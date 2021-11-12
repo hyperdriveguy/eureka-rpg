@@ -1,4 +1,4 @@
-# Final Project
+# Final Project ![workflow status](https://github.com/hyperdriveguy/final-project/actions/workflows/pylint.yml/badge.svg)
 
 ## Required Technologies
 ---
