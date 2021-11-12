@@ -21,4 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd project
-        pylint -d F0001,E0401 `ls -R|grep .py$|xargs`
+        pylint -d F0001,E0401 --fail-under=7 `ls -R|grep .py$|xargs`
