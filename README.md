@@ -7,4 +7,4 @@
 
 ## Authors
 ---
-* # TODO: Add your names and emails here
+* Carson Bush - hyperdriveguy@byui.edu
