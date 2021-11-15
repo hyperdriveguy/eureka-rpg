@@ -15,6 +15,9 @@ class MainWindow(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title)
 
+        # Our TileMap Object
+        self.tile_map = None
+
         # Our Scene Object
         self.scene = None
 
@@ -26,6 +29,9 @@ class MainWindow(arcade.Window):
 
         # A Camera that can be used for scrolling the screen
         self.camera = None
+
+        self.free_camera = False
+        self.free_coords = 0, 0
         
         # A Camera that can be used to draw GUI elements
         self.gui_camera = None
@@ -34,14 +40,18 @@ class MainWindow(arcade.Window):
         self.score = 0
         self.show_score = True
 
+        # Where is the right edge of the map?
+        self.end_of_map = 0
+
+        # Level
+        self.level = 1
+
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
+        self.game_over = arcade.load_sound(":resources:sounds/gameover1.wav")
 
         arcade.set_background_color(arcade.color.DENIM)
-
-        self.free_camera = False
-        self.free_coords = 0, 0
 
         # If you have sprite lists, you should create them here,
         # and set them to None
@@ -49,66 +59,68 @@ class MainWindow(arcade.Window):
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
 
-        # Initialize Scene
-        self.scene = arcade.Scene()
-
-        # Create the Sprite lists
-        self.scene.add_sprite_list("Player")
-        self.scene.add_sprite_list("Walls", use_spatial_hash=True)
-
-        # Set up the player, specifically placing it at these coordinates.
-        # image_source = ":resources:images/animated_characters/male_adventurer/maleAdventurer_idle.png"
-        image_source = 'project/assets/placeholder.png'
-        self.player_sprite = arcade.Sprite(image_source, constants.CHARACTER_SCALING)
-        self.player_sprite.center_x = 64
-        self.player_sprite.center_y = 256
-        self.scene.add_sprite("Player", self.player_sprite)
-
-        # Create the ground
-        # This shows using a loop to place multiple sprites horizontally
-        for x in range(0, 1250, 64):
-            wall = arcade.Sprite(":resources:images/tiles/grassMid.png", constants.TILE_SCALING)
-            wall.center_x = x
-            wall.center_y = 32
-            self.scene.add_sprite("Walls", wall)
-
-        # Put some crates on the ground
-        # This shows using a coordinate list to place sprites
-        coordinate_list = [[512, 96], [256, 96], [768, 96]]
-        for y in range(96, 5000, 64):
-            coordinate_list.append([32, y])
-            coordinate_list.append([1250, y])
-        for _ in range(100):
-            coordinate_list.append([random.randint(96, 1250), random.randint(0, 5000)])
-
-        for coordinate in coordinate_list:
-            # Add a crate on the ground
-            wall = arcade.Sprite(
-                ":resources:images/tiles/boxCrate_double.png", constants.TILE_SCALING
-            )
-            wall.position = coordinate
-            self.scene.add_sprite("Walls", wall)
-        
-        # Use a loop to place some coins for our character to pick up
-        for x in range(128, 1250, 256):
-            coin = arcade.Sprite(":resources:images/items/coinGold.png", constants.COIN_SCALING)
-            coin.center_x = x
-            coin.center_y = 96
-            self.scene.add_sprite("Coins", coin)
-
-        # Create the 'physics engine'
-        self.physics_engine = arcade.PhysicsEngineSimple(
-            self.player_sprite, self.scene.get_sprite_list("Walls")
-        )
-
         # Setup the Camera
         self.camera = arcade.Camera(self.width, self.height)
 
         # Setup the GUI Camera
         self.gui_camera = arcade.Camera(self.width, self.height)
 
+        # Name of map file to load
+        #map_name = "project/assets/map.json"
+        map_name = f":resources:tiled_maps/map2_level_{self.level}.json"
+
+
+        # Layer specific options are defined based on Layer names in a dictionary
+        # Doing this will make the SpriteList for the platforms layer
+        # use spatial hashing for detection.
+        layer_options = {
+            "Platforms": {
+                "use_spatial_hash": True,
+            },
+            "Coins": {
+                "use_spatial_hash": True,
+            },
+            "Don't Touch": {
+                "use_spatial_hash": True,
+            },
+        }
+
+        # Read in the tiled map
+        self.tile_map = arcade.load_tilemap(map_name, constants.TILE_SCALING, layer_options)
+
+        # Initialize Scene with our TileMap, this will automatically add all layers
+        # from the map as SpriteLists in the scene in the proper order.
+        self.scene = arcade.Scene.from_tilemap(self.tile_map)
+        print(self.scene['Platforms'])
+
         # Keep track of the score
         self.score = 0
+
+        # Create the Sprite lists
+        self.scene.add_sprite_list("Player")
+
+        # Add Player Spritelist before "Foreground" layer. This will make the foreground
+        # be drawn after the player, making it appear to be in front of the Player.
+        # Setting before using scene.add_sprite allows us to define where the SpriteList
+        # will be in the draw order. If we just use add_sprite, it will be appended to the
+        # end of the order.
+        self.scene.add_sprite_list_before("Player", 'Foreground')
+
+        # Set up the player, specifically placing it at these coordinates.
+        # image_source = ":resources:images/animated_characters/male_adventurer/maleAdventurer_idle.png"
+        image_source = 'project/assets/placeholder.png'
+        self.player_sprite = arcade.Sprite(image_source, constants.CHARACTER_SCALING)
+        self.player_sprite.center_x = constants.PLAYER_START_X
+        self.player_sprite.center_y = constants.PLAYER_START_Y
+        self.scene.add_sprite("Player", self.player_sprite)
+
+        # Create the 'physics engine'
+        self.physics_engine = arcade.PhysicsEnginePlatformer(
+            self.player_sprite, gravity_constant=0, walls=self.scene['Platforms']
+        )
+
+        # Calculate the right edge of the my_map in pixels
+        self.end_of_map = self.tile_map.width * 64 #GRID_PIXEL_SIZE
 
 
     def on_draw(self):
@@ -186,6 +198,14 @@ class MainWindow(arcade.Window):
             # Add one to the score
             self.score += 1
 
+        # See if the user got to the end of the level
+        if self.player_sprite.center_x >= self.end_of_map:
+            # Advance to the next level
+            self.level += 1
+
+            # Load the next level
+            self.setup()
+
     def on_key_press(self, key, key_modifiers):
         """
         Called whenever a key on the keyboard is pressed.
@@ -205,6 +225,14 @@ class MainWindow(arcade.Window):
 
         if key == arcade.key.SPACE:
             arcade.play_sound(self.jump_sound)
+        
+        if key == arcade.key.F11:
+            if not self.fullscreen:
+                self.set_fullscreen(True)
+                self.setup()
+            else:
+                self.set_fullscreen(False)
+                self.setup()
 
         if key == arcade.key.RCTRL:
             if self.show_score:
