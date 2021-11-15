@@ -1,6 +1,7 @@
 import arcade
 import random
 from game import constants
+from pyglet.math import Vec2
 
 class MainWindow(arcade.Window):
     """
@@ -25,8 +26,22 @@ class MainWindow(arcade.Window):
 
         # A Camera that can be used for scrolling the screen
         self.camera = None
+        
+        # A Camera that can be used to draw GUI elements
+        self.gui_camera = None
+
+        # Keep track of the score
+        self.score = 0
+        self.show_score = True
+
+        # Load sounds
+        self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
+        self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
 
         arcade.set_background_color(arcade.color.DENIM)
+
+        self.free_camera = False
+        self.free_coords = 0, 0
 
         # If you have sprite lists, you should create them here,
         # and set them to None
@@ -73,6 +88,13 @@ class MainWindow(arcade.Window):
             )
             wall.position = coordinate
             self.scene.add_sprite("Walls", wall)
+        
+        # Use a loop to place some coins for our character to pick up
+        for x in range(128, 1250, 256):
+            coin = arcade.Sprite(":resources:images/items/coinGold.png", constants.COIN_SCALING)
+            coin.center_x = x
+            coin.center_y = 96
+            self.scene.add_sprite("Coins", coin)
 
         # Create the 'physics engine'
         self.physics_engine = arcade.PhysicsEngineSimple(
@@ -81,6 +103,12 @@ class MainWindow(arcade.Window):
 
         # Setup the Camera
         self.camera = arcade.Camera(self.width, self.height)
+
+        # Setup the GUI Camera
+        self.gui_camera = arcade.Camera(self.width, self.height)
+
+        # Keep track of the score
+        self.score = 0
 
 
     def on_draw(self):
@@ -94,11 +122,25 @@ class MainWindow(arcade.Window):
 
         # Call draw() on all your sprite lists below
 
+        # Activate our Camera
+        self.camera.use()
+
         # Draw our Scene
         self.scene.draw()
 
-        # Activate our Camera
-        self.camera.use()
+        if self.show_score:
+            # Activate the GUI camera before drawing GUI elements
+            self.gui_camera.use()
+
+            # Draw our score on the screen, scrolling it with the viewport
+            score_text = f"Score: {self.score}"
+            arcade.draw_text(
+                score_text,
+                10,
+                10,
+                arcade.csscolor.WHITE,
+                18,
+            )
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
@@ -111,7 +153,8 @@ class MainWindow(arcade.Window):
             screen_center_x = 0
         if screen_center_y < 0:
             screen_center_y = 0
-        player_centered = screen_center_x, screen_center_y
+        player_centered = [screen_center_x, screen_center_y]
+        self.free_coords = player_centered
 
         self.camera.move_to(player_centered)
 
@@ -126,7 +169,22 @@ class MainWindow(arcade.Window):
         self.physics_engine.update()
 
         # Position the camera
-        self.center_camera_to_player()
+        if not self.free_camera:
+            self.center_camera_to_player()
+
+        # See if we hit any coins
+        coin_hit_list = arcade.check_for_collision_with_list(
+            self.player_sprite, self.scene["Coins"]
+        )
+
+        # Loop through each coin we hit (if any) and remove it
+        for coin in coin_hit_list:
+            # Remove the coin
+            coin.remove_from_sprite_lists()
+            # Play a sound
+            arcade.play_sound(self.collect_coin_sound)
+            # Add one to the score
+            self.score += 1
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -144,6 +202,41 @@ class MainWindow(arcade.Window):
             self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
         elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+
+        if key == arcade.key.SPACE:
+            arcade.play_sound(self.jump_sound)
+
+        if key == arcade.key.RCTRL:
+            if self.show_score:
+                self.show_score = False
+            else:
+                self.show_score = True
+
+        if key == arcade.key.Z:
+            if self.free_camera:
+                self.free_camera = False
+            else:
+                self.free_camera = True
+
+        if self.free_camera:
+            if key == arcade.key.T:
+                self.camera.shake(Vec2(10,10))
+            
+            if key == arcade.key.L:
+                self.free_coords[0] += 64
+                self.camera.move_to(self.free_coords)
+
+            if key == arcade.key.K:
+                self.free_coords[1] -= 64
+                self.camera.move_to(self.free_coords)
+                
+            if key == arcade.key.J:
+                self.free_coords[0] -= 64
+                self.camera.move_to(self.free_coords)
+                
+            if key == arcade.key.I:
+                self.free_coords[1] += 64
+                self.camera.move_to(self.free_coords)
 
     def on_key_release(self, key, key_modifiers):
         """
