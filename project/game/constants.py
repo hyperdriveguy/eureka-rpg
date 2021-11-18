@@ -4,7 +4,7 @@ GAME_NAME = "Eureka!"
 
 # Constants used to scale our sprites from their original size
 CHARACTER_SCALING = 2
-TILE_SCALING = 0.5
+TILE_SCALING = 2
 COIN_SCALING = 0.5
 
 # Movement speed of player, in pixels per frame

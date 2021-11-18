@@ -66,8 +66,8 @@ class MainWindow(arcade.Window):
         self.gui_camera = arcade.Camera(self.width, self.height)
 
         # Name of map file to load
-        #map_name = "project/assets/map.json"
-        map_name = f":resources:tiled_maps/map2_level_{self.level}.json"
+        map_name = "project/assets/test_map.json"
+        #map_name = f":resources:tiled_maps/map2_level_{self.level}.json"
 
 
         # Layer specific options are defined based on Layer names in a dictionary
@@ -122,6 +122,7 @@ class MainWindow(arcade.Window):
         # Calculate the right edge of the my_map in pixels
         self.end_of_map = self.tile_map.width * 64 #GRID_PIXEL_SIZE
 
+        self.yeet_layer = self.tile_map.object_lists["Object Layer 1"]
 
     def on_draw(self):
         """
@@ -153,6 +154,26 @@ class MainWindow(arcade.Window):
                 arcade.csscolor.WHITE,
                 18,
             )
+
+        for box in self.yeet_layer:
+            print(box.properties, '\n\n\n\n\n')
+            try:
+                text = box.properties["text"]
+                print(box.shape)
+                print(range(box.shape[0][0], box.shape[1][0]))
+                print(range(-box.shape[0][1], -box.shape[2][1]))
+                if self.player_sprite.center_x in range(box.shape[0][0] * constants.TILE_SCALING, box.shape[1][0] * constants.TILE_SCALING) and self.player_sprite.center_y in range(-box.shape[0][1] * constants.TILE_SCALING, -box.shape[2][1] * constants.TILE_SCALING):
+                    arcade.draw_text(
+                        text,
+                        constants.SCREEN_WIDTH - 200,
+                        10,
+                        arcade.csscolor.WHITE,
+                        18,
+                    )
+                    print('in da box')
+                print(self.player_sprite.center_x, self.player_sprite.center_y)
+            except KeyError:
+                print('Warning: Interactable has no assigned text.')
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
