@@ -49,15 +49,16 @@ class Overworld(arcade.View):
 
         # If you have sprite lists, you should create them here,
         # and set them to None
+        self.setup()
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
 
         # Setup the Camera
-        self.camera = arcade.Camera(self.width, self.height)
+        self.camera = arcade.Camera(self.window.width, self.window.height)
 
         # Setup the GUI Camera
-        self.gui_camera = arcade.Camera(self.width, self.height)
+        self.gui_camera = arcade.Camera(self.window.width, self.window.height)
 
         # Name of map file to load
         map_name = "project/assets/test_map.json"
@@ -82,6 +83,7 @@ class Overworld(arcade.View):
         # Read in the tiled map
         self.tile_map = arcade.load_tilemap(map_name, constants.TILE_SCALING, layer_options)
 
+        #self.tile_map.width * self.tile_map.tile_width * 
         # Initialize Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
