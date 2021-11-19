@@ -1,6 +1,7 @@
 import arcade
 import random
 from game import constants
+from game.player import Player
 from pyglet.math import Vec2
 from game.utils import is_between
 
@@ -21,7 +22,8 @@ class Overworld(arcade.View):
         self.free_coords = 0, 0
 
         # Keep track of the score
-        self.show_score = True
+        self.show_score = False
+        arcade.enable_timings()
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
@@ -84,11 +86,14 @@ class Overworld(arcade.View):
 
         # Set up the player, specifically placing it at these coordinates.
         # image_source = ":resources:images/animated_characters/male_adventurer/maleAdventurer_idle.png"
-        image_source = 'project/assets/placeholder.png'
-        self.player_sprite = arcade.Sprite(image_source, constants.CHARACTER_SCALING)
+        #image_source = 'project/assets/placeholder.png'
+        self.player_sprite = Player()#arcade.Sprite(image_source, constants.CHARACTER_SCALING)
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
         self.scene.add_sprite("Player", self.player_sprite)
+
+        # Update the players animation
+        arcade.schedule(self.scene.update_animation, 1/40)
 
         # Create the 'physics engine'
         self.physics_engine = arcade.PhysicsEnginePlatformer(
@@ -130,6 +135,19 @@ class Overworld(arcade.View):
                 arcade.csscolor.WHITE,
                 18,
             )
+
+            try:
+                arcade.draw_text(
+                    f'{arcade.get_fps():.2f} FPS',
+                    10,
+                    10,
+                    arcade.color.WHITE,
+                    12,
+                    self.gui_camera.viewport_width - 20,
+                    'right'
+                )
+            except ValueError:
+                print('Warning: Timings are not enabled.')
 
         for box in self.yeet_layer:
             try:

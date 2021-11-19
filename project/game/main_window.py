@@ -30,6 +30,8 @@ class MainWindow(arcade.Window):
             if not self.fullscreen:
                 self.set_fullscreen(True)
                 self.overworld.camera.resize(self.width, self.height)
+                self.overworld.gui_camera.resize(self.width, self.height)
             else:
                 self.set_fullscreen(False)
                 self.overworld.camera.resize(self.width, self.height)
+                self.overworld.gui_camera.resize(self.width, self.height)
