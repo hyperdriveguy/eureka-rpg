@@ -10,6 +10,11 @@ class Overworld(arcade.View):
     def __init__(self):
         super().__init__()
 
+        self._left_pressed = False
+        self._right_pressed = False
+        self._up_pressed = False
+        self._down_pressed = False
+
         self.free_camera = False
         self.free_coords = 0, 0
 
@@ -172,6 +177,19 @@ class Overworld(arcade.View):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
+        if self._up_pressed and not self._down_pressed:
+            self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
+        elif self._down_pressed and not self._up_pressed:
+            self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
+        else:
+            self.player_sprite.change_y = 0
+
+        if self._left_pressed and not self._right_pressed:
+            self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
+        elif self._right_pressed and not self._left_pressed:
+            self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+        else:
+            self.player_sprite.change_x = 0
 
         # Move the player with the physics engine
         self.physics_engine.update()
@@ -211,13 +229,13 @@ class Overworld(arcade.View):
         """
 
         if key == arcade.key.UP or key == arcade.key.W:
-            self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+            self._up_pressed = True
+        if key == arcade.key.DOWN or key == arcade.key.S:
+            self._down_pressed = True
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self._left_pressed = True
+        if key == arcade.key.RIGHT or key == arcade.key.D:
+            self._right_pressed = True
 
         if key == arcade.key.SPACE:
             arcade.play_sound(self.jump_sound)
@@ -260,13 +278,13 @@ class Overworld(arcade.View):
         """
 
         if key == arcade.key.UP or key == arcade.key.W:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.DOWN or key == arcade.key.S:
-            self.player_sprite.change_y = 0
-        elif key == arcade.key.LEFT or key == arcade.key.A:
-            self.player_sprite.change_x = 0
-        elif key == arcade.key.RIGHT or key == arcade.key.D:
-            self.player_sprite.change_x = 0
+            self._up_pressed = False
+        if key == arcade.key.DOWN or key == arcade.key.S:
+            self._down_pressed = False
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self._left_pressed = False
+        if key == arcade.key.RIGHT or key == arcade.key.D:
+            self._right_pressed = False
 
     def on_mouse_motion(self, x, y, delta_x, delta_y):
         """
