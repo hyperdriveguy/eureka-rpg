@@ -92,9 +92,6 @@ class Overworld(arcade.View):
         self.player_sprite.center_y = constants.PLAYER_START_Y
         self.scene.add_sprite("Player", self.player_sprite)
 
-        # Update the players animation
-        arcade.schedule(self.scene.update_animation, 1/40)
-
         # Create the 'physics engine'
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player_sprite, gravity_constant=0, walls=self.scene['Platforms']
@@ -211,6 +208,9 @@ class Overworld(arcade.View):
                 self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
             else:
                 self.player_sprite.change_x = 0
+
+        # Update the players animation
+        self.scene.update_animation(delta_time)
 
         # Move the player with the physics engine
         self.physics_engine.update()
