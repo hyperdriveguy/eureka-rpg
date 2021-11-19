@@ -123,7 +123,7 @@ class Overworld(arcade.View):
         self.scene.draw()
 
         if self._active_textbox:
-            print(self.cur_text)
+            self.gui_camera.use()
             arcade.draw_text(
                 self.cur_text,
                 10,
@@ -175,10 +175,10 @@ class Overworld(arcade.View):
             coll_side_y = self.player_sprite.center_y
 
         if self.player_sprite.character_face_x == constants.Direction.FACE_LEFT.name:
-            begin_x -= 10
+            end_x += 10
             coll_side_x = self.player_sprite.left
         elif self.player_sprite.character_face_x ==  constants.Direction.FACE_RIGHT.name:
-            end_x += 10
+            begin_x -= 10
             coll_side_x = self.player_sprite.right
         else:
             coll_side_x = self.player_sprite.center_x
@@ -263,6 +263,15 @@ class Overworld(arcade.View):
             arcade.play_sound(self.collect_coin_sound)
             # Add one to the score
             self.score += 1
+        
+        if not self._active_textbox:
+            for box in self.yeet_layer:
+                if self._can_interact(box.shape):
+                    self.player_sprite.color = arcade.color.RED
+                else:
+                    self.player_sprite.color = arcade.color.WHITE
+        else:
+            self.player_sprite.color = arcade.color.WHITE
 
     def _force_movement_stop(self):
         self.player_sprite.change_x = 0
@@ -346,14 +355,10 @@ class Overworld(arcade.View):
                 try:
                     self.cur_text = box.properties["text"]
                     if self._can_interact(box.shape):
-                        self.player_sprite.color = arcade.color.RED
                         if key == arcade.key.SPACE:
                             arcade.play_sound(self.jump_sound)
-                            self.player_sprite.color = arcade.color.WHITE
                             self._active_textbox = True
                             self._force_movement_stop()
-                    else:
-                        self.player_sprite.color = arcade.color.WHITE
 
                 except KeyError:
                     print('Warning: Interactable has no assigned text.')
