@@ -10,43 +10,18 @@ class Overworld(arcade.View):
     def __init__(self):
         super().__init__()
 
-        # Our TileMap Object
-        self.tile_map = None
-
-        # Our Scene Object
-        self.scene = None
-
-        # Separate variable that holds the player sprite
-        self.player_sprite = None
-
-        # Our physics engine
-        self.physics_engine = None
-
-        # A Camera that can be used for scrolling the screen
-        self.camera = None
-
         self.free_camera = False
         self.free_coords = 0, 0
-        
-        # A Camera that can be used to draw GUI elements
-        self.gui_camera = None
 
         # Keep track of the score
-        self.score = 0
         self.show_score = True
-
-        # Where is the right edge of the map?
-        self.end_of_map = 0
-
-        # Level
-        self.level = 1
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
         self.game_over = arcade.load_sound(":resources:sounds/gameover1.wav")
 
-        arcade.set_background_color(arcade.color.DENIM)
+        arcade.set_background_color(arcade.color.GRAY)
 
         # If you have sprite lists, you should create them here,
         # and set them to None
@@ -89,10 +64,6 @@ class Overworld(arcade.View):
         # Initialize Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
-        print(self.scene['Platforms'])
-
-        # Keep track of the score
-        self.score = 0
 
         # Create the Sprite lists
         self.scene.add_sprite_list("Player")
@@ -143,10 +114,10 @@ class Overworld(arcade.View):
             # Activate the GUI camera before drawing GUI elements
             self.gui_camera.use()
 
-            # Draw our score on the screen, scrolling it with the viewport
-            score_text = f"Score: {self.score}"
+            # Draw player coordinates screen, scrolling it with the viewport
+            coords = f"{self.player_sprite.center_x:.0f}, {self.player_sprite.center_y:.0f}"
             arcade.draw_text(
-                score_text,
+                coords,
                 10,
                 10,
                 arcade.csscolor.WHITE,
@@ -154,10 +125,8 @@ class Overworld(arcade.View):
             )
 
         for box in self.yeet_layer:
-            #print(box.properties, '\n\n\n\n\n')
             try:
                 text = box.properties["text"]
-                print(box.shape)
                 if self._can_interact(box.shape):
                     arcade.draw_text(
                         text,
@@ -166,8 +135,6 @@ class Overworld(arcade.View):
                         arcade.csscolor.WHITE,
                         18,
                     )
-                    #print('in da box')
-                print(self.player_sprite.center_x, self.player_sprite.center_y)
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
 
@@ -176,7 +143,6 @@ class Overworld(arcade.View):
         end_x = round(shape[1][0] * constants.TILE_SCALING)
         end_y = round(shape[0][1] * constants.TILE_SCALING) + self.full_map_height
         begin_y = round(shape[2][1] * constants.TILE_SCALING) + self.full_map_height
-        #print(begin_x, end_x, begin_y, end_y)
         if (is_between(self.player_sprite.center_x, begin_x, end_x) and
                 is_between(self.player_sprite.center_y, begin_y, end_y)):
             return True
@@ -184,22 +150,18 @@ class Overworld(arcade.View):
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player_sprite.center_y - (
-            self.camera.viewport_height / 2
-        )
+        screen_center_y = self.player_sprite.center_y - (self.camera.viewport_height / 2)
 
         # Don't let camera travel past map
         if screen_center_x < 0:
             screen_center_x = 0
         if screen_center_y < 0:
             screen_center_y = 0
-        if screen_center_x > self.full_map_width - self.window.width / 2:
-            screen_center_x = self.full_map_width - self.window.width / 2
-        if screen_center_y > self.full_map_height - self.window.height / 2:
-            screen_center_y = self.full_map_height - self.window.height / 2
+        if screen_center_x > self.full_map_width - self.camera.viewport_width: 
+            screen_center_x = self.full_map_width - self.camera.viewport_width
+        if screen_center_y > self.full_map_height - self.camera.viewport_height:
+            screen_center_y = self.full_map_height - self.camera.viewport_height
         player_centered = [screen_center_x, screen_center_y]
-        print('camera: ', player_centered)
-        print('stop', self.full_map_height - self.window.height / 2)
         self.free_coords = player_centered
 
         self.camera.move_to(player_centered)
