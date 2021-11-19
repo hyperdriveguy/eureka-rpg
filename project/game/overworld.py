@@ -18,6 +18,10 @@ class Overworld(arcade.View):
         self._up_pressed = False
         self._down_pressed = False
 
+        self._active_textbox = False
+
+        self.cur_text = 'asdf'
+
         self.free_camera = False
         self.free_coords = 0, 0
 
@@ -118,6 +122,17 @@ class Overworld(arcade.View):
         # Draw our Scene
         self.scene.draw()
 
+        if self._active_textbox:
+            print(self.cur_text)
+            arcade.draw_text(
+                self.cur_text,
+                10,
+                50,
+                arcade.csscolor.WHITE,
+                18
+            )
+        
+
         if self.show_score:
             # Activate the GUI camera before drawing GUI elements
             self.gui_camera.use()
@@ -145,27 +160,31 @@ class Overworld(arcade.View):
             except ValueError:
                 print('Warning: Timings are not enabled.')
 
-        for box in self.yeet_layer:
-            try:
-                text = box.properties["text"]
-                if self._can_interact(box.shape):
-                    arcade.draw_text(
-                        text,
-                        10,
-                        50,
-                        arcade.csscolor.WHITE,
-                        18,
-                    )
-            except KeyError:
-                print('Warning: Interactable has no assigned text.')
-
     def _can_interact(self, shape):
         begin_x = round(shape[0][0] * constants.TILE_SCALING)
         end_x = round(shape[1][0] * constants.TILE_SCALING)
         end_y = round(shape[0][1] * constants.TILE_SCALING) + self.full_map_height
         begin_y = round(shape[2][1] * constants.TILE_SCALING) + self.full_map_height
-        if (is_between(self.player_sprite.center_x, begin_x, end_x) and
-                is_between(self.player_sprite.center_y, begin_y, end_y)):
+        if self.player_sprite.character_face_y == constants.Direction.FACE_UP.name:
+            begin_y -= 10
+            coll_side_y = self.player_sprite.top
+        elif self.player_sprite.character_face_y == constants.Direction.FACE_DOWN.name:
+            end_y += 10
+            coll_side_y = self.player_sprite.bottom
+        else:
+            coll_side_y = self.player_sprite.center_y
+
+        if self.player_sprite.character_face_x == constants.Direction.FACE_LEFT.name:
+            begin_x -= 10
+            coll_side_x = self.player_sprite.left
+        elif self.player_sprite.character_face_x ==  constants.Direction.FACE_RIGHT.name:
+            end_x += 10
+            coll_side_x = self.player_sprite.right
+        else:
+            coll_side_x = self.player_sprite.center_x
+
+        if (is_between(coll_side_x, begin_x, end_x) and
+                is_between(coll_side_y, begin_y, end_y)):
             return True
         return False
 
@@ -245,6 +264,11 @@ class Overworld(arcade.View):
             # Add one to the score
             self.score += 1
 
+    def _force_movement_stop(self):
+        self.player_sprite.change_x = 0
+        self.player_sprite.change_y = 0
+        self.movement_lock = True
+
     def on_key_press(self, key, key_modifiers):
         """
         Called whenever a key on the keyboard is pressed.
@@ -262,8 +286,7 @@ class Overworld(arcade.View):
         if key == arcade.key.RIGHT or key == arcade.key.D:
             self._right_pressed = True
 
-        if key == arcade.key.SPACE:
-            arcade.play_sound(self.jump_sound)
+
 
         if key == arcade.key.RCTRL:
             if self.show_score:
@@ -316,3 +339,26 @@ class Overworld(arcade.View):
             self._left_pressed = False
         if key == arcade.key.RIGHT or key == arcade.key.D:
             self._right_pressed = False
+
+        
+        if not self._active_textbox:
+            for box in self.yeet_layer:
+                try:
+                    self.cur_text = box.properties["text"]
+                    if self._can_interact(box.shape):
+                        self.player_sprite.color = arcade.color.RED
+                        if key == arcade.key.SPACE:
+                            arcade.play_sound(self.jump_sound)
+                            self.player_sprite.color = arcade.color.WHITE
+                            self._active_textbox = True
+                            self._force_movement_stop()
+                    else:
+                        self.player_sprite.color = arcade.color.WHITE
+
+                except KeyError:
+                    print('Warning: Interactable has no assigned text.')
+        else:
+            if key == arcade.key.SPACE:
+                arcade.play_sound(self.jump_sound)
+                self._active_textbox = False
+                self.movement_lock = False
