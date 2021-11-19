@@ -2,6 +2,7 @@ import arcade
 import random
 from game import constants
 from pyglet.math import Vec2
+from game.utils import is_between
 
 class Overworld(arcade.View):
 
@@ -83,7 +84,8 @@ class Overworld(arcade.View):
         # Read in the tiled map
         self.tile_map = arcade.load_tilemap(map_name, constants.TILE_SCALING, layer_options)
 
-        #self.tile_map.width * self.tile_map.tile_width * 
+        self.full_map_width = self.tile_map.width * self.tile_map.tile_width * self.tile_map.scaling
+        self.full_map_height = self.tile_map.height * self.tile_map.tile_height * self.tile_map.scaling
         # Initialize Scene with our TileMap, this will automatically add all layers
         # from the map as SpriteLists in the scene in the proper order.
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
@@ -152,13 +154,11 @@ class Overworld(arcade.View):
             )
 
         for box in self.yeet_layer:
-            print(box.properties, '\n\n\n\n\n')
+            #print(box.properties, '\n\n\n\n\n')
             try:
                 text = box.properties["text"]
                 print(box.shape)
-                print(range(box.shape[0][0], box.shape[1][0]))
-                print(range(-box.shape[0][1], -box.shape[2][1]))
-                if self.player_sprite.center_x in range(box.shape[0][0] * constants.TILE_SCALING, box.shape[1][0] * constants.TILE_SCALING) and self.player_sprite.center_y in range(-box.shape[0][1] * constants.TILE_SCALING, -box.shape[2][1] * constants.TILE_SCALING):
+                if self._can_interact(box.shape):
                     arcade.draw_text(
                         text,
                         constants.SCREEN_WIDTH - 200,
@@ -166,10 +166,21 @@ class Overworld(arcade.View):
                         arcade.csscolor.WHITE,
                         18,
                     )
-                    print('in da box')
+                    #print('in da box')
                 print(self.player_sprite.center_x, self.player_sprite.center_y)
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
+
+    def _can_interact(self, shape):
+        begin_x = round(shape[0][0] * constants.TILE_SCALING)
+        end_x = round(shape[1][0] * constants.TILE_SCALING)
+        end_y = round(shape[0][1] * constants.TILE_SCALING) + self.full_map_height
+        begin_y = round(shape[2][1] * constants.TILE_SCALING) + self.full_map_height
+        #print(begin_x, end_x, begin_y, end_y)
+        if (is_between(self.player_sprite.center_x, begin_x, end_x) and
+                is_between(self.player_sprite.center_y, begin_y, end_y)):
+            return True
+        return False
 
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
@@ -177,12 +188,18 @@ class Overworld(arcade.View):
             self.camera.viewport_height / 2
         )
 
-        # Don't let camera travel past 0
+        # Don't let camera travel past map
         if screen_center_x < 0:
             screen_center_x = 0
         if screen_center_y < 0:
             screen_center_y = 0
+        if screen_center_x > self.full_map_width - self.window.width / 2:
+            screen_center_x = self.full_map_width - self.window.width / 2
+        if screen_center_y > self.full_map_height - self.window.height / 2:
+            screen_center_y = self.full_map_height - self.window.height / 2
         player_centered = [screen_center_x, screen_center_y]
+        print('camera: ', player_centered)
+        print('stop', self.full_map_height - self.window.height / 2)
         self.free_coords = player_centered
 
         self.camera.move_to(player_centered)

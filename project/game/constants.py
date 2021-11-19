@@ -10,5 +10,5 @@ COIN_SCALING = 0.5
 # Movement speed of player, in pixels per frame
 PLAYER_MOVEMENT_SPEED = 5
 
-PLAYER_START_X = 64
-PLAYER_START_Y = 256
+PLAYER_START_X = 317
+PLAYER_START_Y = 6242

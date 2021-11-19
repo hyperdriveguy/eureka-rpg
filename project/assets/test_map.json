@@ -59,6 +59,23 @@
                  "width":1572,
                  "x":836,
                  "y":864
+                }, 
+                {
+                 "height":32.6666666666665,
+                 "id":4,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"text",
+                         "type":"string",
+                         "value":"Test da box"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":352.666666666667,
+                 "y":2912
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -79,7 +96,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":3,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
