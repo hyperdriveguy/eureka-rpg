@@ -10,6 +10,8 @@ class Overworld(arcade.View):
     def __init__(self):
         super().__init__()
 
+        self.movement_lock = False
+
         self._left_pressed = False
         self._right_pressed = False
         self._up_pressed = False
@@ -177,19 +179,20 @@ class Overworld(arcade.View):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        if self._up_pressed and not self._down_pressed:
-            self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
-        elif self._down_pressed and not self._up_pressed:
-            self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
-        else:
-            self.player_sprite.change_y = 0
+        if not self.movement_lock:
+            if self._up_pressed and not self._down_pressed:
+                self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
+            elif self._down_pressed and not self._up_pressed:
+                self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
+            else:
+                self.player_sprite.change_y = 0
 
-        if self._left_pressed and not self._right_pressed:
-            self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
-        elif self._right_pressed and not self._left_pressed:
-            self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
-        else:
-            self.player_sprite.change_x = 0
+            if self._left_pressed and not self._right_pressed:
+                self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
+            elif self._right_pressed and not self._left_pressed:
+                self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+            else:
+                self.player_sprite.change_x = 0
 
         # Move the player with the physics engine
         self.physics_engine.update()
@@ -251,6 +254,12 @@ class Overworld(arcade.View):
                 self.free_camera = False
             else:
                 self.free_camera = True
+
+        if key == arcade.key.M:
+            if self.movement_lock:
+                self.movement_lock = False
+            else:
+                self.movement_lock = True
 
         if self.free_camera:
             if key == arcade.key.T:
