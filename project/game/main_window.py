@@ -15,7 +15,8 @@ class MainWindow(arcade.Window):
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
-        self.show_view(Overworld())
+        self.overworld = Overworld()
+        self.show_view(self.overworld)
 
 
     def on_key_press(self, key, key_modifiers):
@@ -28,7 +29,7 @@ class MainWindow(arcade.Window):
         if key == arcade.key.F11:
             if not self.fullscreen:
                 self.set_fullscreen(True)
-                self.setup()
+                self.overworld.camera.resize(self.width, self.height)
             else:
                 self.set_fullscreen(False)
-                self.setup()
+                self.overworld.camera.resize(self.width, self.height)

@@ -130,8 +130,8 @@ class Overworld(arcade.View):
                 if self._can_interact(box.shape):
                     arcade.draw_text(
                         text,
-                        constants.SCREEN_WIDTH - 200,
                         10,
+                        50,
                         arcade.csscolor.WHITE,
                         18,
                     )
