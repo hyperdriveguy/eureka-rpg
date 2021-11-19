@@ -6,11 +6,13 @@ class Player(arcade.Sprite):
     def __init__(self):
         super().__init__()
 
-        # Default to face-right
-        #self.character_face_direction = RIGHT_FACING
+        # Default to face-down
+        self._character_face_direction = [constants.Direction.FACE_NONE ,constants.Direction.FACE_DOWN]
 
         # Used for flipping between image sequences
         self._cur_texture = 0
+        self._force_walk_texture = False
+        self._force_walk_update_counter = 0
 
         self._scale = constants.CHARACTER_SCALING
 
@@ -52,7 +54,7 @@ class Player(arcade.Sprite):
         #    self.character_face_direction = RIGHT_FACING
 
         # Idle animation
-        if self.change_x == 0 and self.change_y == 0:
+        if self.change_x == 0 and self.change_y == 0 and not self._force_walk_texture:
             self.texture = self._idle_texture
             return
 
@@ -63,5 +65,33 @@ class Player(arcade.Sprite):
         frame = self._cur_texture // constants.UPDATES_PER_FRAME
         #direction = self.character_face_direction
         self.texture = self._walk_textures[frame]#[direction]
+        if self._force_walk_texture and self._force_walk_update_counter < 1/30:
+            self._force_walk_update_counter += delta_time
+        else:
+            self._force_walk_texture = False
+            self._force_walk_update_counter = 0
 
+    @property
+    def character_face_direction(self):
+        return f'{self._character_face_direction[0].name[5:]}, {self._character_face_direction[1].name[5:]}'
+    
+    @property
+    def character_face_x(self):
+        return self._character_face_direction[0].name
+    
+    @property
+    def character_face_y(self):
+        return self._character_face_direction[1].name
+
+    @character_face_x.setter
+    def character_face_x(self, character_face_x):
+        if isinstance(character_face_x, constants.Direction):
+            self._character_face_direction[0] = character_face_x
+            self._force_walk_texture = True
+
+    @character_face_y.setter
+    def character_face_y(self, character_face_y):
+        if isinstance(character_face_y, constants.Direction):
+            self._character_face_direction[1] = character_face_y
+            self._force_walk_texture = True
 

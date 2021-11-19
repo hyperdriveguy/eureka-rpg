@@ -75,7 +75,6 @@ class Overworld(arcade.View):
         self.scene = arcade.Scene.from_tilemap(self.tile_map)
 
         # Create the Sprite lists
-        self.scene.add_sprite_list("Player")
 
         # Add Player Spritelist before "Foreground" layer. This will make the foreground
         # be drawn after the player, making it appear to be in front of the Player.
@@ -124,7 +123,7 @@ class Overworld(arcade.View):
             self.gui_camera.use()
 
             # Draw player coordinates screen, scrolling it with the viewport
-            coords = f"{self.player_sprite.center_x:.0f}, {self.player_sprite.center_y:.0f}"
+            coords = f"{self.player_sprite.center_x:.0f}, {self.player_sprite.center_y:.0f}, {self.player_sprite.character_face_direction}"
             arcade.draw_text(
                 coords,
                 10,
@@ -196,18 +195,31 @@ class Overworld(arcade.View):
         """
         if not self.movement_lock:
             if self._up_pressed and not self._down_pressed:
-                self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
+                if self.player_sprite.character_face_y == constants.Direction.FACE_UP.name:
+                    self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
+                self.player_sprite.character_face_y = constants.Direction.FACE_UP
             elif self._down_pressed and not self._up_pressed:
-                self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
+                if self.player_sprite.character_face_y == constants.Direction.FACE_DOWN.name:
+                    self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
+                self.player_sprite.character_face_y = constants.Direction.FACE_DOWN
             else:
                 self.player_sprite.change_y = 0
+                if self.player_sprite.character_face_x != constants.Direction.FACE_NONE.name and self.player_sprite.change_x != 0:
+                    self.player_sprite.character_face_y = constants.Direction.FACE_NONE
+
 
             if self._left_pressed and not self._right_pressed:
-                self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
+                if self.player_sprite.character_face_x == constants.Direction.FACE_LEFT.name:
+                    self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
+                self.player_sprite.character_face_x = constants.Direction.FACE_LEFT
             elif self._right_pressed and not self._left_pressed:
-                self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+                if self.player_sprite.character_face_x == constants.Direction.FACE_RIGHT.name:
+                    self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
+                self.player_sprite.character_face_x = constants.Direction.FACE_RIGHT
             else:
                 self.player_sprite.change_x = 0
+                if self.player_sprite.character_face_y != constants.Direction.FACE_NONE.name and self.player_sprite.change_y != 0:
+                    self.player_sprite.character_face_x = constants.Direction.FACE_NONE
 
         # Update the players animation
         self.scene.update_animation(delta_time)
@@ -232,14 +244,6 @@ class Overworld(arcade.View):
             arcade.play_sound(self.collect_coin_sound)
             # Add one to the score
             self.score += 1
-
-        # See if the user got to the end of the level
-        if self.player_sprite.center_x >= self.end_of_map:
-            # Advance to the next level
-            self.level += 1
-
-            # Load the next level
-            self.setup()
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -312,22 +316,3 @@ class Overworld(arcade.View):
             self._left_pressed = False
         if key == arcade.key.RIGHT or key == arcade.key.D:
             self._right_pressed = False
-
-    def on_mouse_motion(self, x, y, delta_x, delta_y):
-        """
-        Called whenever the mouse moves.
-        """
-        pass
-
-    def on_mouse_press(self, x, y, button, key_modifiers):
-        """
-        Called when the user presses a mouse button.
-        """
-        pass
-
-    def on_mouse_release(self, x, y, button, key_modifiers):
-        """
-        Called when a user releases a mouse button.
-        """
-        pass
-

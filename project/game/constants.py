@@ -1,3 +1,6 @@
+from enum import Enum, auto
+
+
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 GAME_NAME = "Eureka!"
@@ -13,3 +16,10 @@ UPDATES_PER_FRAME = 8
 
 PLAYER_START_X = 317
 PLAYER_START_Y = 6242
+
+class Direction(Enum):
+    FACE_NONE = 0
+    FACE_RIGHT = 1
+    FACE_LEFT = 2
+    FACE_UP = 3
+    FACE_DOWN = 4
