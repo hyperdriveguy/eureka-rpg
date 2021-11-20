@@ -26,7 +26,7 @@ class MainWindow(arcade.Window):
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
-        if key == arcade.key.F:
+        if key == arcade.key.F11 or key == arcade.key.P:
             if not self.fullscreen:
                 self.set_fullscreen(True)
                 self.overworld.camera.resize(self.width, self.height)
