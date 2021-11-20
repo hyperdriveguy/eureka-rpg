@@ -9,3 +9,4 @@
 ---
 * Carson Bush - hyperdriveguy@byui.edu
 * Bryndi Hellewell - brynlol12@gmail.com
+* Chase Odermott - ode16003@byui.edu
