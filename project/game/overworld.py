@@ -1,9 +1,13 @@
 import arcade
 import random
+import platform
+
+from arcade.key import RCOMMAND
 from game import constants
 from game.player import Player
 from pyglet.math import Vec2
 from game.utils import is_between
+
 
 class Overworld(arcade.View):
 
@@ -297,7 +301,7 @@ class Overworld(arcade.View):
 
 
 
-        if key == arcade.key.RCTRL:
+        if key == arcade.key.RCTRL or key == arcade.key.RCOMMAND:
             if self.show_score:
                 self.show_score = False
             else:
