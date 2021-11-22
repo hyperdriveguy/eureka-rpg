@@ -24,6 +24,13 @@ class Player(arcade.Sprite):
 
         self._scale = constants.CHARACTER_SCALING
 
+        self._movement_lock = False
+
+        self._left_pressed = False
+        self._right_pressed = False
+        self._up_pressed = False
+        self._down_pressed = False
+
         # Adjust the collision box. Default includes too much empty space
         # side-to-side. Box is centered at sprite center, (0, 0)
         #self.points = [[-22, -64], [22, -64], [22, 28], [-22, 28]]
@@ -79,7 +86,7 @@ class Player(arcade.Sprite):
             self._force_walk_texture = False
             self._force_walk_update_counter = 0
 
-    def _can_interact(self, shape, map_height):
+    def can_interact(self, shape, map_height):
         begin_x = round(shape[0][0] * constants.TILE_SCALING)
         end_x = round(shape[1][0] * constants.TILE_SCALING)
         end_y = round(shape[0][1] * constants.TILE_SCALING) + map_height
@@ -106,8 +113,68 @@ class Player(arcade.Sprite):
                 is_between(coll_side_y, begin_y, end_y)):
             return True
         return False
-    
 
+    def on_update(self, delta_time: float = 1 / 60):
+        if not self._movement_lock:
+            if self._up_pressed and not self._down_pressed:
+                if self.character_face_y == constants.Direction.FACE_UP.name:
+                    self.change_y = constants.PLAYER_MOVEMENT_SPEED
+                self.character_face_y = constants.Direction.FACE_UP
+            elif self._down_pressed and not self._up_pressed:
+                if self.character_face_y == constants.Direction.FACE_DOWN.name:
+                    self.change_y = -constants.PLAYER_MOVEMENT_SPEED
+                self.character_face_y = constants.Direction.FACE_DOWN
+            else:
+                self.change_y = 0
+                if self.character_face_x != constants.Direction.FACE_NONE.name and self.change_x != 0:
+                    self.character_face_y = constants.Direction.FACE_NONE
+
+
+            if self._left_pressed and not self._right_pressed:
+                if self.character_face_x == constants.Direction.FACE_LEFT.name:
+                    self.change_x = -constants.PLAYER_MOVEMENT_SPEED
+                self.character_face_x = constants.Direction.FACE_LEFT
+            elif self._right_pressed and not self._left_pressed:
+                if self.character_face_x == constants.Direction.FACE_RIGHT.name:
+                    self.change_x = constants.PLAYER_MOVEMENT_SPEED
+                self.character_face_x = constants.Direction.FACE_RIGHT
+            else:
+                self.change_x = 0
+                if self.character_face_y != constants.Direction.FACE_NONE.name and self.change_y != 0:
+                    self.character_face_x = constants.Direction.FACE_NONE
+
+    def on_key_press(self, key, key_modifiers):
+        if key == arcade.key.UP or key == arcade.key.W:
+            self._up_pressed = True
+        if key == arcade.key.DOWN or key == arcade.key.S:
+            self._down_pressed = True
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self._left_pressed = True
+        if key == arcade.key.RIGHT or key == arcade.key.D:
+            self._right_pressed = True
+    
+    def on_key_release(self, key, key_modifiers):
+        if key == arcade.key.UP or key == arcade.key.W:
+            self._up_pressed = False
+        if key == arcade.key.DOWN or key == arcade.key.S:
+            self._down_pressed = False
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self._left_pressed = False
+        if key == arcade.key.RIGHT or key == arcade.key.D:
+            self._right_pressed = False
+
+    def force_movement_stop(self):
+        self.change_x = 0
+        self.change_y = 0
+        self._movement_lock = True
+
+    @property
+    def allow_player_input(self):
+        return self._movement_lock
+    
+    @allow_player_input.setter
+    def allow_player_input(self, allow_player_input: bool):
+        self._movement_lock = not allow_player_input
 
     @property
     def character_face_direction(self):

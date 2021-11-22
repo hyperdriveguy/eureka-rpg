@@ -4,7 +4,6 @@ import random
 from game import constants
 from game.player import Player
 from pyglet.math import Vec2
-from game.utils import is_between
 
 
 class Overworld(arcade.View):
@@ -16,13 +15,6 @@ class Overworld(arcade.View):
 
     def __init__(self):
         super().__init__()
-
-        self.movement_lock = False
-
-        self._left_pressed = False
-        self._right_pressed = False
-        self._up_pressed = False
-        self._down_pressed = False
 
         self._active_textbox = False
 
@@ -190,33 +182,8 @@ class Overworld(arcade.View):
         Normally, you'll call update() on the sprite lists that
         need it.
         """
-        if not self.movement_lock:
-            if self._up_pressed and not self._down_pressed:
-                if self.player_sprite.character_face_y == constants.Direction.FACE_UP.name:
-                    self.player_sprite.change_y = constants.PLAYER_MOVEMENT_SPEED
-                self.player_sprite.character_face_y = constants.Direction.FACE_UP
-            elif self._down_pressed and not self._up_pressed:
-                if self.player_sprite.character_face_y == constants.Direction.FACE_DOWN.name:
-                    self.player_sprite.change_y = -constants.PLAYER_MOVEMENT_SPEED
-                self.player_sprite.character_face_y = constants.Direction.FACE_DOWN
-            else:
-                self.player_sprite.change_y = 0
-                if self.player_sprite.character_face_x != constants.Direction.FACE_NONE.name and self.player_sprite.change_x != 0:
-                    self.player_sprite.character_face_y = constants.Direction.FACE_NONE
-
-
-            if self._left_pressed and not self._right_pressed:
-                if self.player_sprite.character_face_x == constants.Direction.FACE_LEFT.name:
-                    self.player_sprite.change_x = -constants.PLAYER_MOVEMENT_SPEED
-                self.player_sprite.character_face_x = constants.Direction.FACE_LEFT
-            elif self._right_pressed and not self._left_pressed:
-                if self.player_sprite.character_face_x == constants.Direction.FACE_RIGHT.name:
-                    self.player_sprite.change_x = constants.PLAYER_MOVEMENT_SPEED
-                self.player_sprite.character_face_x = constants.Direction.FACE_RIGHT
-            else:
-                self.player_sprite.change_x = 0
-                if self.player_sprite.character_face_y != constants.Direction.FACE_NONE.name and self.player_sprite.change_y != 0:
-                    self.player_sprite.character_face_x = constants.Direction.FACE_NONE
+        # Update player movement
+        self.player_sprite.on_update(delta_time)
 
         # Update the players animation
         self.scene.update_animation(delta_time)
@@ -244,17 +211,12 @@ class Overworld(arcade.View):
         
         if not self._active_textbox:
             for box in self.yeet_layer:
-                if self.player_sprite._can_interact(box.shape, self.full_map_height):
+                if self.player_sprite.can_interact(box.shape, self.full_map_height):
                     self.player_sprite.color = arcade.color.RED
                 else:
                     self.player_sprite.color = arcade.color.WHITE
         else:
             self.player_sprite.color = arcade.color.WHITE
-
-    def _force_movement_stop(self):
-        self.player_sprite.change_x = 0
-        self.player_sprite.change_y = 0
-        self.movement_lock = True
 
     def on_key_press(self, key, key_modifiers):
         """
@@ -263,17 +225,8 @@ class Overworld(arcade.View):
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
-
-        if key == arcade.key.UP or key == arcade.key.W:
-            self._up_pressed = True
-        if key == arcade.key.DOWN or key == arcade.key.S:
-            self._down_pressed = True
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self._left_pressed = True
-        if key == arcade.key.RIGHT or key == arcade.key.D:
-            self._right_pressed = True
-
-
+        # Get player movements
+        self.player_sprite.on_key_press(key, key_modifiers)
 
         if key == arcade.key.RCTRL or key == arcade.key.RCOMMAND:
             if self.show_score:
@@ -317,26 +270,19 @@ class Overworld(arcade.View):
         """
         Called whenever the user lets off a previously pressed key.
         """
-
-        if key == arcade.key.UP or key == arcade.key.W:
-            self._up_pressed = False
-        if key == arcade.key.DOWN or key == arcade.key.S:
-            self._down_pressed = False
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self._left_pressed = False
-        if key == arcade.key.RIGHT or key == arcade.key.D:
-            self._right_pressed = False
-
+        # Stop player movments
+        self.player_sprite.on_key_release(key, key_modifiers)
         
         if not self._active_textbox:
             for box in self.yeet_layer:
                 try:
-                    self.cur_text = box.properties["text"]
-                    if self.player_sprite._can_interact(box.shape, self.full_map_height):
+                    if self.player_sprite.can_interact(box.shape, self.full_map_height):
                         if key == arcade.key.SPACE:
                             arcade.play_sound(self.jump_sound)
+                            self.cur_text = box.properties["text"]
                             self._active_textbox = True
-                            self._force_movement_stop()
+                            self.player_sprite.force_movement_stop()
+                            break
 
                 except KeyError:
                     print('Warning: Interactable has no assigned text.')
@@ -344,4 +290,4 @@ class Overworld(arcade.View):
             if key == arcade.key.SPACE:
                 arcade.play_sound(self.jump_sound)
                 self._active_textbox = False
-                self.movement_lock = False
+                self.player_sprite.allow_player_input = True
