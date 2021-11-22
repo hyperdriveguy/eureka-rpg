@@ -56,13 +56,13 @@ class Overworld(arcade.View):
         # Doing this will make the SpriteList for the platforms layer
         # use spatial hashing for detection.
         layer_options = {
-            "Platforms": {
+            "Foreground": {
                 "use_spatial_hash": True,
             },
-            "Coins": {
+            "Walls": {
                 "use_spatial_hash": True,
             },
-            "Don't Touch": {
+            "Background": {
                 "use_spatial_hash": True,
             },
         }
@@ -86,22 +86,17 @@ class Overworld(arcade.View):
         self.scene.add_sprite_list_before("Player", 'Foreground')
 
         # Set up the player, specifically placing it at these coordinates.
-        # image_source = ":resources:images/animated_characters/male_adventurer/maleAdventurer_idle.png"
-        #image_source = 'project/assets/placeholder.png'
-        self.player_sprite = Player()#arcade.Sprite(image_source, constants.CHARACTER_SCALING)
+        self.player_sprite = Player()
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
         self.scene.add_sprite("Player", self.player_sprite)
 
         # Create the 'physics engine'
         self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, gravity_constant=0, walls=self.scene['Platforms']
+            self.player_sprite, gravity_constant=0, walls=self.scene['Walls']
         )
 
-        # Calculate the right edge of the my_map in pixels
-        self.end_of_map = self.tile_map.width * 64 #GRID_PIXEL_SIZE
-
-        self.yeet_layer = self.tile_map.object_lists["Object Layer 1"]
+        self.yeet_layer = self.tile_map.object_lists["Text"]
 
     def on_draw(self):
         """
@@ -146,11 +141,18 @@ class Overworld(arcade.View):
             )
 
             try:
+                cur_fps = arcade.get_fps()
+                if cur_fps >= 60:
+                    fps_color = arcade.color.GREEN
+                elif cur_fps > 45 and cur_fps < 60:
+                    fps_color = arcade.color.YELLOW
+                else:
+                    fps_color = arcade.color.RED
                 arcade.draw_text(
-                    f'{arcade.get_fps():.2f} FPS',
+                    f'{cur_fps:.2f} FPS',
                     10,
                     10,
-                    arcade.color.WHITE,
+                    fps_color,
                     12,
                     self.gui_camera.viewport_width - 20,
                     'right'
@@ -194,20 +196,6 @@ class Overworld(arcade.View):
         # Position the camera
         if not self.free_camera:
             self.center_camera_to_player()
-
-        # See if we hit any coins
-        coin_hit_list = arcade.check_for_collision_with_list(
-            self.player_sprite, self.scene["Coins"]
-        )
-
-        # Loop through each coin we hit (if any) and remove it
-        for coin in coin_hit_list:
-            # Remove the coin
-            coin.remove_from_sprite_lists()
-            # Play a sound
-            arcade.play_sound(self.collect_coin_sound)
-            # Add one to the score
-            self.score += 1
         
         if not self._active_textbox:
             for box in self.yeet_layer:
