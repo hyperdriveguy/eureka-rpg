@@ -1,7 +1,15 @@
 import arcade
 from game import constants
+from game.utils import is_between
 
 class Player(arcade.Sprite):
+    """Contains functions of the player.
+
+    This class is primarily overworld oriented.
+    Stereotype: Information Holder.
+
+    Inherits the Sprite class.
+    """
 
     def __init__(self):
         super().__init__()
@@ -70,6 +78,36 @@ class Player(arcade.Sprite):
         else:
             self._force_walk_texture = False
             self._force_walk_update_counter = 0
+
+    def _can_interact(self, shape, map_height):
+        begin_x = round(shape[0][0] * constants.TILE_SCALING)
+        end_x = round(shape[1][0] * constants.TILE_SCALING)
+        end_y = round(shape[0][1] * constants.TILE_SCALING) + map_height
+        begin_y = round(shape[2][1] * constants.TILE_SCALING) + map_height
+        if self.character_face_y == constants.Direction.FACE_UP.name:
+            begin_y -= 10
+            coll_side_y = self.top
+        elif self.character_face_y == constants.Direction.FACE_DOWN.name:
+            end_y += 10
+            coll_side_y = self.bottom
+        else:
+            coll_side_y = self.center_y
+
+        if self.character_face_x == constants.Direction.FACE_LEFT.name:
+            end_x += 10
+            coll_side_x = self.left
+        elif self.character_face_x ==  constants.Direction.FACE_RIGHT.name:
+            begin_x -= 10
+            coll_side_x = self.right
+        else:
+            coll_side_x = self.center_x
+
+        if (is_between(coll_side_x, begin_x, end_x) and
+                is_between(coll_side_y, begin_y, end_y)):
+            return True
+        return False
+    
+
 
     @property
     def character_face_direction(self):

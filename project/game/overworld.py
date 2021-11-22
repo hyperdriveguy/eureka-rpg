@@ -1,8 +1,6 @@
 import arcade
 import random
-import platform
 
-from arcade.key import RCOMMAND
 from game import constants
 from game.player import Player
 from pyglet.math import Vec2
@@ -10,6 +8,10 @@ from game.utils import is_between
 
 
 class Overworld(arcade.View):
+    """Contains functions exclusive to the overworld.
+
+    Stereotype: Controller, Information Holder, Interfacer
+    """
 
 
     def __init__(self):
@@ -164,34 +166,6 @@ class Overworld(arcade.View):
             except ValueError:
                 print('Warning: Timings are not enabled.')
 
-    def _can_interact(self, shape):
-        begin_x = round(shape[0][0] * constants.TILE_SCALING)
-        end_x = round(shape[1][0] * constants.TILE_SCALING)
-        end_y = round(shape[0][1] * constants.TILE_SCALING) + self.full_map_height
-        begin_y = round(shape[2][1] * constants.TILE_SCALING) + self.full_map_height
-        if self.player_sprite.character_face_y == constants.Direction.FACE_UP.name:
-            begin_y -= 10
-            coll_side_y = self.player_sprite.top
-        elif self.player_sprite.character_face_y == constants.Direction.FACE_DOWN.name:
-            end_y += 10
-            coll_side_y = self.player_sprite.bottom
-        else:
-            coll_side_y = self.player_sprite.center_y
-
-        if self.player_sprite.character_face_x == constants.Direction.FACE_LEFT.name:
-            end_x += 10
-            coll_side_x = self.player_sprite.left
-        elif self.player_sprite.character_face_x ==  constants.Direction.FACE_RIGHT.name:
-            begin_x -= 10
-            coll_side_x = self.player_sprite.right
-        else:
-            coll_side_x = self.player_sprite.center_x
-
-        if (is_between(coll_side_x, begin_x, end_x) and
-                is_between(coll_side_y, begin_y, end_y)):
-            return True
-        return False
-
     def center_camera_to_player(self):
         screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
         screen_center_y = self.player_sprite.center_y - (self.camera.viewport_height / 2)
@@ -270,7 +244,7 @@ class Overworld(arcade.View):
         
         if not self._active_textbox:
             for box in self.yeet_layer:
-                if self._can_interact(box.shape):
+                if self.player_sprite._can_interact(box.shape, self.full_map_height):
                     self.player_sprite.color = arcade.color.RED
                 else:
                     self.player_sprite.color = arcade.color.WHITE
@@ -358,7 +332,7 @@ class Overworld(arcade.View):
             for box in self.yeet_layer:
                 try:
                     self.cur_text = box.properties["text"]
-                    if self._can_interact(box.shape):
+                    if self.player_sprite._can_interact(box.shape, self.full_map_height):
                         if key == arcade.key.SPACE:
                             arcade.play_sound(self.jump_sound)
                             self._active_textbox = True

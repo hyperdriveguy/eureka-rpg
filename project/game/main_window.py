@@ -5,9 +5,7 @@ class MainWindow(arcade.Window):
     """
     Main application class.
 
-    NOTE: Go ahead and delete the methods you don't need.
-    If you do need a method, delete the 'pass' and replace it
-    with your own code. Don't leave 'pass' in this program.
+    Stereotype: Controller, Interfacer
     """
 
     def __init__(self, width, height, title):
