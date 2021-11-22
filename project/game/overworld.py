@@ -52,51 +52,16 @@ class Overworld(arcade.View):
         #map_name = f":resources:tiled_maps/map2_level_{self.level}.json"
 
 
-        # Layer specific options are defined based on Layer names in a dictionary
-        # Doing this will make the SpriteList for the platforms layer
-        # use spatial hashing for detection.
-        layer_options = {
-            "Foreground": {
-                "use_spatial_hash": True,
-            },
-            "Walls": {
-                "use_spatial_hash": True,
-            },
-            "Background": {
-                "use_spatial_hash": True,
-            },
-        }
-
-        # Read in the tiled map
-        self.tile_map = arcade.load_tilemap(map_name, constants.TILE_SCALING, layer_options)
-
-        self.full_map_width = self.tile_map.width * self.tile_map.tile_width * self.tile_map.scaling
-        self.full_map_height = self.tile_map.height * self.tile_map.tile_height * self.tile_map.scaling
-        # Initialize Scene with our TileMap, this will automatically add all layers
-        # from the map as SpriteLists in the scene in the proper order.
-        self.scene = arcade.Scene.from_tilemap(self.tile_map)
-
-        # Create the Sprite lists
-
         # Add Player Spritelist before "Foreground" layer. This will make the foreground
         # be drawn after the player, making it appear to be in front of the Player.
         # Setting before using scene.add_sprite allows us to define where the SpriteList
         # will be in the draw order. If we just use add_sprite, it will be appended to the
         # end of the order.
-        self.scene.add_sprite_list_before("Player", 'Foreground')
 
         # Set up the player, specifically placing it at these coordinates.
         self.player_sprite = Player()
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
-        self.scene.add_sprite("Player", self.player_sprite)
-
-        # Create the 'physics engine'
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, gravity_constant=0, walls=self.scene['Walls']
-        )
-
-        self.yeet_layer = self.tile_map.object_lists["Text"]
 
     def on_draw(self):
         """
@@ -144,8 +109,10 @@ class Overworld(arcade.View):
                 cur_fps = arcade.get_fps()
                 if cur_fps >= 60:
                     fps_color = arcade.color.GREEN
-                elif cur_fps > 45 and cur_fps < 60:
+                elif cur_fps >= 45 and cur_fps < 60:
                     fps_color = arcade.color.YELLOW
+                elif cur_fps >= 30 and cur_fps < 45:
+                    fps_color = arcade.color.ORANGE
                 else:
                     fps_color = arcade.color.RED
                 arcade.draw_text(
