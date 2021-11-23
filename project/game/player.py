@@ -15,7 +15,7 @@ class Player(arcade.Sprite):
         super().__init__()
 
         # Default to face-down
-        self._character_face_direction = [constants.Direction.FACE_NONE ,constants.Direction.FACE_DOWN]
+        self._character_face_direction = [constants.FACE_NONE , constants.FACE_DOWN]
 
         # Used for flipping between image sequences
         self._cur_texture = 0
@@ -86,62 +86,34 @@ class Player(arcade.Sprite):
             self._force_walk_texture = False
             self._force_walk_update_counter = 0
 
-    def can_interact(self, shape, map_height):
-        begin_x = round(shape[0][0] * constants.TILE_SCALING)
-        end_x = round(shape[1][0] * constants.TILE_SCALING)
-        end_y = round(shape[0][1] * constants.TILE_SCALING) + map_height
-        begin_y = round(shape[2][1] * constants.TILE_SCALING) + map_height
-        if self.character_face_y == constants.Direction.FACE_UP.name:
-            begin_y -= 10
-            coll_side_y = self.top
-        elif self.character_face_y == constants.Direction.FACE_DOWN.name:
-            end_y += 10
-            coll_side_y = self.bottom
-        else:
-            coll_side_y = self.center_y
-
-        if self.character_face_x == constants.Direction.FACE_LEFT.name:
-            end_x += 10
-            coll_side_x = self.left
-        elif self.character_face_x ==  constants.Direction.FACE_RIGHT.name:
-            begin_x -= 10
-            coll_side_x = self.right
-        else:
-            coll_side_x = self.center_x
-
-        if (is_between(coll_side_x, begin_x, end_x) and
-                is_between(coll_side_y, begin_y, end_y)):
-            return True
-        return False
-
     def on_update(self, delta_time: float = 1 / 60):
         if not self._movement_lock:
             if self._up_pressed and not self._down_pressed:
-                if self.character_face_y == constants.Direction.FACE_UP.name:
+                if self.character_face_y == constants.FACE_UP:
                     self.change_y = constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_y = constants.Direction.FACE_UP
+                self.character_face_y = constants.FACE_UP
             elif self._down_pressed and not self._up_pressed:
-                if self.character_face_y == constants.Direction.FACE_DOWN.name:
+                if self.character_face_y == constants.FACE_DOWN:
                     self.change_y = -constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_y = constants.Direction.FACE_DOWN
+                self.character_face_y = constants.FACE_DOWN
             else:
                 self.change_y = 0
-                if self.character_face_x != constants.Direction.FACE_NONE.name and self.change_x != 0:
-                    self.character_face_y = constants.Direction.FACE_NONE
+                if self.character_face_x != constants.FACE_NONE and self.change_x != 0:
+                    self.character_face_y = constants.FACE_NONE
 
 
             if self._left_pressed and not self._right_pressed:
-                if self.character_face_x == constants.Direction.FACE_LEFT.name:
+                if self.character_face_x == constants.FACE_LEFT:
                     self.change_x = -constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_x = constants.Direction.FACE_LEFT
+                self.character_face_x = constants.FACE_LEFT
             elif self._right_pressed and not self._left_pressed:
-                if self.character_face_x == constants.Direction.FACE_RIGHT.name:
+                if self.character_face_x == constants.FACE_RIGHT:
                     self.change_x = constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_x = constants.Direction.FACE_RIGHT
+                self.character_face_x = constants.FACE_RIGHT
             else:
                 self.change_x = 0
-                if self.character_face_y != constants.Direction.FACE_NONE.name and self.change_y != 0:
-                    self.character_face_x = constants.Direction.FACE_NONE
+                if self.character_face_y != constants.FACE_NONE and self.change_y != 0:
+                    self.character_face_x = constants.FACE_NONE
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.UP or key == arcade.key.W:
@@ -175,28 +147,28 @@ class Player(arcade.Sprite):
     @allow_player_input.setter
     def allow_player_input(self, allow_player_input: bool):
         self._movement_lock = not allow_player_input
-
-    @property
-    def character_face_direction(self):
-        return f'{self._character_face_direction[0].name[5:]}, {self._character_face_direction[1].name[5:]}'
     
     @property
     def character_face_x(self):
-        return self._character_face_direction[0].name
+        return self._character_face_direction[0]
     
     @property
     def character_face_y(self):
-        return self._character_face_direction[1].name
+        return self._character_face_direction[1]
 
     @character_face_x.setter
     def character_face_x(self, character_face_x):
-        if isinstance(character_face_x, constants.Direction):
+        if character_face_x in (constants.FACE_LEFT, constants.FACE_RIGHT, constants.FACE_NONE):
             self._character_face_direction[0] = character_face_x
             self._force_walk_texture = True
 
     @character_face_y.setter
     def character_face_y(self, character_face_y):
-        if isinstance(character_face_y, constants.Direction):
+        if character_face_y in (constants.FACE_DOWN, constants.FACE_UP, constants.FACE_NONE):
             self._character_face_direction[1] = character_face_y
             self._force_walk_texture = True
+
+    @property
+    def character_face_direction(self):
+        return f'{self._character_face_direction[0]}, {self._character_face_direction[1]}'
 

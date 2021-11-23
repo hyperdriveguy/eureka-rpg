@@ -1,5 +1,3 @@
-from enum import Enum, auto
-
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -17,9 +15,8 @@ UPDATES_PER_FRAME = 8
 PLAYER_START_X = 317
 PLAYER_START_Y = 6242
 
-class Direction(Enum):
-    FACE_NONE = 0
-    FACE_RIGHT = 1
-    FACE_LEFT = 2
-    FACE_UP = 3
-    FACE_DOWN = 4
+FACE_NONE = 'NONE'
+FACE_RIGHT = 'RIGHT'
+FACE_LEFT = 'LEFT'
+FACE_UP = 'UP'
+FACE_DOWN = 'DOWN'

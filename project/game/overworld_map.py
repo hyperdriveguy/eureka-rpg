@@ -1,5 +1,6 @@
 import arcade
 from game import constants
+from game.interactable import Interactable
 
 class OverworldMap:
 
@@ -37,9 +38,44 @@ class OverworldMap:
         self._scene.add_sprite("Player", self._player)
 
         # Create the 'physics engine'
-        self.physics_engine = arcade.PhysicsEnginePlatformer(
-            self.player_sprite, gravity_constant=0, walls=self.scene['Walls']
+        self._physics_engine = arcade.PhysicsEnginePlatformer(
+            self._player, gravity_constant=0, walls=self._scene['Walls']
         )
 
-        self.yeet_layer = self.tile_map.object_lists["Text"]
-        
+        self._spawn = self._tile_map.object_lists['Spawn']
+        self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
+    
+    def draw(self):
+        # Draw our Scene
+        self._scene.draw()
+
+
+    def update(self, delta_time):
+        # Move the player with the physics engine
+        self._physics_engine.update()
+
+        # Update the players animation
+        self._scene.update_animation(delta_time)
+
+        # Update interactable objects
+        self._text_objects.update_interactable(force_check=(delta_time >= 1/30))
+
+    @property
+    def map_width(self):
+        return self._full_map_width
+
+    @property
+    def map_height(self):
+        return self._full_map_height
+    
+    @property
+    def map_scene(self):
+        return self._scene
+    
+    @property
+    def player_can_interact(self):
+        return self._text_objects.can_interact
+    
+    @property
+    def object_text(self):
+        return self._text_objects.interact_text

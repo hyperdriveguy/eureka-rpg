@@ -3,6 +3,7 @@ import random
 
 from game import constants
 from game.player import Player
+from game.overworld_map import OverworldMap
 from pyglet.math import Vec2
 
 
@@ -24,7 +25,7 @@ class Overworld(arcade.View):
         self.free_coords = 0, 0
 
         # Keep track of the score
-        self.show_score = False
+        self.show_debug = False
         arcade.enable_timings()
 
         # Load sounds
@@ -47,11 +48,6 @@ class Overworld(arcade.View):
         # Setup the GUI Camera
         self.gui_camera = arcade.Camera(self.window.width, self.window.height)
 
-        # Name of map file to load
-        map_name = "project/assets/test_map.json"
-        #map_name = f":resources:tiled_maps/map2_level_{self.level}.json"
-
-
         # Add Player Spritelist before "Foreground" layer. This will make the foreground
         # be drawn after the player, making it appear to be in front of the Player.
         # Setting before using scene.add_sprite allows us to define where the SpriteList
@@ -62,6 +58,11 @@ class Overworld(arcade.View):
         self.player_sprite = Player()
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
+
+        # Init map
+        map_name = "project/assets/test_map.json"
+        self._cur_map = OverworldMap(map_name, self.player_sprite)
+
 
     def on_draw(self):
         """
@@ -77,8 +78,7 @@ class Overworld(arcade.View):
         # Activate our Camera
         self.camera.use()
 
-        # Draw our Scene
-        self.scene.draw()
+        self._cur_map.draw()
 
         if self._active_textbox:
             self.gui_camera.use()
@@ -91,7 +91,7 @@ class Overworld(arcade.View):
             )
         
 
-        if self.show_score:
+        if self.show_debug:
             # Activate the GUI camera before drawing GUI elements
             self.gui_camera.use()
 
@@ -127,19 +127,19 @@ class Overworld(arcade.View):
             except ValueError:
                 print('Warning: Timings are not enabled.')
 
-    def center_camera_to_player(self):
-        screen_center_x = self.player_sprite.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player_sprite.center_y - (self.camera.viewport_height / 2)
+    def center_camera(self, sprite: arcade.Sprite):
+        screen_center_x = sprite.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
 
         # Don't let camera travel past map
         if screen_center_x < 0:
             screen_center_x = 0
         if screen_center_y < 0:
             screen_center_y = 0
-        if screen_center_x > self.full_map_width - self.camera.viewport_width: 
-            screen_center_x = self.full_map_width - self.camera.viewport_width
-        if screen_center_y > self.full_map_height - self.camera.viewport_height:
-            screen_center_y = self.full_map_height - self.camera.viewport_height
+        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width: 
+            screen_center_x = self._cur_map.map_width - self.camera.viewport_width
+        if screen_center_y > self._cur_map.map_height - self.camera.viewport_height:
+            screen_center_y = self._cur_map.map_height - self.camera.viewport_height
         player_centered = [screen_center_x, screen_center_y]
         self.free_coords = player_centered
 
@@ -154,22 +154,18 @@ class Overworld(arcade.View):
         # Update player movement
         self.player_sprite.on_update(delta_time)
 
-        # Update the players animation
-        self.scene.update_animation(delta_time)
-
-        # Move the player with the physics engine
-        self.physics_engine.update()
+        # Update current map
+        self._cur_map.update(delta_time)
 
         # Position the camera
         if not self.free_camera:
-            self.center_camera_to_player()
+            self.center_camera(self.player_sprite)
         
         if not self._active_textbox:
-            for box in self.yeet_layer:
-                if self.player_sprite.can_interact(box.shape, self.full_map_height):
-                    self.player_sprite.color = arcade.color.RED
-                else:
-                    self.player_sprite.color = arcade.color.WHITE
+            if self._cur_map.player_can_interact:
+                self.player_sprite.color = arcade.color.RED
+            else:
+                self.player_sprite.color = arcade.color.WHITE
         else:
             self.player_sprite.color = arcade.color.WHITE
 
@@ -184,10 +180,10 @@ class Overworld(arcade.View):
         self.player_sprite.on_key_press(key, key_modifiers)
 
         if key == arcade.key.RCTRL or key == arcade.key.RCOMMAND:
-            if self.show_score:
-                self.show_score = False
+            if self.show_debug:
+                self.show_debug = False
             else:
-                self.show_score = True
+                self.show_debug = True
 
         if key == arcade.key.Z:
             if self.free_camera:
@@ -196,10 +192,10 @@ class Overworld(arcade.View):
                 self.free_camera = True
 
         if key == arcade.key.M:
-            if self.movement_lock:
-                self.movement_lock = False
+            if self.player_sprite.allow_player_input:
+                self.player_sprite.allow_player_input = False
             else:
-                self.movement_lock = True
+                self.player_sprite.allow_player_input = True
 
         if self.free_camera:
             if key == arcade.key.T:
@@ -229,18 +225,16 @@ class Overworld(arcade.View):
         self.player_sprite.on_key_release(key, key_modifiers)
         
         if not self._active_textbox:
-            for box in self.yeet_layer:
-                try:
-                    if self.player_sprite.can_interact(box.shape, self.full_map_height):
-                        if key == arcade.key.SPACE:
-                            arcade.play_sound(self.jump_sound)
-                            self.cur_text = box.properties["text"]
-                            self._active_textbox = True
-                            self.player_sprite.force_movement_stop()
-                            break
+            try:
+                if self._cur_map.player_can_interact:
+                    if key == arcade.key.SPACE:
+                        arcade.play_sound(self.jump_sound)
+                        self.cur_text = self._cur_map.object_text
+                        self._active_textbox = True
+                        self.player_sprite.force_movement_stop()
 
-                except KeyError:
-                    print('Warning: Interactable has no assigned text.')
+            except KeyError:
+                print('Warning: Interactable has no assigned text.')
         else:
             if key == arcade.key.SPACE:
                 arcade.play_sound(self.jump_sound)
