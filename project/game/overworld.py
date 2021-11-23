@@ -179,6 +179,8 @@ class Overworld(arcade.View):
         # Get player movements
         self.player_sprite.on_key_press(key, key_modifiers)
 
+        self._cur_map.on_keypress(key, key_modifiers)
+
         if key == arcade.key.RCTRL or key == arcade.key.RCOMMAND:
             if self.show_debug:
                 self.show_debug = False
@@ -223,6 +225,16 @@ class Overworld(arcade.View):
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
+
+        if key == arcade.key.Y:
+            # Init map
+            map_name = "project/assets/test_map.json"
+            self._cur_map = OverworldMap(map_name, self.player_sprite)
+
+        if key == arcade.key.T:
+            # Init map
+            map_name = "project/assets/test_map_2.json"
+            self._cur_map = OverworldMap(map_name, self.player_sprite)
         
         if not self._active_textbox:
             try:

@@ -20,6 +20,7 @@ class Interactable:
 
         self._player = player
         self._can_interact = False
+        self._last_intersect_msg = 5
 
     def _mod_y(self, y_range):
         begin_y, end_y = y_range
@@ -59,7 +60,7 @@ class Interactable:
             return True
         return False
     
-    def update_interactable(self, force_check=False):
+    def update_interactable(self, delta_time = 1/60, force_check=False):
         if not (self._player.change_x == 0 and self._player.change_y == 0) or force_check:
             with ThreadPoolExecutor() as exec:
                 cur_object_ranges = tuple(exec.map(
@@ -68,7 +69,11 @@ class Interactable:
             self._active_objects = tuple(filter(self._filter_active, cur_object_ranges))
             self._can_interact = (len(self._active_objects) > 0)
             if len(self._active_objects) > 1:
-                print(('Warning: Detected multiple intersecting iteraction boxes'))
+                if self._last_intersect_msg > 5:
+                    print('Warning: Detected multiple intersecting iteraction boxes')
+                    self._last_intersect_msg = 0
+                self._last_intersect_msg += delta_time
+            
     
     @property
     def can_interact(self):
