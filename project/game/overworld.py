@@ -163,11 +163,11 @@ class Overworld(arcade.View):
         
         if not self._active_textbox:
             if self._cur_map.player_can_interact:
-                self.player_sprite.color = arcade.color.RED
+                self.player_sprite.player_highlighted = True
             else:
-                self.player_sprite.color = arcade.color.WHITE
+                self.player_sprite.player_highlighted = False
         else:
-            self.player_sprite.color = arcade.color.WHITE
+            self.player_sprite.player_highlighted = False
 
     def on_key_press(self, key, key_modifiers):
         """

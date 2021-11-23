@@ -19,6 +19,7 @@ class Interactable:
             self._interactable_ranges = tuple(exec.map(parse_box, tiled_object_list))
 
         self._player = player
+        self._can_interact = False
 
     def _mod_y(self, y_range):
         begin_y, end_y = y_range
@@ -55,7 +56,7 @@ class Interactable:
         return False
     
     def update_interactable(self, force_check=False):
-        if (self._player.change_x == 0 and self._player.change_y == 0) or force_check:
+        if not (self._player.change_x == 0 and self._player.change_y == 0) or force_check:
             with ThreadPoolExecutor() as exec:
                 cur_object_ranges = tuple(exec.map(
                     self._add_modifiers,
@@ -71,5 +72,4 @@ class Interactable:
     
     @property
     def interact_text(self):
-        print(self._active_objects)
         return self._active_objects[0][2][0]['text']

@@ -58,7 +58,7 @@ class OverworldMap:
         self._scene.update_animation(delta_time)
 
         # Update interactable objects
-        self._text_objects.update_interactable(force_check=(delta_time >= 1/30))
+        self._text_objects.update_interactable()
 
     @property
     def map_width(self):

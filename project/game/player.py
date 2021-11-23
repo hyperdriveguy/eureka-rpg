@@ -172,3 +172,13 @@ class Player(arcade.Sprite):
     def character_face_direction(self):
         return f'{self._character_face_direction[0]}, {self._character_face_direction[1]}'
 
+    @property
+    def player_highlighted(self):
+        return (self.color == arcade.color.RED)
+    
+    @player_highlighted.setter
+    def player_highlighted(self, player_highlighted):
+        if player_highlighted:
+            self.color = arcade.color.RED
+        else:
+            self.color = arcade.color.WHITE
