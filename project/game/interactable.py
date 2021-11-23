@@ -73,7 +73,3 @@ class Interactable:
     def interact_text(self):
         print(self._active_objects)
         return self._active_objects[0][2][0]['text']
-
-((199.0, 129, 202),
-  (6242, 6207, 6272),
-  ({'text': 'Interact Test'},))
