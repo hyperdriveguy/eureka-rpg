@@ -1,6 +1,7 @@
 import arcade
 from game import constants
 from game.interactable import Interactable
+from concurrent.futures import ThreadPoolExecutor
 
 class OverworldMap:
 
@@ -30,20 +31,28 @@ class OverworldMap:
         self._full_map_width = self._tile_map.width * self._tile_map.tile_width * self._tile_map.scaling
         self._full_map_height = self._tile_map.height * self._tile_map.tile_height * self._tile_map.scaling
 
-        # Initialize Scene with our TileMap, this will automatically add all layers
-        # from the map as SpriteLists in the scene in the proper order.
-        self._scene = arcade.Scene.from_tilemap(self._tile_map)
+        def build_map_objects():
+            self._spawn = self._tile_map.object_lists['Spawn'][0]
+            self._player.center_x, self._player.center_y = self._spawn.shape
+            self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
 
-        self._scene.add_sprite_list_before("Player", 'Foreground')
-        self._scene.add_sprite("Player", self._player)
+        def build_map_scene():
+            # Initialize Scene with our TileMap, this will automatically add all layers
+            # from the map as SpriteLists in the scene in the proper order.
+            self._scene = arcade.Scene.from_tilemap(self._tile_map)
 
-        # Create the 'physics engine'
-        self._physics_engine = arcade.PhysicsEnginePlatformer(
-            self._player, gravity_constant=0, walls=self._scene['Walls']
-        )
+            self._scene.add_sprite_list_before("Player", 'Foreground')
+            self._scene.add_sprite("Player", self._player)
 
-        self._spawn = self._tile_map.object_lists['Spawn']
-        self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
+            # Create the 'physics engine'
+            self._physics_engine = arcade.PhysicsEnginePlatformer(
+                self._player, gravity_constant=0, walls=self._scene['Walls']
+            )
+        
+        with ThreadPoolExecutor() as exec:
+            exec.submit(build_map_objects)
+            exec.submit(build_map_scene)
+
     
     def draw(self):
         # Draw our Scene

@@ -42,16 +42,20 @@ class Interactable:
             begin_x = x_range[0] - 10
             coll_side_x = self._player.right
         return (coll_side_x, begin_x, end_x)
-    
-    def _add_modifiers(self, object):
-        return (self._mod_x(object[0]),
-                self._mod_y(object[1]),
-                object[2])
 
-    def _filter_active(self, object):
+    def _add_modifiers(self, interactable):
+        with ThreadPoolExecutor(max_workers=4) as exec:
+            mod_x_future = exec.submit(self._mod_x, interactable[0])
+            mod_y_future = exec.submit(self._mod_y, interactable[1])
+            return (mod_x_future.result(),
+                    mod_y_future.result(),
+                    interactable[2])
+
+    @staticmethod
+    def _filter_active(interactable):
         # coll_side_x, begin_x, end_x; coll_side_y, begin_y, end_y
-        if (is_between(object[0][0], object[0][1], object[0][2]) and
-                is_between(object[1][0], object[1][1], object[1][2])):
+        if (is_between(interactable[0][0], interactable[0][1], interactable[0][2]) and
+                is_between(interactable[1][0], interactable[1][1], interactable[1][2])):
             return True
         return False
     
@@ -64,7 +68,7 @@ class Interactable:
             self._active_objects = tuple(filter(self._filter_active, cur_object_ranges))
             self._can_interact = (len(self._active_objects) > 0)
             if len(self._active_objects) > 1:
-                raise ValueError('Detected multiple intersecting iteraction boxes')
+                print(('Warning: Detected multiple intersecting iteraction boxes'))
     
     @property
     def can_interact(self):
