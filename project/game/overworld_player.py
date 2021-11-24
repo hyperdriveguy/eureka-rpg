@@ -2,7 +2,7 @@ import arcade
 from game import constants
 from game.utils import is_between
 
-class Player(arcade.Sprite):
+class OverworldPlayer(arcade.Sprite):
     """Contains functions of the player.
 
     This class is primarily overworld oriented.

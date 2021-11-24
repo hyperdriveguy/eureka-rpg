@@ -2,7 +2,7 @@ import arcade
 import random
 
 from game import constants
-from game.player import Player
+from game.overworld_player import OverworldPlayer
 from game.overworld_map import OverworldMap
 from pyglet.math import Vec2
 
@@ -55,7 +55,7 @@ class Overworld(arcade.View):
         # end of the order.
 
         # Set up the player, specifically placing it at these coordinates.
-        self.player_sprite = Player()
+        self.player_sprite = OverworldPlayer()
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
 
@@ -252,3 +252,7 @@ class Overworld(arcade.View):
                 arcade.play_sound(self.jump_sound)
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
+    
+    def on_resize(self, width: int, height: int):
+        self.camera.resize(width, height)
+        self.gui_camera.resize(width, height)
