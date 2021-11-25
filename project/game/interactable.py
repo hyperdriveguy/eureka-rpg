@@ -55,24 +55,33 @@ class Interactable:
     @staticmethod
     def _filter_active(interactable):
         # coll_side_x, begin_x, end_x; coll_side_y, begin_y, end_y
-        if (is_between(interactable[0][0], interactable[0][1], interactable[0][2]) and
-                is_between(interactable[1][0], interactable[1][1], interactable[1][2])):
-            return True
-        return False
+        return bool(
+            (
+                is_between(
+                    interactable[0][0], interactable[0][1], interactable[0][2]
+                )
+                and is_between(
+                    interactable[1][0], interactable[1][1], interactable[1][2]
+                )
+            )
+        )
     
     def update_interactable(self, delta_time = 1/60, force_check=False):
-        if not (self._player.change_x == 0 and self._player.change_y == 0) or force_check:
-            with ThreadPoolExecutor() as exec:
-                cur_object_ranges = tuple(exec.map(
-                    self._add_modifiers,
-                    self._interactable_ranges))
-            self._active_objects = tuple(filter(self._filter_active, cur_object_ranges))
-            self._can_interact = (len(self._active_objects) > 0)
-            if len(self._active_objects) > 1:
-                if self._last_intersect_msg > 5:
-                    print('Warning: Detected multiple intersecting iteraction boxes')
-                    self._last_intersect_msg = 0
-                self._last_intersect_msg += delta_time
+        if (
+            self._player.change_x == 0 and self._player.change_y == 0
+        ) and not force_check:
+            return
+        with ThreadPoolExecutor() as exec:
+            cur_object_ranges = tuple(exec.map(
+                self._add_modifiers,
+                self._interactable_ranges))
+        self._active_objects = tuple(filter(self._filter_active, cur_object_ranges))
+        self._can_interact = (len(self._active_objects) > 0)
+        if len(self._active_objects) > 1:
+            if self._last_intersect_msg > 5:
+                print('Warning: Detected multiple intersecting iteraction boxes')
+                self._last_intersect_msg = 0
+            self._last_intersect_msg += delta_time
             
     
     @property
