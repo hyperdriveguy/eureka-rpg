@@ -132,10 +132,8 @@ class Overworld(arcade.View):
         screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
 
         # Don't let camera travel past map
-        if screen_center_x < 0:
-            screen_center_x = 0
-        if screen_center_y < 0:
-            screen_center_y = 0
+        screen_center_x = max(screen_center_x, 0)
+        screen_center_y = max(screen_center_y, 0)
         if screen_center_x > self._cur_map.map_width - self.camera.viewport_width: 
             screen_center_x = self._cur_map.map_width - self.camera.viewport_width
         if screen_center_y > self._cur_map.map_height - self.camera.viewport_height:
@@ -161,11 +159,8 @@ class Overworld(arcade.View):
         if not self.free_camera:
             self.center_camera(self.player_sprite)
         
-        if not self._active_textbox:
-            if self._cur_map.player_can_interact:
+        if not self._active_textbox and self._cur_map.player_can_interact:
                 self.player_sprite.player_highlighted = True
-            else:
-                self.player_sprite.player_highlighted = False
         else:
             self.player_sprite.player_highlighted = False
 
@@ -181,28 +176,19 @@ class Overworld(arcade.View):
 
         self._cur_map.on_keypress(key, key_modifiers)
 
-        if key == arcade.key.RCTRL or key == arcade.key.RCOMMAND:
-            if self.show_debug:
-                self.show_debug = False
-            else:
-                self.show_debug = True
-
+        if key in (arcade.key.RCTRL, arcade.key.RCOMMAND):
+            self.show_debug = not self.show_debug
         if key == arcade.key.Z:
-            if self.free_camera:
-                self.free_camera = False
-            else:
-                self.free_camera = True
-
+            self.free_camera = not self.free_camera
         if key == arcade.key.M:
-            if self.player_sprite.allow_player_input:
-                self.player_sprite.allow_player_input = False
-            else:
-                self.player_sprite.allow_player_input = True
+            self.player_sprite.allow_player_input = (
+                not self.player_sprite.allow_player_input
+            )
 
         if self.free_camera:
             if key == arcade.key.T:
                 self.camera.shake(Vec2(10,10))
-            
+
             if key == arcade.key.L:
                 self.free_coords[0] += 64
                 self.camera.move_to(self.free_coords)
@@ -210,11 +196,11 @@ class Overworld(arcade.View):
             if key == arcade.key.K:
                 self.free_coords[1] -= 64
                 self.camera.move_to(self.free_coords)
-                
+
             if key == arcade.key.J:
                 self.free_coords[0] -= 64
                 self.camera.move_to(self.free_coords)
-                
+
             if key == arcade.key.I:
                 self.free_coords[1] += 64
                 self.camera.move_to(self.free_coords)
@@ -238,17 +224,15 @@ class Overworld(arcade.View):
         
         if not self._active_textbox:
             try:
-                if self._cur_map.player_can_interact:
-                    if key == arcade.key.SPACE:
-                        arcade.play_sound(self.jump_sound)
-                        self.cur_text = self._cur_map.object_text
-                        self._active_textbox = True
-                        self.player_sprite.force_movement_stop()
+                if self._cur_map.player_can_interact and key == arcade.key.SPACE:
+                    arcade.play_sound(self.jump_sound)
+                    self.cur_text = self._cur_map.object_text
+                    self._active_textbox = True
+                    self.player_sprite.force_movement_stop()
 
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
-        else:
-            if key == arcade.key.SPACE:
-                arcade.play_sound(self.jump_sound)
-                self._active_textbox = False
-                self.player_sprite.allow_player_input = True
+        elif key == arcade.key.SPACE:
+            arcade.play_sound(self.jump_sound)
+            self._active_textbox = False
+            self.player_sprite.allow_player_input = True

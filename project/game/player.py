@@ -87,53 +87,50 @@ class Player(arcade.Sprite):
             self._force_walk_update_counter = 0
 
     def on_update(self, delta_time: float = 1 / 60):
-        if not self._movement_lock:
-            if self._up_pressed and not self._down_pressed:
-                if self.character_face_y == constants.FACE_UP:
-                    self.change_y = constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_y = constants.FACE_UP
-            elif self._down_pressed and not self._up_pressed:
-                if self.character_face_y == constants.FACE_DOWN:
-                    self.change_y = -constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_y = constants.FACE_DOWN
-            else:
-                self.change_y = 0
-                if self.character_face_x != constants.FACE_NONE and self.change_x != 0:
-                    self.character_face_y = constants.FACE_NONE
+        if self._movement_lock:
+            return
+        if self._up_pressed and not self._down_pressed:
+            if self.character_face_y == constants.FACE_UP:
+                self.change_y = constants.PLAYER_MOVEMENT_SPEED
+            self.character_face_y = constants.FACE_UP
+        elif self._down_pressed and not self._up_pressed:
+            if self.character_face_y == constants.FACE_DOWN:
+                self.change_y = -constants.PLAYER_MOVEMENT_SPEED
+            self.character_face_y = constants.FACE_DOWN
+        else:
+            self.change_y = 0
+            if self.character_face_x != constants.FACE_NONE and self.change_x != 0:
+                self.character_face_y = constants.FACE_NONE
 
 
-            if self._left_pressed and not self._right_pressed:
-                if self.character_face_x == constants.FACE_LEFT:
-                    self.change_x = -constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_x = constants.FACE_LEFT
-            elif self._right_pressed and not self._left_pressed:
-                if self.character_face_x == constants.FACE_RIGHT:
-                    self.change_x = constants.PLAYER_MOVEMENT_SPEED
-                self.character_face_x = constants.FACE_RIGHT
-            else:
-                self.change_x = 0
-                if self.character_face_y != constants.FACE_NONE and self.change_y != 0:
-                    self.character_face_x = constants.FACE_NONE
+        if self._left_pressed and not self._right_pressed:
+            if self.character_face_x == constants.FACE_LEFT:
+                self.change_x = -constants.PLAYER_MOVEMENT_SPEED
+            self.character_face_x = constants.FACE_LEFT
+        elif self._right_pressed and not self._left_pressed:
+            if self.character_face_x == constants.FACE_RIGHT:
+                self.change_x = constants.PLAYER_MOVEMENT_SPEED
+            self.character_face_x = constants.FACE_RIGHT
+        else:
+            self.change_x = 0
+            if self.character_face_y != constants.FACE_NONE and self.change_y != 0:
+                self.character_face_x = constants.FACE_NONE
 
     def on_key_press(self, key, key_modifiers):
-        if key == arcade.key.UP or key == arcade.key.W:
-            self._up_pressed = True
-        if key == arcade.key.DOWN or key == arcade.key.S:
-            self._down_pressed = True
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self._left_pressed = True
-        if key == arcade.key.RIGHT or key == arcade.key.D:
-            self._right_pressed = True
+        self._flag_key_movement(key, True)
     
     def on_key_release(self, key, key_modifiers):
-        if key == arcade.key.UP or key == arcade.key.W:
-            self._up_pressed = False
-        if key == arcade.key.DOWN or key == arcade.key.S:
-            self._down_pressed = False
-        if key == arcade.key.LEFT or key == arcade.key.A:
-            self._left_pressed = False
-        if key == arcade.key.RIGHT or key == arcade.key.D:
-            self._right_pressed = False
+        self._flag_key_movement(key, False)
+
+    def _flag_key_movement(self, key, is_pressed):
+        if key in (arcade.key.UP, arcade.key.W):
+            self._up_pressed = is_pressed
+        if key in (arcade.key.DOWN, arcade.key.S):
+            self._down_pressed = is_pressed
+        if key in (arcade.key.LEFT, arcade.key.A):
+            self._left_pressed = is_pressed
+        if key in (arcade.key.RIGHT, arcade.key.D):
+            self._right_pressed = is_pressed
 
     def force_movement_stop(self):
         self.change_x = 0
@@ -178,7 +175,4 @@ class Player(arcade.Sprite):
     
     @player_highlighted.setter
     def player_highlighted(self, player_highlighted):
-        if player_highlighted:
-            self.color = arcade.color.RED
-        else:
-            self.color = arcade.color.WHITE
+        self.color = arcade.color.RED if player_highlighted else arcade.color.WHITE

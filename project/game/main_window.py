@@ -24,14 +24,9 @@ class MainWindow(arcade.Window):
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
-        if key == arcade.key.F11 or key == arcade.key.P:
-            if not self.fullscreen:
-                self.set_fullscreen(True)
-                self.overworld.camera.resize(self.width, self.height)
-                self.overworld.gui_camera.resize(self.width, self.height)
-                
-            else:
-                self.set_fullscreen(False)
-                self.overworld.camera.resize(self.width, self.height)
-                self.overworld.gui_camera.resize(self.width, self.height)
+        if key in (arcade.key.F11, arcade.key.P):
+            self.set_fullscreen(not self.fullscreen)
+
+            self.overworld.camera.resize(self.width, self.height)
+            self.overworld.gui_camera.resize(self.width, self.height)
                 
