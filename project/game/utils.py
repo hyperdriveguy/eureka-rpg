@@ -2,6 +2,4 @@
 """
 
 def is_between(target, begin, end):
-    if target >= begin and target <= end:
-        return True
-    return False
+    return target >= begin and target <= end
