@@ -34,9 +34,10 @@ class OverworldPlayer(arcade.Sprite):
         # Adjust the collision box. Default includes too much empty space
         # side-to-side. Box is centered at sprite center, (0, 0)
         #self.points = [[-22, -64], [22, -64], [22, 28], [-22, 28]]
+        
+        self._load_textures()
 
-        # --- Load Textures ---
-
+    def _load_textures(self):
         # Images from Kenney.nl's Asset Pack 3
         #main_path = ":resources:images/animated_characters/female_adventurer/femaleAdventurer"
         # main_path = ":resources:images/animated_characters/female_person/femalePerson"
