@@ -1,5 +1,6 @@
 import arcade
 from game.overworld import Overworld
+from game.battle import Battle
 
 class MainWindow(arcade.Window):
     """
@@ -14,7 +15,9 @@ class MainWindow(arcade.Window):
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
         self.set_mouse_visible(False)
+        self.set_min_size(160, 144)
         self.overworld = Overworld()
+        self.battle = Battle()
         self.show_view(self.overworld)
 
 
@@ -27,4 +30,7 @@ class MainWindow(arcade.Window):
         """
         if key in (arcade.key.F11, arcade.key.P):
             self.set_fullscreen(not self.fullscreen)
+    
+    def on_resize(self, width: float, height: float):
+        super().on_resize(width, height)
                 
