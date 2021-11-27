@@ -1,8 +1,10 @@
+import textwrap
 import arcade
 import random
 
 from game import constants
 from game.player import Player
+from game.text_box import DrawTextBox
 from game.overworld_map import OverworldMap
 from pyglet.math import Vec2
 
@@ -17,9 +19,14 @@ class Overworld(arcade.View):
     def __init__(self):
         super().__init__()
 
-        self._active_textbox = False
+        # self._active_textbox = False
+        self._active_textbox = True
 
-        self.cur_text = 'asdf'
+        self.cur_text = 'The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox'
+
+        # self.cur_text = 'Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello '
+
+        # self.cur_text = 'Hello Hello'
 
         self.free_camera = False
         self.free_coords = 0, 0
@@ -82,14 +89,9 @@ class Overworld(arcade.View):
 
         if self._active_textbox:
             self.gui_camera.use()
-            arcade.draw_text(
-                self.cur_text,
-                10,
-                50,
-                arcade.csscolor.WHITE,
-                18
-            )
-        
+            text_box = DrawTextBox(self.cur_text)
+            text_box.draw_text_box()
+
 
         if self.show_debug:
             # Activate the GUI camera before drawing GUI elements
@@ -104,6 +106,14 @@ class Overworld(arcade.View):
                 arcade.csscolor.WHITE,
                 18,
             )
+            arcade.draw_text(
+                f'cur_text length: {str(len(self.cur_text))}, number of lines: {str(len(text_box.text_list))}',
+                10,
+                50,
+                arcade.csscolor.WHITE,
+                18
+            )
+
 
             try:
                 cur_fps = arcade.get_fps()
