@@ -19,14 +19,9 @@ class Overworld(arcade.View):
     def __init__(self):
         super().__init__()
 
-        # self._active_textbox = False
-        self._active_textbox = True
+        self._active_textbox = False
 
-        self.cur_text = 'The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick brown fox'
-
-        # self.cur_text = 'Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello '
-
-        # self.cur_text = 'Hello Hello'
+        self.cur_text = ''
 
         self.free_camera = False
         self.free_coords = 0, 0
@@ -89,8 +84,7 @@ class Overworld(arcade.View):
 
         if self._active_textbox:
             self.gui_camera.use()
-            text_box = DrawTextBox(self.cur_text)
-            text_box.draw_text_box()
+            self._text_box.draw_text_box()
 
 
         if self.show_debug:
@@ -106,13 +100,14 @@ class Overworld(arcade.View):
                 arcade.csscolor.WHITE,
                 18,
             )
-            arcade.draw_text(
-                f'cur_text length: {str(len(self.cur_text))}, number of lines: {str(len(text_box.text_list))}',
-                10,
-                50,
-                arcade.csscolor.WHITE,
-                18
-            )
+            if self._active_textbox:
+                arcade.draw_text(
+                    f'cur_text length: {str(len(self.cur_text))}, number of lines: {str(len(self._text_box.text_list))}',
+                    10,
+                    50,
+                    arcade.csscolor.WHITE,
+                    18
+                )
 
 
             try:
@@ -238,11 +233,15 @@ class Overworld(arcade.View):
                     arcade.play_sound(self.jump_sound)
                     self.cur_text = self._cur_map.object_text
                     self._active_textbox = True
+                    self._text_box = DrawTextBox(self.cur_text)
                     self.player_sprite.force_movement_stop()
 
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
         elif key == arcade.key.SPACE:
             arcade.play_sound(self.jump_sound)
-            self._active_textbox = False
-            self.player_sprite.allow_player_input = True
+            if self._text_box.text_end:
+                self._active_textbox = False
+                self.player_sprite.allow_player_input = True
+            else:
+                self._text_box.line_by_line()
