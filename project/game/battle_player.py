@@ -4,7 +4,4 @@ from game.contestant import Contestant
 class BattlePlayer(Contestant):
 
     def __init__(self):
-        super().__init__()
-    
-    def update_animation(self, delta_time: float = 1 / 60):
-        pass
+        super().__init__(['project/assets/player_placeholder.png', 'project/assets/player_placeholder_2.png', 'project/assets/player_placeholder_3.png'])

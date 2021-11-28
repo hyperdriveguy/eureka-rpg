@@ -1,9 +1,11 @@
+from typing import Iterable
 import arcade
 from game import constants
 
 class Contestant(arcade.Sprite):
 
-    def __init__(self):
+    def __init__(self, idle_pics: Iterable, hp=10, attack=5, defense=5, skill=5, speed=5):
+        super().__init__()
         self._scale = constants.CHARACTER_SCALING
         self._is_turn = False
         
@@ -20,9 +22,23 @@ class Contestant(arcade.Sprite):
         self._defense_mod = 0
         self._skill_mod = 0
         self._speed_mod = 0
+        
+        self._last_text_update = 0
+        self._cur_texture = 0
+        self._update_direction = 1
+        self._idle_textures = []
+        for pic in idle_pics:
+            self._idle_textures.append(arcade.load_texture(pic))
     
     def update_animation(self, delta_time: float = 1 / 60):
-        raise ValueError('"update_animation" was not properly overridden by child.')
+        if self._last_text_update > 1 / 2:
+            self._cur_texture += self._update_direction
+            if self._cur_texture >= len(self._idle_textures) - 1:
+                self._update_direction = -1
+            elif self._cur_texture <= 0:
+                self._update_direction = 1
+            self.texture = self._idle_textures[self._cur_texture] 
+        self._last_text_update += delta_time
     
     @property
     def is_turn(self):
