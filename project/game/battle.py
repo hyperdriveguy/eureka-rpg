@@ -27,14 +27,18 @@ class Battle(arcade.View):
         arcade.start_render()
 
         self._gui_camera.use()
-        self.battle_hud._hud_shape.draw()
-        self.battle_hud._hp_sprite_list.draw()
+        self.battle_hud.draw()
 
     def on_update(self, delta_time):
-        pass
+        self.battle_hud.update(delta_time)
+    
+    def on_key_press(self, key, key_modifiers):
+        if key == arcade.key.J:
+            self._player.is_turn = not self._player.is_turn
+        self.battle_hud.on_key_press(key, key_modifiers)
 
     def on_show_view(self):
-        pass
+        self._player.is_turn = True
     
     def on_resize(self, width: int, height: int):
         self._camera.resize(width, height)
