@@ -9,7 +9,7 @@ class DrawTextBox:
         self.rec_length = 100
         self.text_box_center_x = constants.SCREEN_WIDTH / 2
         self.text_box_center_y = constants.SCREEN_HEIGHT - self.rec_length / 2 - 10
-        self.wrapper = textwrap.TextWrapper(width=45)
+        self.wrapper = textwrap.TextWrapper(width=45, drop_whitespace=False)
         self.text_list = self.wrapper.wrap(text) #a list of strings
         self.text = text
         self.cur_line = 0
