@@ -21,4 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         cd project
-        pylint $(find . -name "*.py" | xargs)
+        pylint -d E0401 $(find . -name "*.py" | xargs)
