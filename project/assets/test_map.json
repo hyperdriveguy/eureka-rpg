@@ -86,12 +86,17 @@
                          "name":"text",
                          "type":"string",
                          "value":"Interact Test"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"text only"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":31.6666666666667,
-                 "x":64.3333333333333,
+                 "x":64,
                  "y":64
                 }, 
                 {
@@ -100,9 +105,19 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"battle",
+                         "type":"string",
+                         "value":"cactus"
+                        }, 
+                        {
                          "name":"text",
                          "type":"string",
                          "value":"Testing the interaction"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"text then battle"
                         }],
                  "rotation":0,
                  "type":"",
