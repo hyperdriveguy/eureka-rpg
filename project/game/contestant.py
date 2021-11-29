@@ -26,13 +26,15 @@ class Contestant(arcade.Sprite):
         self._last_text_update = 0
         self._cur_texture = 0
         self._update_direction = 1
+        self._anim_speed = 1
         self._idle_textures = []
         for pic in idle_pics:
             self._idle_textures.append(arcade.load_texture(pic))
     
     def update_animation(self, delta_time: float = 1 / 60):
-        if self._last_text_update > 1 / 2:
+        if self._last_text_update > 1 / (4 * self._anim_speed):
             self._cur_texture += self._update_direction
+            self._last_text_update = 0
             if self._cur_texture >= len(self._idle_textures) - 1:
                 self._update_direction = -1
             elif self._cur_texture <= 0:
