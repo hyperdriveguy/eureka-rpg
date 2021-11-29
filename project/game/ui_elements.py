@@ -17,6 +17,8 @@ class Button(arcade.SpriteList):
                 ):
         super().__init__()
         
+        self._action_name = text
+        
         self._button_text = arcade.create_text_sprite(
             text,
             start_x,
@@ -31,15 +33,24 @@ class Button(arcade.SpriteList):
             rotation=rotation
             )
         self.append(self._button_text)
+        
+    @property
+    def name(self):
+        return self._action_name
+    
 
 class Selector:
     
     def __init__(self, *buttons, orient='main'):
+        self._button_actions = {}
         self._button_list = arcade.SpriteList()
         for button in buttons:
+            if len(button) > 1:
+                raise IndexError('Invalid button was passed to the selector.')
             self._button_list.extend(button)
+            self._button_actions[button[0]] = button.name
         self._cur_selection = 0
-        
+
         self._selector_list = arcade.ShapeElementList()
         self._add_selector()
         self._can_select = False
@@ -67,6 +78,9 @@ class Selector:
         if self._cur_selection < 0:
             self._cur_selection = len(self._button_list) - 1
         self._update_selector()
+    
+    def select(self):
+        return self._button_actions[self._button_list[self._cur_selection]]
     
     def _update_selector(self):
         self._selector_list.remove(self._selection_box)

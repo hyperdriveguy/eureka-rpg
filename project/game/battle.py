@@ -20,6 +20,10 @@ class Battle(arcade.View):
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)
         self._contestants.append(self._enemy)
+        self._timer = 0
+        self._player_dmg = 0
+        self._enemy_dmg = 0
+        self._anim_done = True
 
         self.battle_hud = BattleHud(self._gui_camera, self._player)
         
@@ -38,6 +42,10 @@ class Battle(arcade.View):
         
         self._camera.use()
         self._contestants.draw()
+        if self._timer > 0:
+            arcade.draw_text(f'-{self._player_dmg}', self._player.center_x, self._player.top, color=arcade.color.RED)
+            arcade.draw_text(f'-{self._enemy_dmg}', self._enemy.center_x, self._enemy.top, color=arcade.color.RED)
+            self._anim_done = False
 
     def _set_contestant_pos(self):
         self._player.center_x = self._camera.viewport_width / 5
@@ -49,6 +57,21 @@ class Battle(arcade.View):
 
     def on_update(self, delta_time):
         self.battle_hud.update(delta_time)
+        if self.battle_hud.has_selected:
+            if self.battle_hud.player_action[0] == 'Attack':
+                self._enemy_dmg = self.battle_hud.player_action[1]() - self._enemy.defend()
+            self._player_dmg = self._enemy.attack() - self._player.defend()
+            self._enemy.cur_hp -= self._enemy_dmg
+            self._player.cur_hp -= self._player_dmg
+            self._timer = 5
+            self.battle_hud.update_hp()
+            self.battle_hud.has_selected = False
+        if self._timer <= 0 and self._player.is_turn is False:
+            self.battle_hud.new_player_turn()
+            self._player.is_turn = True
+        if self._timer > 0:
+            self._timer -= delta_time
+            
         self._player.update_animation(delta_time)
         self._enemy.update_animation(delta_time)
     

@@ -1,6 +1,7 @@
 from typing import Iterable
 import arcade
 from game import constants
+from random import randint
 
 class Contestant(arcade.Sprite):
 
@@ -11,7 +12,7 @@ class Contestant(arcade.Sprite):
         
         # Base Battle Stats
         self._base_heart_points = 10
-        self._base_attack = 5
+        self._base_attack = 10
         self._base_defense = 5
         self._base_skill = 5
         self._base_speed = 5
@@ -27,6 +28,7 @@ class Contestant(arcade.Sprite):
         self._cur_texture = 0
         self._update_direction = 1
         self._anim_speed = 1
+        self._anim_timer = 0
         self._idle_textures = []
         for pic in idle_pics:
             self._idle_textures.append(arcade.load_texture(pic))
@@ -39,8 +41,25 @@ class Contestant(arcade.Sprite):
                 self._update_direction = -1
             elif self._cur_texture <= 0:
                 self._update_direction = 1
-            self.texture = self._idle_textures[self._cur_texture] 
+            self.texture = self._idle_textures[self._cur_texture]
         self._last_text_update += delta_time
+        if self._anim_timer <= 0:
+            self._anim_speed = 1
+            self._anim_timer = 0
+        else:
+            self._anim_timer -= delta_time
+            
+    
+    def _attack_animation(self):
+        self._anim_speed = 8
+        self._anim_timer = 3
+    
+    def attack(self):
+        self._attack_animation()
+        return randint(round(self._base_attack / 2), self._base_attack)
+    
+    def defend(self):
+        return randint(round(self._base_defense / 2), self._base_defense)
     
     @property
     def is_turn(self):
