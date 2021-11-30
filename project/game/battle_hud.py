@@ -10,7 +10,7 @@ class BattleHud:
         self._player = player
         self._has_selected = False
         self.new_player_turn()
-        
+
         # Build shapes/sprites
         self._hud_shape = arcade.ShapeElementList()
         self._hp_sprite_list = arcade.SpriteList()
@@ -21,7 +21,7 @@ class BattleHud:
         self._hp_sprite_list.append(self._full_hp_sprite)
         self._build_shapes()
         self._build_tab()
-    
+
     def _create_hp_indicator(self):
         hp_draw_x = round(self._gui_camera.viewport_width * 0.05)
         cur_hp_draw_y = round(self._gui_camera.viewport_height * 0.18)
