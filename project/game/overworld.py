@@ -43,7 +43,6 @@ class Overworld(arcade.View):
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
-
         # Setup the Camera
         self.camera = arcade.Camera(self.window.width, self.window.height)
 
@@ -232,6 +231,8 @@ class Overworld(arcade.View):
                 if self._cur_map.player_can_interact and key == arcade.key.SPACE:
                     arcade.play_sound(self.jump_sound)
                     self.cur_text = self._cur_map.object_text
+                    if len(self._cur_map.object_properties) > 2:
+                        self._cur_battle = self._cur_map.object_properties['battle']
                     self._active_textbox = True
                     self._text_box = DrawTextBox(self.cur_text)
                     self.player_sprite.force_movement_stop()
@@ -243,6 +244,10 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
+                if len(self._cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
+                    self.window.show_view(self.window.battle)
+                    del self._cur_map.object_properties['battle']
+                    self._cur_map.object_properties['text'] = 'Battle Complete!'
             else:
                 self._text_box.line_by_line()
     

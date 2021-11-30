@@ -91,3 +91,7 @@ class OverworldMap:
     @property
     def object_text(self):
         return self._text_objects.interact_text
+
+    @property
+    def object_properties(self):
+        return self._text_objects.interact_properties

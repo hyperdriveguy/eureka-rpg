@@ -3,6 +3,7 @@ from game.battle_player import BattlePlayer
 from game.battle_hud import BattleHud
 from game.contestant import Contestant
 from game.utils import get_smallest
+import sys
 
 class Battle(arcade.View):
 
@@ -62,7 +63,11 @@ class Battle(arcade.View):
                 self._enemy_dmg = self.battle_hud.player_action[1]() - self._enemy.defend()
             self._player_dmg = self._enemy.attack() - self._player.defend()
             self._enemy.cur_hp -= self._enemy_dmg
+            if self._enemy.cur_hp <= 0:
+                self.window.show_view(self.window.overworld)
             self._player.cur_hp -= self._player_dmg
+            if self._player.cur_hp <= 0:
+                sys.exit()
             self._timer = 5
             self.battle_hud.update_hp()
             self.battle_hud.has_selected = False

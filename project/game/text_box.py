@@ -18,12 +18,13 @@ class DrawTextBox:
 
     def create_page_text(self):
         self.page_text = ''
-        for index in range(self.cur_line, self.cur_line + 4):
-            self.page_text += self.text_list[index] 
-        # print(self.text_list)
-        if self.cur_line + 4 == len(self.text_list):
-            self.text_end = True 
-
+        if len(self.text_list) > 4:
+            for index in range(self.cur_line, self.cur_line + 4):
+                self.page_text += self.text_list[index] 
+            if self.cur_line + 4 == len(self.text_list) or len(self.text_list) <= 4:
+                self.text_end = True 
+        else:
+            self.text_end = True
 
     def line_by_line(self):
         self.cur_line += 1
@@ -36,7 +37,7 @@ class DrawTextBox:
     def draw_text_box(self):
         arcade.draw_rectangle_filled(self.text_box_center_x, self.text_box_center_y, self.rec_width, self.rec_length, arcade.csscolor.BLACK)
         arcade.draw_point(self.text_box_center_x, self.text_box_center_y, arcade.color.BARN_RED, 5)
-        if len(self.text_list) > 1:
+        if len(self.text_list) > 4:
             arcade.draw_text(
                 self.page_text,
                 self.text_box_center_x,
