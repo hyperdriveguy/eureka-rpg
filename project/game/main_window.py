@@ -18,7 +18,7 @@ class MainWindow(arcade.Window):
         self.set_min_size(160, 144)
         self.overworld = Overworld()
         self.battle = Battle()
-        self.show_view(self.battle)
+        self.show_view(self.overworld)
 
 
     def on_key_press(self, key, key_modifiers):

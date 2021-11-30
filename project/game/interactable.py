@@ -91,3 +91,7 @@ class Interactable:
     @property
     def interact_text(self):
         return self._active_objects[0][2][0]['text']
+
+    @property
+    def interact_properties(self):
+        return self._active_objects[0][2][0]
