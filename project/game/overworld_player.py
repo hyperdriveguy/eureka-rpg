@@ -1,8 +1,7 @@
 import arcade
 from game import constants
-from game.utils import is_between
 
-class Player(arcade.Sprite):
+class OverworldPlayer(arcade.Sprite):
     """Contains functions of the player.
 
     This class is primarily overworld oriented.
@@ -35,8 +34,9 @@ class Player(arcade.Sprite):
         # side-to-side. Box is centered at sprite center, (0, 0)
         #self.points = [[-22, -64], [22, -64], [22, 28], [-22, 28]]
 
-        # --- Load Textures ---
+        self._load_textures()
 
+    def _load_textures(self):
         # Images from Kenney.nl's Asset Pack 3
         #main_path = ":resources:images/animated_characters/female_adventurer/femaleAdventurer"
         # main_path = ":resources:images/animated_characters/female_person/femalePerson"
@@ -89,6 +89,9 @@ class Player(arcade.Sprite):
     def on_update(self, delta_time: float = 1 / 60):
         if self._movement_lock:
             return
+        self._do_movement_updates()
+
+    def _do_movement_updates(self):
         if self._up_pressed and not self._down_pressed:
             if self.character_face_y == constants.FACE_UP:
                 self.change_y = constants.PLAYER_MOVEMENT_SPEED
@@ -101,7 +104,6 @@ class Player(arcade.Sprite):
             self.change_y = 0
             if self.character_face_x != constants.FACE_NONE and self.change_x != 0:
                 self.character_face_y = constants.FACE_NONE
-
 
         if self._left_pressed and not self._right_pressed:
             if self.character_face_x == constants.FACE_LEFT:
@@ -118,7 +120,7 @@ class Player(arcade.Sprite):
 
     def on_key_press(self, key, key_modifiers):
         self._flag_key_movement(key, True)
-    
+
     def on_key_release(self, key, key_modifiers):
         self._flag_key_movement(key, False)
 
@@ -140,15 +142,15 @@ class Player(arcade.Sprite):
     @property
     def allow_player_input(self):
         return self._movement_lock
-    
+
     @allow_player_input.setter
     def allow_player_input(self, allow_player_input: bool):
         self._movement_lock = not allow_player_input
-    
+
     @property
     def character_face_x(self):
         return self._character_face_direction[0]
-    
+
     @property
     def character_face_y(self):
         return self._character_face_direction[1]
@@ -172,7 +174,7 @@ class Player(arcade.Sprite):
     @property
     def player_highlighted(self):
         return (self.color == arcade.color.RED)
-    
+
     @player_highlighted.setter
     def player_highlighted(self, player_highlighted):
         self.color = arcade.color.RED if player_highlighted else arcade.color.WHITE

@@ -1,8 +1,10 @@
+import textwrap
 import arcade
 import random
 
 from game import constants
-from game.player import Player
+from game.overworld_player import OverworldPlayer
+from game.text_box import DrawTextBox
 from game.overworld_map import OverworldMap
 from pyglet.math import Vec2
 
@@ -15,11 +17,12 @@ class Overworld(arcade.View):
 
 
     def __init__(self):
+        """ Class Constructor """
         super().__init__()
 
         self._active_textbox = False
 
-        self.cur_text = 'asdf'
+        self.cur_text = ''
 
         self.free_camera = False
         self.free_coords = 0, 0
@@ -41,7 +44,6 @@ class Overworld(arcade.View):
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
-
         # Setup the Camera
         self.camera = arcade.Camera(self.window.width, self.window.height)
 
@@ -55,14 +57,13 @@ class Overworld(arcade.View):
         # end of the order.
 
         # Set up the player, specifically placing it at these coordinates.
-        self.player_sprite = Player()
+        self.player_sprite = OverworldPlayer()
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
 
         # Init map
         map_name = "project/assets/test_map.json"
         self._cur_map = OverworldMap(map_name, self.player_sprite)
-
 
     def on_draw(self):
         """
@@ -82,14 +83,8 @@ class Overworld(arcade.View):
 
         if self._active_textbox:
             self.gui_camera.use()
-            arcade.draw_text(
-                self.cur_text,
-                10,
-                50,
-                arcade.csscolor.WHITE,
-                18
-            )
-        
+            self._text_box.draw_text_box()
+
 
         if self.show_debug:
             # Activate the GUI camera before drawing GUI elements
@@ -104,14 +99,23 @@ class Overworld(arcade.View):
                 arcade.csscolor.WHITE,
                 18,
             )
+            if self._active_textbox:
+                arcade.draw_text(
+                    f'cur_text length: {len(self.cur_text)}, number of lines: {len(self._text_box.text_list)}',
+                    10,
+                    50,
+                    arcade.csscolor.WHITE,
+                    18
+                )
+
 
             try:
                 cur_fps = arcade.get_fps()
                 if cur_fps >= 60:
                     fps_color = arcade.color.GREEN
-                elif cur_fps >= 45 and cur_fps < 60:
+                elif cur_fps >= 45:
                     fps_color = arcade.color.YELLOW
-                elif cur_fps >= 30 and cur_fps < 45:
+                elif cur_fps >= 30:
                     fps_color = arcade.color.ORANGE
                 else:
                     fps_color = arcade.color.RED
@@ -128,13 +132,16 @@ class Overworld(arcade.View):
                 print('Warning: Timings are not enabled.')
 
     def center_camera(self, sprite: arcade.Sprite):
+        """ 
+        Center the camera on the player        
+        """
         screen_center_x = sprite.center_x - (self.camera.viewport_width / 2)
         screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
 
         # Don't let camera travel past map
         screen_center_x = max(screen_center_x, 0)
         screen_center_y = max(screen_center_y, 0)
-        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width: 
+        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width:
             screen_center_x = self._cur_map.map_width - self.camera.viewport_width
         if screen_center_y > self._cur_map.map_height - self.camera.viewport_height:
             screen_center_y = self._cur_map.map_height - self.camera.viewport_height
@@ -158,9 +165,9 @@ class Overworld(arcade.View):
         # Position the camera
         if not self.free_camera:
             self.center_camera(self.player_sprite)
-        
+
         if not self._active_textbox and self._cur_map.player_can_interact:
-                self.player_sprite.player_highlighted = True
+            self.player_sprite.player_highlighted = True
         else:
             self.player_sprite.player_highlighted = False
 
@@ -208,11 +215,13 @@ class Overworld(arcade.View):
     def on_key_release(self, key, key_modifiers):
         """
         Called whenever the user lets off a previously pressed key.
+
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
 
         if key == arcade.key.Y:
+            #Switch to main map 
             # Init map
             map_name = "project/assets/test_map.json"
             self._cur_map = OverworldMap(map_name, self.player_sprite)
@@ -221,18 +230,42 @@ class Overworld(arcade.View):
             # Init map
             map_name = "project/assets/test_map_2.json"
             self._cur_map = OverworldMap(map_name, self.player_sprite)
-        
+
         if not self._active_textbox:
             try:
                 if self._cur_map.player_can_interact and key == arcade.key.SPACE:
-                    arcade.play_sound(self.jump_sound)
-                    self.cur_text = self._cur_map.object_text
-                    self._active_textbox = True
-                    self.player_sprite.force_movement_stop()
-
+                    self._do_interact()
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
         elif key == arcade.key.SPACE:
             arcade.play_sound(self.jump_sound)
-            self._active_textbox = False
-            self.player_sprite.allow_player_input = True
+            if self._text_box.text_end:
+                self._active_textbox = False
+                self.player_sprite.allow_player_input = True
+                if len(self._cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
+                    self.window.show_view(self.window.battle)
+                    del self._cur_map.object_properties['battle']
+                    #self._cur_map.object_properties['text'] = 'Battle Complete!'
+                    print(self._cur_map.object_properties)
+            else:
+                self._text_box.line_by_line()
+
+    def _do_interact(self):
+        arcade.play_sound(self.jump_sound)
+        self.cur_text = self._cur_map.object_text
+        if len(self._cur_map.object_properties) > 2:
+            self._cur_battle = self._cur_map.object_properties['battle']
+        self._active_textbox = True
+        self._text_box = DrawTextBox(self.cur_text)
+        self.player_sprite.force_movement_stop()
+
+    def on_resize(self, width: int, height: int):
+        """ Resize camera and gui_camera
+        
+            Args:
+                self (Overworld): An instance of Overworld
+                width (int): The width of the camera size
+                height (int): The height of the camera size
+        """
+        self.camera.resize(width, height)
+        self.gui_camera.resize(width, height)

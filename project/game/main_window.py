@@ -1,5 +1,6 @@
 import arcade
 from game.overworld import Overworld
+from game.battle import Battle
 
 class MainWindow(arcade.Window):
     """
@@ -9,11 +10,26 @@ class MainWindow(arcade.Window):
     """
 
     def __init__(self, width, height, title):
-        super().__init__(width, height, title)
+        """ Class Constructor
+        
+            Args:
+                self (MainWindow): An instance of MainWindow
+                width (int): The width of the main window
+                height (int): The wight of the main window
+                title (str): The title to show on the main window
+        """
+        super().__init__(width, height, title, resizable=True)
 
     def setup(self):
-        """ Set up the game variables. Call to re-start the game. """
+        """ Set up the game variables. Call to re-start the game. 
+        
+            Args:
+                self (MainWindow): An instance of MainWindow
+        """
+        self.set_mouse_visible(False)
+        self.set_min_size(160, 144)
         self.overworld = Overworld()
+        self.battle = Battle()
         self.show_view(self.overworld)
 
 
@@ -26,7 +42,7 @@ class MainWindow(arcade.Window):
         """
         if key in (arcade.key.F11, arcade.key.P):
             self.set_fullscreen(not self.fullscreen)
-
-            self.overworld.camera.resize(self.width, self.height)
-            self.overworld.gui_camera.resize(self.width, self.height)
+    
+    def on_resize(self, width: float, height: float):
+        super().on_resize(width, height)
                 
