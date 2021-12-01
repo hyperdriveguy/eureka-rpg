@@ -1,7 +1,6 @@
 import arcade
 from concurrent.futures import ThreadPoolExecutor
 from game import constants
-from game.utils import is_between
 
 class Interactable:
 
@@ -55,15 +54,13 @@ class Interactable:
     @staticmethod
     def _filter_active(interactable):
         # coll_side_x, begin_x, end_x; coll_side_y, begin_y, end_y
-        return bool(
-            (
-                is_between(
-                    interactable[0][0], interactable[0][1], interactable[0][2]
-                )
-                and is_between(
-                    interactable[1][0], interactable[1][1], interactable[1][2]
-                )
-            )
+        return bool(interactable[0][1] <=
+                    interactable[0][0] <=
+                    interactable[0][2]
+
+                    and interactable[1][1] <=
+                    interactable[1][0] <=
+                    interactable[1][2]
         )
 
     def update_interactable(self, delta_time = 1/60, force_check=False):
