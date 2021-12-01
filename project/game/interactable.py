@@ -15,8 +15,8 @@ class Interactable:
                     (begin_y, end_y),
                     (interactable.properties,))
 
-        with ThreadPoolExecutor() as exec:
-            self._interactable_ranges = tuple(exec.map(parse_box, tiled_object_list))
+        with ThreadPoolExecutor() as threader:
+            self._interactable_ranges = tuple(threader.map(parse_box, tiled_object_list))
 
         self._player = player
         self._can_interact = False
@@ -45,9 +45,9 @@ class Interactable:
         return (coll_side_x, begin_x, end_x)
 
     def _add_modifiers(self, interactable):
-        with ThreadPoolExecutor(max_workers=4) as exec:
-            mod_x_future = exec.submit(self._mod_x, interactable[0])
-            mod_y_future = exec.submit(self._mod_y, interactable[1])
+        with ThreadPoolExecutor(max_workers=4) as threader:
+            mod_x_future = threader.submit(self._mod_x, interactable[0])
+            mod_y_future = threader.submit(self._mod_y, interactable[1])
             return (mod_x_future.result(),
                     mod_y_future.result(),
                     interactable[2])
@@ -65,14 +65,14 @@ class Interactable:
                 )
             )
         )
-    
+
     def update_interactable(self, delta_time = 1/60, force_check=False):
         if (
             self._player.change_x == 0 and self._player.change_y == 0
         ) and not force_check:
             return
-        with ThreadPoolExecutor() as exec:
-            cur_object_ranges = tuple(exec.map(
+        with ThreadPoolExecutor() as threader:
+            cur_object_ranges = tuple(threader.map(
                 self._add_modifiers,
                 self._interactable_ranges))
         self._active_objects = tuple(filter(self._filter_active, cur_object_ranges))
@@ -82,12 +82,12 @@ class Interactable:
                 print('Warning: Detected multiple intersecting iteraction boxes')
                 self._last_intersect_msg = 0
             self._last_intersect_msg += delta_time
-            
-    
+
+
     @property
     def can_interact(self):
         return self._can_interact
-    
+
     @property
     def interact_text(self):
         return self._active_objects[0][2][0]['text']
