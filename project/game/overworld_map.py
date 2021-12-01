@@ -48,12 +48,12 @@ class OverworldMap:
             self._physics_engine = arcade.PhysicsEnginePlatformer(
                 self._player, gravity_constant=0, walls=self._scene['Walls']
             )
-        
-        with ThreadPoolExecutor() as exec:
-            exec.submit(build_map_objects)
-            exec.submit(build_map_scene)
 
-    
+        with ThreadPoolExecutor() as threader:
+            threader.submit(build_map_objects)
+            threader.submit(build_map_scene)
+
+
     def draw(self):
         # Draw our Scene
         self._scene.draw()
@@ -68,7 +68,7 @@ class OverworldMap:
 
         # Update interactable objects
         self._text_objects.update_interactable(delta_time)
-    
+
     def on_keypress(self, key, key_modifiers):
         self._text_objects.update_interactable(force_check=True)
 
@@ -79,15 +79,15 @@ class OverworldMap:
     @property
     def map_height(self):
         return self._full_map_height
-    
+
     @property
     def map_scene(self):
         return self._scene
-    
+
     @property
     def player_can_interact(self):
         return self._text_objects.can_interact
-    
+
     @property
     def object_text(self):
         return self._text_objects.interact_text
