@@ -213,14 +213,12 @@ class Overworld(arcade.View):
         """
         Called whenever the user lets off a previously pressed key.
 
-            Args:
-                Self (Overworld): An instance of Overworld
-                Key ()
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
 
         if key == arcade.key.Y:
+            #Switch to main map 
             # Init map
             map_name = "project/assets/test_map.json"
             self._cur_map = OverworldMap(map_name, self.player_sprite)
