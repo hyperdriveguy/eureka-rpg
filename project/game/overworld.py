@@ -138,7 +138,7 @@ class Overworld(arcade.View):
         # Don't let camera travel past map
         screen_center_x = max(screen_center_x, 0)
         screen_center_y = max(screen_center_y, 0)
-        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width: 
+        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width:
             screen_center_x = self._cur_map.map_width - self.camera.viewport_width
         if screen_center_y > self._cur_map.map_height - self.camera.viewport_height:
             screen_center_y = self._cur_map.map_height - self.camera.viewport_height
@@ -162,7 +162,7 @@ class Overworld(arcade.View):
         # Position the camera
         if not self.free_camera:
             self.center_camera(self.player_sprite)
-        
+
         if not self._active_textbox and self._cur_map.player_can_interact:
                 self.player_sprite.player_highlighted = True
         else:
@@ -225,7 +225,7 @@ class Overworld(arcade.View):
             # Init map
             map_name = "project/assets/test_map_2.json"
             self._cur_map = OverworldMap(map_name, self.player_sprite)
-        
+
         if not self._active_textbox:
             try:
                 if self._cur_map.player_can_interact and key == arcade.key.SPACE:
@@ -250,7 +250,7 @@ class Overworld(arcade.View):
                     self._cur_map.object_properties['text'] = 'Battle Complete!'
             else:
                 self._text_box.line_by_line()
-    
+
     def on_resize(self, width: int, height: int):
         self.camera.resize(width, height)
         self.gui_camera.resize(width, height)
