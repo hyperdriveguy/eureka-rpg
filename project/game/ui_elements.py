@@ -1,24 +1,53 @@
+"""Contains reusable UI elements.
+"""
 import arcade
 
+
 class Button(arcade.SpriteList):
-    
+    """A selectable button with a text indicator.
+
+    Inherits: arcade.Spritelist
+    """
+
     def __init__(self,
-                text: str,
-                start_x: float,
-                start_y: float,
-                color: arcade.Color,
-                font_size: float = 12,
-                width: int = 0,
-                align: str = "left",
-                font_name=("calibri", "arial"),
-                anchor_x: str = "left",
-                anchor_y: str = "baseline",
-                rotation: float = 0,
-                ):
+                 text: str,
+                 start_x: float,
+                 start_y: float,
+                 color: arcade.Color,
+                 font_size: float = 12,
+                 width: int = 0,
+                 align: str = "left",
+                 font_name=("calibri", "arial"),
+                 anchor_x: str = "left",
+                 anchor_y: str = "baseline",
+                 rotation: float = 0,
+                 ):
+        """Initialize the button sprite and attributes.
+
+        Args:
+            text (str): text to display on button.
+            start_x (float): start x position in pixels.
+            start_y (float): start y position in pixels.
+            color (arcade.Color): text color.
+            font_size (float, optional): Font size in points.
+                Defaults to 12.
+            width (int, optional): max text width.
+                Defaults to 0.
+            align (str, optional): text alignment.
+                Defaults to "left".
+            font_name (tuple, optional): font name to use.
+                Defaults to ("calibri", "arial").
+            anchor_x (str, optional): place to anchor start_x.
+                Defaults to "left".
+            anchor_y (str, optional): place to anchor start_y.
+                Defaults to "baseline".
+            rotation (float, optional): degrees that text should be rotated.
+                Defaults to 0.
+        """
         super().__init__()
-        
+
         self._action_name = text
-        
+
         self._button_text = arcade.create_text_sprite(
             text,
             start_x,
@@ -33,15 +62,34 @@ class Button(arcade.SpriteList):
             rotation=rotation
             )
         self.append(self._button_text)
-        
+
+    def clear(self):
+        raise NotImplementedError('UI elements are not clearable.')
+
     @property
     def name(self):
+        """Text shown on the button.
+
+        Returns:
+            str: name of the button.
+        """
         return self._action_name
-    
+
 
 class Selector:
-    
+    """Contains selectable UI elements and determines if they are highlighted.
+    """
+
     def __init__(self, *buttons, orient='main'):
+        """Initialize the selector with the containing UI elements.
+
+        Args:
+            orient (str, optional): determine whether navigation is 1-D or 2-D.
+                Defaults to 'main'. Not yet implemented.
+
+        Raises:
+            IndexError: an an empty sprite list was provided.
+        """
         self._button_actions = {}
         self._button_list = arcade.SpriteList()
         for button in buttons:
@@ -56,46 +104,65 @@ class Selector:
         self._can_select = False
 
     def _add_selector(self):
+        """Create and append the selector element to the list.
+        """
         self._selection_box = arcade.create_rectangle(
             self._button_list[self._cur_selection].center_x,
             self._button_list[self._cur_selection].center_y * 0.78,
-            self._button_list[self._cur_selection].width *1.1,
+            self._button_list[self._cur_selection].width * 1.1,
             self._button_list[self._cur_selection].height * 0.8,
             arcade.color.BLACK,
             border_width=3,
             filled=False
         )
         self._selector_list.append(self._selection_box)
-    
+
     def next_button(self):
+        """Select the next button in the selector list.
+        """
         self._cur_selection += 1
         if self._cur_selection >= len(self._button_list):
             self._cur_selection = 0
         self._update_selector()
-    
+
     def prev_button(self):
+        """Select the previous button in the selector list.
+        """
         self._cur_selection -= 1
         if self._cur_selection < 0:
             self._cur_selection = len(self._button_list) - 1
         self._update_selector()
-    
+
     def select(self):
+        """Select the current button.
+
+        Returns:
+            str: name of the selected button.
+        """
         return self._button_actions[self._button_list[self._cur_selection]]
-    
+
     def _update_selector(self):
+        """Update the selector sprite by recreating it.
+        """
         self._selector_list.remove(self._selection_box)
         self._add_selector()
-    
+
     def draw(self):
+        """Draw all the buttons and the selector if able to select.
+        """
         self._button_list.draw()
         if self._can_select:
             self._selector_list.draw()
-        
-        
+
     @property
     def can_select(self):
+        """Determine if able to select a button.
+
+        Returns:
+            bool: player able to select
+        """
         return self._can_select
-    
+
     @can_select.setter
     def can_select(self, can_select: bool):
         self._can_select = can_select
