@@ -34,8 +34,8 @@ class Battle(arcade.View):
         self._enemy = Contestant(['project/assets/angry_cactus.png',
                                   'project/assets/angry_cactus_1.png',
                                   'project/assets/angry_cactus_2.png'],
-                                 hp=2,
-                                 attack=10,
+                                 hp=8,
+                                 attack=7,
                                  defense=0,
                                  speed=1)
         self._set_contestant_pos()
