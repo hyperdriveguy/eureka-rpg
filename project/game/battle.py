@@ -33,7 +33,11 @@ class Battle(arcade.View):
         self._player = BattlePlayer()
         self._enemy = Contestant(['project/assets/angry_cactus.png',
                                   'project/assets/angry_cactus_1.png',
-                                  'project/assets/angry_cactus_2.png'])
+                                  'project/assets/angry_cactus_2.png'],
+                                 hp=2,
+                                 attack=10,
+                                 defense=0,
+                                 speed=1)
         self._set_contestant_pos()
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)
@@ -114,8 +118,8 @@ class Battle(arcade.View):
         Preforms several checks and calculates damage.
         """
         if self.battle_hud.player_action[0] == 'Attack':
-            self._enemy_dmg = self.battle_hud.player_action[1]() - self._enemy.defend()
-        self._player_dmg = self._enemy.attack() - self._player.defend()
+            self._enemy_dmg = max((self.battle_hud.player_action[1]() - self._enemy.defend(), 0))
+        self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._enemy.cur_hp -= self._enemy_dmg
         if self._enemy.cur_hp <= 0:
             self.window.show_view(self.window.overworld)
