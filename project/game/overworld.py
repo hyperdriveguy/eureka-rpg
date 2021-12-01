@@ -212,6 +212,10 @@ class Overworld(arcade.View):
     def on_key_release(self, key, key_modifiers):
         """
         Called whenever the user lets off a previously pressed key.
+
+            Args:
+                Self (Overworld): An instance of Overworld
+                Key ()
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
@@ -252,5 +256,12 @@ class Overworld(arcade.View):
                 self._text_box.line_by_line()
     
     def on_resize(self, width: int, height: int):
+        """ Resize camera and gui_camera
+        
+            Args:
+                self (Overworld): An instance of Overworld
+                width (int): The width of the camera size
+                height (int): The height of the camera size
+        """
         self.camera.resize(width, height)
         self.gui_camera.resize(width, height)
