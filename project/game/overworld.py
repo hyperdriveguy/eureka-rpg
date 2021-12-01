@@ -101,7 +101,7 @@ class Overworld(arcade.View):
             )
             if self._active_textbox:
                 arcade.draw_text(
-                    f'cur_text length: {str(len(self.cur_text))}, number of lines: {str(len(self._text_box.text_list))}',
+                    f'cur_text length: {len(self.cur_text)}, number of lines: {len(self._text_box.text_list)}',
                     10,
                     50,
                     arcade.csscolor.WHITE,
@@ -164,7 +164,7 @@ class Overworld(arcade.View):
             self.center_camera(self.player_sprite)
 
         if not self._active_textbox and self._cur_map.player_can_interact:
-                self.player_sprite.player_highlighted = True
+            self.player_sprite.player_highlighted = True
         else:
             self.player_sprite.player_highlighted = False
 
@@ -229,14 +229,7 @@ class Overworld(arcade.View):
         if not self._active_textbox:
             try:
                 if self._cur_map.player_can_interact and key == arcade.key.SPACE:
-                    arcade.play_sound(self.jump_sound)
-                    self.cur_text = self._cur_map.object_text
-                    if len(self._cur_map.object_properties) > 2:
-                        self._cur_battle = self._cur_map.object_properties['battle']
-                    self._active_textbox = True
-                    self._text_box = DrawTextBox(self.cur_text)
-                    self.player_sprite.force_movement_stop()
-
+                    self._do_interact()
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
         elif key == arcade.key.SPACE:
@@ -247,9 +240,19 @@ class Overworld(arcade.View):
                 if len(self._cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
                     self.window.show_view(self.window.battle)
                     del self._cur_map.object_properties['battle']
-                    self._cur_map.object_properties['text'] = 'Battle Complete!'
+                    #self._cur_map.object_properties['text'] = 'Battle Complete!'
+                    print(self._cur_map.object_properties)
             else:
                 self._text_box.line_by_line()
+
+    def _do_interact(self):
+        arcade.play_sound(self.jump_sound)
+        self.cur_text = self._cur_map.object_text
+        if len(self._cur_map.object_properties) > 2:
+            self._cur_battle = self._cur_map.object_properties['battle']
+        self._active_textbox = True
+        self._text_box = DrawTextBox(self.cur_text)
+        self.player_sprite.force_movement_stop()
 
     def on_resize(self, width: int, height: int):
         self.camera.resize(width, height)
