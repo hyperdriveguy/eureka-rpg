@@ -17,6 +17,7 @@ class Overworld(arcade.View):
 
 
     def __init__(self):
+        """ Class Constructor """
         super().__init__()
 
         self._active_textbox = False
@@ -63,7 +64,6 @@ class Overworld(arcade.View):
         # Init map
         map_name = "project/assets/test_map.json"
         self._cur_map = OverworldMap(map_name, self.player_sprite)
-
 
     def on_draw(self):
         """
@@ -132,6 +132,9 @@ class Overworld(arcade.View):
                 print('Warning: Timings are not enabled.')
 
     def center_camera(self, sprite: arcade.Sprite):
+        """ 
+        Center the camera on the player        
+        """
         screen_center_x = sprite.center_x - (self.camera.viewport_width / 2)
         screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
 
