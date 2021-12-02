@@ -101,7 +101,7 @@ class Overworld(arcade.View):
             )
             if self._active_textbox:
                 arcade.draw_text(
-                    f'cur_text length: {len(self.cur_text)}, number of lines: {len(self._text_box.text_list)}',
+                    f'cur_text length: {len(self.cur_text)}, number of lines: {self._text_box.num_lines}',
                     10,
                     50,
                     arcade.csscolor.WHITE,
