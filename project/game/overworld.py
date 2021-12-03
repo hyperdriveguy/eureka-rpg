@@ -6,6 +6,7 @@ from game import constants
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
 from game.overworld_map import OverworldMap
+from game.map_switcher import MapSwitcher
 from pyglet.math import Vec2
 
 
@@ -61,9 +62,8 @@ class Overworld(arcade.View):
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
 
-        # Init map
-        map_name = "project/assets/test_map.json"
-        self._cur_map = OverworldMap(map_name, self.player_sprite)
+        # Init Map
+        self._map_switcher = MapSwitcher(self.player_sprite, constants.maps)
 
     def on_draw(self):
         """
@@ -79,7 +79,7 @@ class Overworld(arcade.View):
         # Activate our Camera
         self.camera.use()
 
-        self._cur_map.draw()
+        self._map_switcher.cur_map.draw()
 
         if self._active_textbox:
             self.gui_camera.use()
@@ -141,10 +141,10 @@ class Overworld(arcade.View):
         # Don't let camera travel past map
         screen_center_x = max(screen_center_x, 0)
         screen_center_y = max(screen_center_y, 0)
-        if screen_center_x > self._cur_map.map_width - self.camera.viewport_width:
-            screen_center_x = self._cur_map.map_width - self.camera.viewport_width
-        if screen_center_y > self._cur_map.map_height - self.camera.viewport_height:
-            screen_center_y = self._cur_map.map_height - self.camera.viewport_height
+        if screen_center_x > self._map_switcher.cur_map.map_width - self.camera.viewport_width:
+            screen_center_x = self._map_switcher.cur_map.map_width - self.camera.viewport_width
+        if screen_center_y > self._map_switcher.cur_map.map_height - self.camera.viewport_height:
+            screen_center_y = self._map_switcher.cur_map.map_height - self.camera.viewport_height
         player_centered = [screen_center_x, screen_center_y]
         self.free_coords = player_centered
 
@@ -160,13 +160,13 @@ class Overworld(arcade.View):
         self.player_sprite.on_update(delta_time)
 
         # Update current map
-        self._cur_map.update(delta_time)
+        self._map_switcher.cur_map.update(delta_time)
 
         # Position the camera
         if not self.free_camera:
             self.center_camera(self.player_sprite)
 
-        if not self._active_textbox and self._cur_map.player_can_interact:
+        if not self._active_textbox and self._map_switcher.cur_map.player_can_interact:
             self.player_sprite.player_highlighted = True
         else:
             self.player_sprite.player_highlighted = False
@@ -181,7 +181,7 @@ class Overworld(arcade.View):
         # Get player movements
         self.player_sprite.on_key_press(key, key_modifiers)
 
-        self._cur_map.on_keypress(key, key_modifiers)
+        self._map_switcher.cur_map.on_keypress(key, key_modifiers)
 
         if key in (arcade.key.RCTRL, arcade.key.RCOMMAND):
             self.show_debug = not self.show_debug
@@ -223,17 +223,15 @@ class Overworld(arcade.View):
         if key == arcade.key.Y:
             #Switch to main map 
             # Init map
-            map_name = "project/assets/test_map.json"
-            self._cur_map = OverworldMap(map_name, self.player_sprite)
+            self._map_switcher.cur_map = 'Test Map'
 
         if key == arcade.key.T:
             # Init map
-            map_name = "project/assets/test_map_2.json"
-            self._cur_map = OverworldMap(map_name, self.player_sprite)
+            self._map_switcher.cur_map = 'Test Map 2'
 
         if not self._active_textbox:
             try:
-                if self._cur_map.player_can_interact and key == arcade.key.SPACE:
+                if self._map_switcher.cur_map.player_can_interact and key == arcade.key.SPACE:
                     self._do_interact()
             except KeyError:
                 print('Warning: Interactable has no assigned text.')
@@ -242,19 +240,19 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if len(self._cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
+                if len(self._map_switcher.cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
                     self.window.show_view(self.window.battle)
-                    del self._cur_map.object_properties['battle']
-                    #self._cur_map.object_properties['text'] = 'Battle Complete!'
-                    print(self._cur_map.object_properties)
+                    del self._map_switcher.cur_map.object_properties['battle']
+                    #self._map_switcher.cur_map.object_properties['text'] = 'Battle Complete!'
+                    print(self._map_switcher.cur_map.object_properties)
             else:
                 self._text_box.line_by_line()
 
     def _do_interact(self):
         arcade.play_sound(self.jump_sound)
-        self.cur_text = self._cur_map.object_text
-        if len(self._cur_map.object_properties) > 2:
-            self._cur_battle = self._cur_map.object_properties['battle']
+        self.cur_text = self._map_switcher.cur_map.object_text
+        if len(self._map_switcher.cur_map.object_properties) > 2:
+            self._cur_battle = self._map_switcher.cur_map.object_properties['battle']
         self._active_textbox = True
         self._text_box = DrawTextBox(self.cur_text)
         self.player_sprite.force_movement_stop()
