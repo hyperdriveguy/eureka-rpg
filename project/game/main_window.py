@@ -28,7 +28,8 @@ class MainWindow(arcade.Window):
         """
         self.set_mouse_visible(False)
         self.set_min_size(160, 144)
-        self.overworld = Overworld()
+        self._overworld = Overworld()
+        self._last_view = self._overworld
         self.battle = Battle()
         self.show_view(self.overworld)
 
@@ -43,6 +44,18 @@ class MainWindow(arcade.Window):
         if key in (arcade.key.F11, arcade.key.P):
             self.set_fullscreen(not self.fullscreen)
     
+    def show_view(self, new_view):
+        self._last_view = self.current_view
+        super().show_view(new_view)
+    
     def on_resize(self, width: float, height: float):
         super().on_resize(width, height)
+    
+    @property
+    def overworld(self):
+        return self._overworld
+    
+    @property
+    def last_view(self):
+        return self._last_view
                 
