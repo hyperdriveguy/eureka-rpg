@@ -10,6 +10,7 @@ class Inventory(arcade.View):
         self._scrolling_camera = arcade.Camera(self.window.width, self.window.height)
 
     def setup(self):
+        
         pass
 
     def on_draw(self):
