@@ -16,8 +16,21 @@ class Battle(arcade.View):
     Inherits: arcade.View
 
     Stereotype: Controller
-    """
 
+    Attributes:
+        self._camera (arcade.Camera): an instance of arcade.Camera
+        self._gui_camera (arcade.Camera): ui camera - an instance of arcade.Camera
+
+        self._player (BattlePlayer): an instance of BattlePlayer
+        self._enemy = (Contestant): an instance of Contestant
+        self._contestants (arcade.SpriteList): list of contestants as sprites
+        
+        self._timer (int): a timer
+        self._player_dmg (int): player damage
+        self._enemy_dmg (int): enemy damage
+        self._anim_done (bool): is animation done
+        self.battle_hud (BattleHud): an instance of BattleHud
+    """
     def __init__(self):
         """Basic battle initialization.
 
