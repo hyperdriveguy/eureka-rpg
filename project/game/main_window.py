@@ -1,9 +1,7 @@
-from typing import overload
 import arcade
 from game.overworld import Overworld
 from game.battle import Battle
 from game.inventory import Inventory
-from project.game import overworld
 
 class MainWindow(arcade.Window):
     """
@@ -24,10 +22,8 @@ class MainWindow(arcade.Window):
         super().__init__(width, height, title, resizable=True)
 
     def setup(self):
-        """ Set up the game variables. Call to re-start the game.
-
-            Args:
-                self (MainWindow): An instance of MainWindow
+        """ 
+        Set up the game variables. Call to re-start the game.
         """
         self.set_mouse_visible(False)
         self.set_min_size(160, 144)
@@ -49,13 +45,28 @@ class MainWindow(arcade.Window):
             self.set_fullscreen(not self.fullscreen)
 
     def show_view(self, new_view):
+        """ Show the desired view.
+
+        Args:
+            new_view (arcade.View): An instance of acrade.View
+        """
         self._last_view = self.current_view
         super().show_view(new_view)
 
     @property
     def overworld(self):
+        """ Get overworld
+
+        Returns:
+            Overworld: An instance of Overworld
+        """
         return self._overworld
 
     @property
     def last_view(self):
+        """ Get last_view
+
+        Returns:
+            Overworld: self._overworld - an instance of Overworld
+        """
         return self._last_view
