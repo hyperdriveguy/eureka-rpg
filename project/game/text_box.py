@@ -12,6 +12,7 @@ class DrawTextBox:
         self.text_box_center_y (int): vertical position of the center point of the text box
         self.wrapper (TextWrapper): An instance of TextWrapper
         self.text_list (list): One string split into a list of strings to wrap the text
+        self.num_lines (int): The number of lines the text list has (i.e the length of the text list)
         self.text (str): The text to be added to the text box
         self.cur_line (int): The last line added to the text box
         self.text_end (bool): Determine if the end of the text has been reached
@@ -29,6 +30,7 @@ class DrawTextBox:
         self.text_box_center_y = constants.SCREEN_HEIGHT - self.rec_length / 2 - 10
         self.wrapper = textwrap.TextWrapper(width=45, drop_whitespace=False)
         self.text_list = self.wrapper.wrap(text) #a list of strings
+        self.num_lines = len(self.text_list)
         self.text = text
         self.cur_line = 0
         self.text_end = False
@@ -40,11 +42,11 @@ class DrawTextBox:
             Args:
                 self (DrawTextBox): An instance of DrawTextBox                
         """
-        self.page_text = ''
-        if len(self.text_list) > 4:
+        self.page_text = ''   
+        if self.num_lines >= 4:
             for index in range(self.cur_line, self.cur_line + 4):
-                self.page_text += self.text_list[index] 
-            if self.cur_line + 4 == len(self.text_list) or len(self.text_list) <= 4:
+                self.page_text += self.text_list[index]
+            if self.cur_line + 4 == self.num_lines:
                 self.text_end = True 
         else:
             self.text_end = True
@@ -70,7 +72,7 @@ class DrawTextBox:
         """
         arcade.draw_rectangle_filled(self.text_box_center_x, self.text_box_center_y, self.rec_width, self.rec_length, arcade.csscolor.BLACK)
         arcade.draw_point(self.text_box_center_x, self.text_box_center_y, arcade.color.BARN_RED, 5)
-        if len(self.text_list) > 4:
+        if self.num_lines > 1:
             arcade.draw_text(
                 self.page_text,
                 self.text_box_center_x,

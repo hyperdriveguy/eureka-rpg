@@ -20,3 +20,10 @@ FACE_RIGHT = 'RIGHT'
 FACE_LEFT = 'LEFT'
 FACE_UP = 'UP'
 FACE_DOWN = 'DOWN'
+
+# Map Constants
+map_path = 'project/assets/'
+maps = {
+    'Test Map': 'test_map.json',
+    'Test Map 2': 'test_map_2.json'
+}
