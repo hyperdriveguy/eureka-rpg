@@ -1,9 +1,7 @@
-from typing import overload
 import arcade
 from game.overworld import Overworld
 from game.battle import Battle
 from game.inventory import Inventory
-from project.game import overworld
 
 class MainWindow(arcade.Window):
     """
