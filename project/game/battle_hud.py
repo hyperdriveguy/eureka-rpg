@@ -238,4 +238,9 @@ class BattleHud:
 
     @has_selected.setter
     def has_selected(self, has_selected):
+        """ Set has_selected
+
+        Args:
+            has_selected (bool): Determine if the player has made a selection
+        """
         self._has_selected = has_selected

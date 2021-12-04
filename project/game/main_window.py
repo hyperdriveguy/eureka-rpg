@@ -38,6 +38,10 @@ class MainWindow(arcade.Window):
         """
         Called whenever a key on the keyboard is pressed.
 
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
+
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
         """
