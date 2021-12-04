@@ -8,4 +8,4 @@ class Player:
     def __init__(self):
         self._overworld = OverworldPlayer()
         self._battle = BattlePlayer()
-        self._inventory = {}
+        self._inventory = {'Yeet': 3, 'Bruh': 10}

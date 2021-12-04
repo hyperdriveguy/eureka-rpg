@@ -1,6 +1,7 @@
 import arcade
 from game.overworld import Overworld
 from game.battle import Battle
+from game.inventory import Inventory
 
 class MainWindow(arcade.Window):
     """
@@ -11,7 +12,7 @@ class MainWindow(arcade.Window):
 
     def __init__(self, width, height, title):
         """ Class Constructor
-        
+
             Args:
                 self (MainWindow): An instance of MainWindow
                 width (int): The width of the main window
@@ -21,8 +22,8 @@ class MainWindow(arcade.Window):
         super().__init__(width, height, title, resizable=True)
 
     def setup(self):
-        """ Set up the game variables. Call to re-start the game. 
-        
+        """ Set up the game variables. Call to re-start the game.
+
             Args:
                 self (MainWindow): An instance of MainWindow
         """
@@ -31,7 +32,7 @@ class MainWindow(arcade.Window):
         self._overworld = Overworld()
         self._last_view = self._overworld
         self.battle = Battle()
-        self.show_view(self.overworld)
+        self.show_view(Inventory({'Yeet': 3, 'Bruh': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10}))
 
 
     def on_key_press(self, key, key_modifiers):
@@ -43,19 +44,18 @@ class MainWindow(arcade.Window):
         """
         if key in (arcade.key.F11, arcade.key.P):
             self.set_fullscreen(not self.fullscreen)
-    
+
     def show_view(self, new_view):
         self._last_view = self.current_view
         super().show_view(new_view)
-    
+
     def on_resize(self, width: float, height: float):
         super().on_resize(width, height)
-    
+
     @property
     def overworld(self):
         return self._overworld
-    
+
     @property
     def last_view(self):
         return self._last_view
-                

@@ -136,3 +136,20 @@ class Contestant(arcade.Sprite):
             int: max HP
         """
         return self._base_heart_points
+
+    @property
+    def all_stats(self):
+        return {'HP': self._base_heart_points,
+                'Attack': self._base_attack,
+                'Defense': self._base_defense,
+                'Skill': self._base_skill,
+                'Speed': self._base_speed
+                }
+
+    @all_stats.setter
+    def all_stats(self, all_stats: dict):
+        self._base_heart_points = all_stats['HP']
+        self._base_attack = all_stats['Attack']
+        self._base_defense = all_stats['Defense']
+        self._base_skill = all_stats['Skill']
+        self._base_speed = all_stats['Speed']

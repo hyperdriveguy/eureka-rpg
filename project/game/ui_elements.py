@@ -1,5 +1,6 @@
 """Contains reusable UI elements.
 """
+from typing import Iterable
 import arcade
 
 
@@ -80,7 +81,7 @@ class Selector:
     """Contains selectable UI elements and determines if they are highlighted.
     """
 
-    def __init__(self, *buttons, orient='main'):
+    def __init__(self, buttons: Iterable, orient='main', y_mod=1):
         """Initialize the selector with the containing UI elements.
 
         Args:
@@ -90,6 +91,7 @@ class Selector:
         Raises:
             IndexError: an an empty sprite list was provided.
         """
+        self._y_mod = y_mod
         self._button_actions = {}
         self._button_list = arcade.SpriteList()
         for button in buttons:
@@ -98,6 +100,8 @@ class Selector:
             self._button_list.extend(button)
             self._button_actions[button[0]] = button.name
         self._cur_selection = 0
+        print('button list',len(self._button_list))
+        print('buttons', len(buttons))
 
         self._selector_list = arcade.ShapeElementList()
         self._add_selector()
@@ -108,7 +112,7 @@ class Selector:
         """
         self._selection_box = arcade.create_rectangle(
             self._button_list[self._cur_selection].center_x,
-            self._button_list[self._cur_selection].center_y * 0.78,
+            self._button_list[self._cur_selection].center_y * self._y_mod,
             self._button_list[self._cur_selection].width * 1.1,
             self._button_list[self._cur_selection].height * 0.8,
             arcade.color.BLACK,
@@ -158,7 +162,7 @@ class Selector:
     def can_select(self):
         """Determine if able to select a button.
 
-        Returns:
+        Returns:pass
             bool: player able to select
         """
         return self._can_select
@@ -166,3 +170,13 @@ class Selector:
     @can_select.setter
     def can_select(self, can_select: bool):
         self._can_select = can_select
+
+    @property
+    def selector_pos(self):
+        """Get the selector's current x/y
+
+        Returns:
+            tuple(float, float): position of the selector
+        """
+        return (self._button_list[self._cur_selection].center_x,
+                self._button_list[self._cur_selection].center_y * 0.78)

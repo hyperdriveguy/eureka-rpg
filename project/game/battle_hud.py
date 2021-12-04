@@ -85,8 +85,9 @@ class BattleHud:
             font_size=self._font_size * 0.7,
             color=arcade.color.WHITE
         )
-        self._main_select = ui_elements.Selector(self._attack_button,
-                                                 self._run_button)
+        self._main_select = ui_elements.Selector((self._attack_button,
+                                                 self._run_button),
+                                                 y_mod=0.78)
 
     def _calc_base_font_size(self):
         """Dynamically calculate the font size from the camera size.
