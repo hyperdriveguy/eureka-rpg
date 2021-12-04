@@ -9,6 +9,8 @@ class BattlePlayer(Contestant):
     """Class used for the player during battle.
 
     Inherits: Contestant
+
+    Stereotype: Information Holder
     """
 
     def __init__(self):
