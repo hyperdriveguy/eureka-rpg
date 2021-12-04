@@ -1,7 +1,9 @@
+from typing import overload
 import arcade
 from game.overworld import Overworld
 from game.battle import Battle
 from game.inventory import Inventory
+from project.game import overworld
 
 class MainWindow(arcade.Window):
     """
@@ -32,7 +34,8 @@ class MainWindow(arcade.Window):
         self._overworld = Overworld()
         self._last_view = self._overworld
         self.battle = Battle()
-        self.show_view(Inventory({'Yeet': 3, 'Bruh': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10}))
+        test_inventory = Inventory({'Yeet': 3, 'Bruh': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10})
+        self.show_view(self._overworld)
 
 
     def on_key_press(self, key, key_modifiers):
@@ -48,9 +51,6 @@ class MainWindow(arcade.Window):
     def show_view(self, new_view):
         self._last_view = self.current_view
         super().show_view(new_view)
-
-    def on_resize(self, width: float, height: float):
-        super().on_resize(width, height)
 
     @property
     def overworld(self):
