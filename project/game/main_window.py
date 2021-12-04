@@ -7,6 +7,8 @@ class MainWindow(arcade.Window):
     """
     Main application class.
 
+    Inherits: arcade.Window
+    
     Stereotype: Controller, Interfacer
     """
 
