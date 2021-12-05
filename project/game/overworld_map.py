@@ -1,7 +1,8 @@
+""" The Overworld Map """
+from concurrent.futures import ThreadPoolExecutor
 import arcade
 from game import constants
 from game.interactable import Interactable
-from concurrent.futures import ThreadPoolExecutor
 
 class OverworldMap:
     """ Responsible for the map

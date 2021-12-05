@@ -108,7 +108,7 @@ class Selector:
         Args:
             orient (str, optional): determine whether navigation is 1-D or 2-D.
                 Defaults to 'main'. Not yet implemented.
-            y_mod (int): default 1. 
+            y_mod (int): default 1.
         Raises:
             IndexError: an empty sprite list was provided.
         """

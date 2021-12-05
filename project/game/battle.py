@@ -24,7 +24,7 @@ class Battle(arcade.View):
         self._player (BattlePlayer): an instance of BattlePlayer
         self._enemy = (Contestant): an instance of Contestant
         self._contestants (arcade.SpriteList): list of contestants as sprites
-        
+
         self._timer (int): a timer
         self._player_dmg (int): player damage
         self._enemy_dmg (int): enemy damage

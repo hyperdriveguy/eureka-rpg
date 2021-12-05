@@ -1,9 +1,6 @@
 """Contains classes for the player battling.
 """
-
-import arcade
 from game.contestant import Contestant
-
 
 class BattlePlayer(Contestant):
     """Class used for the player during battle.

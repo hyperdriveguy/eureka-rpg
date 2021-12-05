@@ -1,3 +1,4 @@
+""" The game inventory """
 import arcade
 from game.ui_elements import Button, Selector
 
@@ -6,7 +7,7 @@ class Inventory(arcade.View):
 
     Inherits: arcade.View
 
-    Stereotype: 
+    Stereotype:
 
     Attributes:
         self._static_camera (arcade.Camera): an instance of arcade.Camera
@@ -44,6 +45,7 @@ class Inventory(arcade.View):
         self._selector.can_select = True
 
     def setup(self):
+        """TODO"""
         pass
 
     def on_draw(self):

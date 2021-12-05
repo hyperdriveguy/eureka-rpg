@@ -1,3 +1,4 @@
+""" The Overworld """
 import arcade
 from pyglet.math import Vec2
 
@@ -90,7 +91,6 @@ class Overworld(arcade.View):
 
         # Activate our Camera
         self.camera.use()
-
         self._map_switcher.cur_map.draw()
 
         if self._active_textbox:
@@ -242,7 +242,7 @@ class Overworld(arcade.View):
         self.player_sprite.on_key_release(key, key_modifiers)
 
         if key == arcade.key.Y:
-            #Switch to main map 
+            #Switch to main map
             # Init map
             self._map_switcher.cur_map = 'Test Map'
 
@@ -269,7 +269,7 @@ class Overworld(arcade.View):
                 self._text_box.line_by_line()
 
     def _do_interact(self):
-        """ Interact with map 
+        """ Interact with map
         """
         arcade.play_sound(self.jump_sound)
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
@@ -289,7 +289,7 @@ class Overworld(arcade.View):
 
     def on_resize(self, width: int, height: int):
         """ Resize camera and gui_camera
-        
+
             Args:
                 self (Overworld): An instance of Overworld
                 width (int): The width of the camera size

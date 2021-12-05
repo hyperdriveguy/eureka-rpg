@@ -1,3 +1,4 @@
+""" The map switcher"""
 from game.overworld_map import OverworldMap
 from game.constants import TILE_SCALING
 
@@ -31,7 +32,7 @@ class MapSwitcher:
             spawn ([type], optional): [description]. Defaults to None.
         """
         self._cur_map = OverworldMap(self._all_maps[map_name], self._player)
-    
+
     def warp_map(self, warp_properties):
         """ Warp to another map
 
@@ -49,7 +50,7 @@ class MapSwitcher:
         # print((warp_x), (warp_y))
         # print(warp_properties)
         # print(self._cur_map.map_height)
-    
+
     @property
     def cur_map(self):
         """ Get the current map
@@ -58,7 +59,7 @@ class MapSwitcher:
             map: The current map
         """
         return self._cur_map
-    
+
     @cur_map.setter
     def cur_map(self, cur_map):
         """ Set the current map

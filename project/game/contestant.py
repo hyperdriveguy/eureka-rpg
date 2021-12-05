@@ -1,6 +1,5 @@
 """Contains classes for battle contestants.
 """
-
 from typing import Iterable
 from random import randint
 import arcade
@@ -14,10 +13,10 @@ class Contestant(arcade.Sprite):
 
     Stereotype: Information Holder
 
-    Attributes: 
+    Attributes:
         self._scale (int): scaling for characters
-        self._is_turn (bool): determine if it is contestants turn 
-        
+        self._is_turn (bool): determine if it is contestants turn
+
         self._base_heart_points (int): contestants max hp
         self._base_attack (int): contestants max attack capability
         self._base_defense (int): contestants max defense capability

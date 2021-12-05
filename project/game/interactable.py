@@ -1,4 +1,4 @@
-import arcade
+""" Map Interactions """
 from concurrent.futures import ThreadPoolExecutor
 from game import constants
 
@@ -10,7 +10,7 @@ class Interactable:
     Attributes:
        self._player (sprite): the player
        self._can_interact (bool): Check if player can interact
-       self._last_intersect_msg (int):  
+       self._last_intersect_msg (int):
     """
     def __init__(self, tiled_object_list, player, map_height):
         """ Class Contructor

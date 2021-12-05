@@ -1,4 +1,4 @@
-import arcade
+""" The Player """
 from game.overworld_player import OverworldPlayer
 from game.battle_player import BattlePlayer
 
