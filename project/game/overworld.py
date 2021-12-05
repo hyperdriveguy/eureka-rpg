@@ -1,13 +1,9 @@
-import textwrap
-import random
-
 import arcade
 from pyglet.math import Vec2
 
 from game import constants
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
-from game.overworld_map import OverworldMap
 from game.map_switcher import MapSwitcher
 from game.battle import Battle
 
@@ -15,10 +11,24 @@ from game.battle import Battle
 class Overworld(arcade.View):
     """Contains functions exclusive to the overworld.
 
+    Inherits: arcade.View
+
     Stereotype: Controller, Information Holder, Interfacer
+
+    Attributes:
+        self._active_textbox (bool): Check if textbox is activated
+
+        self.cur_text (str): the current text to be displayed
+
+        self.free_camera (bool): Check if camera should be changed to free mode
+        self.free_coords (): coordinates of the free camera
+
+        self.show_debug (bool): Check if debugging info should be shown
+
+        self.collect_coin_sound (): sound of collecting coins
+        self.jump_sound (): sound of jump
+        self.game_over (): sound of gameover
     """
-
-
     def __init__(self):
         """ Class Constructor """
         super().__init__()
