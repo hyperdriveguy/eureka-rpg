@@ -21,6 +21,11 @@ class BattleHud:
         Args:
             gui_camera (arcade.Camera): The ui camera for the HUD.
             player (BattlePlayer): The player's battling attributes.
+
+        Attributes:
+            self._gui_camera (arcade.Camera): ui camera. An instance of acrade.Camera
+            self._player (BattlePlayer): The battle player. An instance of BattlePlayer
+            self._has_selected (bool): Determin if player has made selection
         """
         self._gui_camera = gui_camera
         self._player = player
@@ -63,7 +68,7 @@ class BattleHud:
             color=arcade.color.WHITE
         )
 
-    def _make_buttons(self,):
+    def _make_buttons(self):
         """Make the UI buttons for selecting an action.
         """
         run_draw_x = round(self._gui_camera.viewport_width * 0.95)
