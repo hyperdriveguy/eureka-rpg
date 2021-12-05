@@ -1,13 +1,10 @@
-import textwrap
-import random
-
+""" The Overworld """
 import arcade
 from pyglet.math import Vec2
 
 from game import constants
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
-from game.overworld_map import OverworldMap
 from game.map_switcher import MapSwitcher
 from game.battle import Battle
 
@@ -15,10 +12,24 @@ from game.battle import Battle
 class Overworld(arcade.View):
     """Contains functions exclusive to the overworld.
 
+    Inherits: arcade.View
+
     Stereotype: Controller, Information Holder, Interfacer
+
+    Attributes:
+        self._active_textbox (bool): Check if textbox is activated
+
+        self.cur_text (str): the current text to be displayed
+
+        self.free_camera (bool): Check if camera should be changed to free mode
+        self.free_coords (): coordinates of the free camera
+
+        self.show_debug (bool): Check if debugging info should be shown
+
+        self.collect_coin_sound (): sound of collecting coins
+        self.jump_sound (): sound of jump
+        self.game_over (): sound of gameover
     """
-
-
     def __init__(self):
         """ Class Constructor """
         super().__init__()
@@ -80,7 +91,6 @@ class Overworld(arcade.View):
 
         # Activate our Camera
         self.camera.use()
-
         self._map_switcher.cur_map.draw()
 
         if self._active_textbox:
@@ -109,8 +119,6 @@ class Overworld(arcade.View):
                     arcade.csscolor.WHITE,
                     18
                 )
-
-
             try:
                 cur_fps = arcade.get_fps()
                 if cur_fps >= 60:
@@ -134,8 +142,10 @@ class Overworld(arcade.View):
                 print('Warning: Timings are not enabled.')
 
     def center_camera(self, sprite: arcade.Sprite):
-        """ 
-        Center the camera on the player        
+        """ Center the camera on the player
+
+        Args:
+            sprite (arcade.Sprite): The sprite to center the camera around
         """
         screen_center_x = sprite.center_x - (self.camera.viewport_width / 2)
         screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
@@ -153,10 +163,12 @@ class Overworld(arcade.View):
         self.camera.move_to(player_centered)
 
     def on_update(self, delta_time):
-        """
-        All the logic to move, and the game logic goes here.
+        """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
+
+        Args:
+            delta_time (float): time in seconds since method was last called.
         """
         # Update player movement
         self.player_sprite.on_update(delta_time)
@@ -176,6 +188,10 @@ class Overworld(arcade.View):
     def on_key_press(self, key, key_modifiers):
         """
         Called whenever a key on the keyboard is pressed.
+
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
 
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
@@ -218,12 +234,15 @@ class Overworld(arcade.View):
         """
         Called whenever the user lets off a previously pressed key.
 
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
 
         if key == arcade.key.Y:
-            #Switch to main map 
+            #Switch to main map
             # Init map
             self._map_switcher.cur_map = 'Test Map'
 
@@ -250,6 +269,8 @@ class Overworld(arcade.View):
                 self._text_box.line_by_line()
 
     def _do_interact(self):
+        """ Interact with map
+        """
         arcade.play_sound(self.jump_sound)
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
@@ -268,7 +289,7 @@ class Overworld(arcade.View):
 
     def on_resize(self, width: int, height: int):
         """ Resize camera and gui_camera
-        
+
             Args:
                 self (Overworld): An instance of Overworld
                 width (int): The width of the camera size

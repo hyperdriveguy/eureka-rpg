@@ -1,6 +1,5 @@
 """Contains classes for battle contestants.
 """
-
 from typing import Iterable
 from random import randint
 import arcade
@@ -11,8 +10,32 @@ class Contestant(arcade.Sprite):
     """A contestant in battle.
 
     Inherits: arcade.Sprite
-    """
 
+    Stereotype: Information Holder
+
+    Attributes:
+        self._scale (int): scaling for characters
+        self._is_turn (bool): determine if it is contestants turn
+
+        self._base_heart_points (int): contestants max hp
+        self._base_attack (int): contestants max attack capability
+        self._base_defense (int): contestants max defense capability
+        self._base_skill (int): contestants max skill level
+        self._base_speed (int): contestants max speed capability
+
+        self._cur_heart_points (int): contestants current hp
+        self._attack_mod (int): attack modifier
+        self._defense_mod (int): defense modifier
+        self._skill_mod (int): skill modifier
+        self._speed_mod (int): speed modifier
+
+        self._last_text_update (int):
+        self._cur_texture (int): the index of current texture to call from textures list
+        self._update_direction (int): update contestant direction
+        self._anim_speed (int): animation speed
+        self._anim_timer (int): animation timer
+        self._idle_textures (list): list of textures for animation
+    """
     def __init__(self,
                  idle_pics: Iterable,
                  hp=10,
@@ -117,11 +140,16 @@ class Contestant(arcade.Sprite):
 
     @is_turn.setter
     def is_turn(self, is_turn: bool):
+        """ Set is_turn
+
+        Args:
+            is_turn (bool): determine if it is the player's turn
+        """
         self._is_turn = is_turn
 
     @property
     def cur_hp(self):
-        """Current player HP.
+        """ Get current player HP.
 
         Returns:
             int: current HP
@@ -130,11 +158,16 @@ class Contestant(arcade.Sprite):
 
     @cur_hp.setter
     def cur_hp(self, cur_hp: int):
+        """ Set cur_hp
+
+        Args:
+            cur_hp (int): Current player HP
+        """
         self._cur_heart_points = cur_hp
 
     @property
     def max_hp(self):
-        """Max player HP.
+        """ Get Max player HP.
 
         Returns:
             int: max HP
@@ -143,6 +176,11 @@ class Contestant(arcade.Sprite):
 
     @property
     def all_stats(self):
+        """ Get all contestant stats
+
+        Returns:
+            dictionary: contestant base stats
+        """
         return {'HP': self._base_heart_points,
                 'Attack': self._base_attack,
                 'Defense': self._base_defense,
@@ -152,6 +190,11 @@ class Contestant(arcade.Sprite):
 
     @all_stats.setter
     def all_stats(self, all_stats: dict):
+        """ Set contestant's base stats to a dictionary
+
+        Args:
+            all_stats (dict): dictionary of all the contestants base stats
+        """
         self._base_heart_points = all_stats['HP']
         self._base_attack = all_stats['Attack']
         self._base_defense = all_stats['Defense']
