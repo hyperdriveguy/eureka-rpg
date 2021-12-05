@@ -38,13 +38,15 @@ class OverworldMap:
             self._player.center_x, self._player.center_y = spawn
 
         def build_map_objects():
+            """ Create the map objects
+            """
             self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
 
         def build_map_scene():
-            # Initialize Scene with our TileMap, this will automatically add all layers
-            # from the map as SpriteLists in the scene in the proper order.
+            """ Initialize Scene with our TileMap, this will automatically add all layers 
+            from the map as SpriteLists in the scene in the proper order. 
+            """
             self._scene = arcade.Scene.from_tilemap(self._tile_map)
-
             self._scene.add_sprite_list_before("Player", 'Foreground')
             self._scene.add_sprite("Player", self._player)
 
@@ -59,11 +61,16 @@ class OverworldMap:
 
 
     def draw(self):
-        # Draw our Scene
+        """ Draw the Scene """
         self._scene.draw()
 
 
     def update(self, delta_time):
+        """ Update physics engine, player animation, and interactable objects.
+
+        Args:
+            delta_time (float): time in seconds since method was last called.
+        """
         # Move the player with the physics engine
         self._physics_engine.update()
 
@@ -74,6 +81,12 @@ class OverworldMap:
         self._text_objects.update_interactable(delta_time)
 
     def on_keypress(self, key, key_modifiers):
+        """Called whenever a key on the keyboard is pressed.
+
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
+        """
         self._text_objects.update_interactable(force_check=True)
 
     @property

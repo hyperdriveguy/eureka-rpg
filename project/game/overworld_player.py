@@ -152,7 +152,7 @@ class OverworldPlayer(arcade.Sprite):
                 self.character_face_x = constants.FACE_NONE
 
     def on_key_press(self, key, key_modifiers):
-        """Get player keypresses.
+        """Called whenever a key on the keyboard is pressed.
 
         Args:
             key (int): key that was pressed.
