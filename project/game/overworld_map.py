@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 class OverworldMap:
 
-    def __init__(self, map_file, player):
+    def __init__(self, map_file, player, spawn=None):
         # Create the Sprite lists
         self._player = player
 
@@ -31,9 +31,13 @@ class OverworldMap:
         self._full_map_width = self._tile_map.width * self._tile_map.tile_width * self._tile_map.scaling
         self._full_map_height = self._tile_map.height * self._tile_map.tile_height * self._tile_map.scaling
 
-        def build_map_objects():
+        if spawn is None:
             self._spawn = self._tile_map.object_lists['Spawn'][0]
             self._player.center_x, self._player.center_y = self._spawn.shape
+        else:
+            self._player.center_x, self._player.center_y = spawn
+
+        def build_map_objects():
             self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
 
         def build_map_scene():

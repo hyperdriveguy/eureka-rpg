@@ -1,13 +1,15 @@
 import textwrap
-import arcade
 import random
+
+import arcade
+from pyglet.math import Vec2
 
 from game import constants
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
 from game.overworld_map import OverworldMap
 from game.map_switcher import MapSwitcher
-from pyglet.math import Vec2
+from game.battle import Battle
 
 
 class Overworld(arcade.View):
@@ -234,28 +236,35 @@ class Overworld(arcade.View):
                 if self._map_switcher.cur_map.player_can_interact and key == arcade.key.SPACE:
                     self._do_interact()
             except KeyError:
-                print('Warning: Interactable has no assigned text.')
+                print('Warning: Interactable has no relevant properties.')
+                print(self._map_switcher.cur_map.object_properties)
         elif key == arcade.key.SPACE:
             arcade.play_sound(self.jump_sound)
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if len(self._map_switcher.cur_map.object_properties) > 2 and self._cur_battle == 'cactus':
-                    self.window.show_view(self.window.battle)
-                    del self._map_switcher.cur_map.object_properties['battle']
-                    #self._map_switcher.cur_map.object_properties['text'] = 'Battle Complete!'
-                    print(self._map_switcher.cur_map.object_properties)
+                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._map_switcher.cur_map.object_properties['done']:
+                    self.window.show_view(Battle())
+                    self._map_switcher.cur_map.object_properties['done'] = True
             else:
                 self._text_box.line_by_line()
 
     def _do_interact(self):
         arcade.play_sound(self.jump_sound)
-        self.cur_text = self._map_switcher.cur_map.object_text
-        if len(self._map_switcher.cur_map.object_properties) > 2:
-            self._cur_battle = self._map_switcher.cur_map.object_properties['battle']
-        self._active_textbox = True
-        self._text_box = DrawTextBox(self.cur_text)
-        self.player_sprite.force_movement_stop()
+        if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
+            self.cur_text = self._map_switcher.cur_map.object_text
+        elif self._map_switcher.cur_map.object_properties['type'].lower() == 'battle':
+            if self._map_switcher.cur_map.object_properties['done']:
+                self.cur_text = self._map_switcher.cur_map.object_properties['afterbattle']
+            else:
+                self.cur_text = self._map_switcher.cur_map.object_properties['prebattle']
+                self._cur_battle = self._map_switcher.cur_map.object_properties['battle']
+        if self._map_switcher.cur_map.object_properties['type'].lower() == 'warp':
+            self._map_switcher.warp_map(self._map_switcher.cur_map.object_properties['warp'])
+        else:
+            self._active_textbox = True
+            self._text_box = DrawTextBox(self.cur_text)
+            self.player_sprite.force_movement_stop()
 
     def on_resize(self, width: int, height: int):
         """ Resize camera and gui_camera

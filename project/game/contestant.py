@@ -43,7 +43,8 @@ class Contestant(arcade.Sprite):
                  attack=5,
                  defense=5,
                  skill=5,
-                 speed=5):
+                 speed=5,
+                 stat_dict: dict=None):
         """Initialize attributes of the contestant.
 
         Args:
@@ -58,12 +59,15 @@ class Contestant(arcade.Sprite):
         self._scale = constants.CHARACTER_SCALING
         self._is_turn = False
 
-        # Base Battle Stats
-        self._base_heart_points = hp
-        self._base_attack = attack
-        self._base_defense = defense
-        self._base_skill = skill
-        self._base_speed = speed
+        if stat_dict is None:
+            # Base Battle Stats
+            self._base_heart_points = hp
+            self._base_attack = attack
+            self._base_defense = defense
+            self._base_skill = skill
+            self._base_speed = speed
+        else:
+            self.all_stats = stat_dict
 
         # Current stats/modifiers
         self._cur_heart_points = self._base_heart_points

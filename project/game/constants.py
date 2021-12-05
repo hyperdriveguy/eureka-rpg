@@ -7,7 +7,6 @@ GAME_NAME = "Eureka!"
 # Constants used to scale our sprites from their original size
 CHARACTER_SCALING = 2
 TILE_SCALING = 2
-COIN_SCALING = 0.5
 
 # Movement speed of player, in pixels per frame
 PLAYER_MOVEMENT_SPEED = 5
@@ -27,4 +26,17 @@ map_path = 'project/assets/'
 maps = {
     'Test Map': 'test_map.json',
     'Test Map 2': 'test_map_2.json'
+}
+
+# Enemy Constants
+enemies = {
+    'cactus': {
+        'stats': {
+            'HP': 8,
+            'Attack': 7,
+            'Defense': 0,
+            'Skill': 5,
+            'Speed': 1
+            }
+    }
 }
