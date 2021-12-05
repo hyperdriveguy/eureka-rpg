@@ -8,8 +8,14 @@ class Button(arcade.SpriteList):
     """A selectable button with a text indicator.
 
     Inherits: arcade.Spritelist
-    """
 
+    Stereotype: Information Holder
+
+    Attributes:
+        self._action_name (str): The name of the action the player can take
+
+        self._button_text (text sprite): The text of the button as a sprite
+    """
     def __init__(self,
                  text: str,
                  start_x: float,
@@ -65,6 +71,10 @@ class Button(arcade.SpriteList):
         self.append(self._button_text)
 
     def clear(self):
+        """
+        Raises:
+            NotImplementedError: message if error: UI elements are not clearable
+        """
         raise NotImplementedError('UI elements are not clearable.')
 
     @property
@@ -79,6 +89,17 @@ class Button(arcade.SpriteList):
 
 class Selector:
     """Contains selectable UI elements and determines if they are highlighted.
+
+    Stereotype: Controller
+
+    Attributes:
+        self._y_mod (int): y point modification
+        self._button_actions (dict): Dictionary of the button actions
+        self._button_list (arcade.SpriteList): an instance of arcade.SpriteList()
+        self._cur_selection (int): The element that is selected
+
+        self._selector_list (arcade.ShapeElementList): an instance of arcade.ShapeElementList()
+        self._can_select (bool): Check if element can be selected
     """
 
     def __init__(self, buttons: Iterable, orient='main', y_mod=1):
@@ -87,9 +108,9 @@ class Selector:
         Args:
             orient (str, optional): determine whether navigation is 1-D or 2-D.
                 Defaults to 'main'. Not yet implemented.
-
+            y_mod (int): default 1. 
         Raises:
-            IndexError: an an empty sprite list was provided.
+            IndexError: an empty sprite list was provided.
         """
         self._y_mod = y_mod
         self._button_actions = {}
@@ -100,8 +121,8 @@ class Selector:
             self._button_list.extend(button)
             self._button_actions[button[0]] = button.name
         self._cur_selection = 0
-        print('button list',len(self._button_list))
-        print('buttons', len(buttons))
+        # print('button list',len(self._button_list))
+        # print('buttons', len(buttons))
 
         self._selector_list = arcade.ShapeElementList()
         self._add_selector()
@@ -169,6 +190,11 @@ class Selector:
 
     @can_select.setter
     def can_select(self, can_select: bool):
+        """Set self._can_select
+
+        Args:
+            can_select (bool): Check if element can be selected
+        """
         self._can_select = can_select
 
     @property
