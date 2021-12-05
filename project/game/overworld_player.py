@@ -16,7 +16,7 @@ class OverworldPlayer(arcade.Sprite):
 
         self._cur_texture (int): current index of the textures list
         self._force_walk_texture (bool): check if walk_texture should be implemented
-        self._force_walk_update_counter (int): 
+        self._force_walk_update_counter (int):
 
         self._scale (int): to scale character
 
@@ -83,7 +83,7 @@ class OverworldPlayer(arcade.Sprite):
         #    self.walk_textures.append(texture)
 
     def update_animation(self, delta_time: float = 1 / 60):
-        """ update the player movement animation   
+        """ update the player movement animation
 
         Args:
             delta_time (float, optional): time in seconds since method was last called. Defaults to 1/60.

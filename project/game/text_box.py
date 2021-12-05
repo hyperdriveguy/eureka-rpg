@@ -1,11 +1,11 @@
 """ Drawing the Text Box """
-import arcade
 import textwrap
+import arcade
 from game import constants
 
 class DrawTextBox:
     """ Responsible for drawing text boxes
-  
+
     Attributes:
         self.rec_width (int): width of text box
         self.rec_length (int): length of text box
@@ -40,7 +40,7 @@ class DrawTextBox:
         """ Create the text that will be seen in the text box.
 
             Args:
-                self (DrawTextBox): An instance of DrawTextBox              
+                self (DrawTextBox): An instance of DrawTextBox    
         """
         self.page_text = ''
         if self.num_lines >= 4:
@@ -88,7 +88,7 @@ class DrawTextBox:
                 anchor_y="center",
                 multiline=True,
                 width=self.rec_width - 15
-            )        
+            ) 
         else:
             arcade.draw_text(
                 self.text,
