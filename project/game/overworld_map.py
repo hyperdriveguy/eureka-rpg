@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 class OverworldMap:
     """ Responsible for the map
-    Stereotype:
+    Stereotype: Information Holder, Controller
 
     Attributes:
         self._player = player
@@ -21,8 +21,8 @@ class OverworldMap:
         """ Class Constructor
 
         Args:
-            map_file ([type]): [description]
-            player ([type]): [description]
+            map_file (file): map file
+            player (sprite): player sprite
             spawn ([type], optional): [description]. Defaults to None.
         """
         # Create the Sprite lists
@@ -81,7 +81,6 @@ class OverworldMap:
     def draw(self):
         """Draw the Scene"""
         self._scene.draw()
-
 
     def update(self, delta_time):
         """ Update physics engine, player animation, and interactable object
