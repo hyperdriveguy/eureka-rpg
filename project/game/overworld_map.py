@@ -4,7 +4,19 @@ from game.interactable import Interactable
 from concurrent.futures import ThreadPoolExecutor
 
 class OverworldMap:
+    """ Responsible for the map
+    Stereotype:
 
+    Attributes:
+        self._player = player
+        layer_options (dict): set some layer options to use spatial hashing
+
+        self._tile_map: tiled map
+
+        # Calculate full map width and height
+        self._full_map_width (int):The width of the map
+        self._full_map_height (int):The height of the map
+    """
     def __init__(self, map_file, player, spawn=None):
         """ Class Constructor
 
