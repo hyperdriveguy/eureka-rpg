@@ -1,3 +1,6 @@
+import textwrap
+import random
+
 import arcade
 from pyglet.math import Vec2
 
@@ -12,30 +15,22 @@ from game.battle import Battle
 class Overworld(arcade.View):
     """Contains functions exclusive to the overworld.
 
-    Inherits: arcade.View
-
     Stereotype: Controller, Information Holder, Interfacer
-
-    Attributes:
-        self._active_textbox (bool): Check if text box is activated
-        self.cur_text (str): Current text to be displayed
-        self.free_camera (bool): Check if camera should change to free view
-        self.free_coords (): coordinates of free camera
-        self.show_debug (bool): Check if debugging text should show to screen
-        self.collect_coin_sound (): sound to be played when coin is collected
-        self.jump_sound (): interaction sound
-        self.game_over (): gameover sound
     """
+
+
     def __init__(self):
         """ Class Constructor """
         super().__init__()
 
         self._active_textbox = False
+
         self.cur_text = ''
 
         self.free_camera = False
         self.free_coords = 0, 0
 
+        # Keep track of the score
         self.show_debug = False
         arcade.enable_timings()
 
@@ -46,6 +41,8 @@ class Overworld(arcade.View):
 
         arcade.set_background_color(arcade.color.GRAY)
 
+        # If you have sprite lists, you should create them here,
+        # and set them to None
         self.setup()
 
     def setup(self):
@@ -74,6 +71,7 @@ class Overworld(arcade.View):
         """
         Render the screen.
         """
+
         # This command should happen before we start drawing. It will clear
         # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
