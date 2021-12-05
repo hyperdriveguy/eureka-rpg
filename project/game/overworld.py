@@ -109,8 +109,6 @@ class Overworld(arcade.View):
                     arcade.csscolor.WHITE,
                     18
                 )
-
-
             try:
                 cur_fps = arcade.get_fps()
                 if cur_fps >= 60:
@@ -134,8 +132,10 @@ class Overworld(arcade.View):
                 print('Warning: Timings are not enabled.')
 
     def center_camera(self, sprite: arcade.Sprite):
-        """ 
-        Center the camera on the player        
+        """ Center the camera on the player
+
+        Args:
+            sprite (arcade.Sprite): The sprite to center the camera around
         """
         screen_center_x = sprite.center_x - (self.camera.viewport_width / 2)
         screen_center_y = sprite.center_y - (self.camera.viewport_height / 2)
@@ -153,10 +153,12 @@ class Overworld(arcade.View):
         self.camera.move_to(player_centered)
 
     def on_update(self, delta_time):
-        """
-        All the logic to move, and the game logic goes here.
+        """ All the logic to move, and the game logic goes here.
         Normally, you'll call update() on the sprite lists that
         need it.
+
+        Args:
+            delta_time (float): time in seconds since method was last called.
         """
         # Update player movement
         self.player_sprite.on_update(delta_time)
@@ -176,6 +178,10 @@ class Overworld(arcade.View):
     def on_key_press(self, key, key_modifiers):
         """
         Called whenever a key on the keyboard is pressed.
+
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
 
         For a full list of keys, see:
         https://api.arcade.academy/en/latest/arcade.key.html
@@ -218,6 +224,9 @@ class Overworld(arcade.View):
         """
         Called whenever the user lets off a previously pressed key.
 
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
@@ -250,6 +259,8 @@ class Overworld(arcade.View):
                 self._text_box.line_by_line()
 
     def _do_interact(self):
+        """ Interact with map 
+        """
         arcade.play_sound(self.jump_sound)
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
