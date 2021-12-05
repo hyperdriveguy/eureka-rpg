@@ -202,7 +202,7 @@ class BattleHud:
         self._main_select.draw()
 
     def on_key_press(self, key, key_modifiers):
-        """Get player keypresses.
+        """Called whenever a key on the keyboard is pressed.
 
         Args:
             key (int): key that was pressed.
