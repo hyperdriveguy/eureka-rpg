@@ -1,6 +1,8 @@
 """ This module contain the Overworld player"""
 import arcade
+
 from game import constants
+
 
 class OverworldPlayer(arcade.Sprite):
     """Contains functions of the player.
@@ -35,6 +37,8 @@ class OverworldPlayer(arcade.Sprite):
 
         # Default to face-down
         self._character_face_direction = [constants.FACE_NONE , constants.FACE_DOWN]
+        # Determine which direction has texture priority
+        self._dir_priority = 1
 
         # Used for flipping between image sequences
         self._cur_texture = 0
@@ -69,15 +73,44 @@ class OverworldPlayer(arcade.Sprite):
 
         # Load textures for idle standing
         #self.idle_texture_pair = load_texture_pair(f"{main_path}_idle.png")
-        self._idle_texture = arcade.load_texture('project/assets/placeholder.png')
-        self.texture = self._idle_texture
+        self._idle_textures = {
+            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png'),
+            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png'),
+            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
+            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+        }
+        self.texture = self._idle_textures[self._character_face_direction[self._dir_priority]]
 
         # Load textures for walking
-        self._walk_textures = []
-        self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png'))
-        self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png'))
-        self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png', flipped_horizontally=True))
-        self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png', flipped_horizontally=True))
+        self._walk_textures = [{
+            'DOWN': arcade.load_texture('project/assets/overworld_player_step.png'),
+            'UP': arcade.load_texture('project/assets/overworld_player_back_step.png'),
+            'LEFT': arcade.load_texture('project/assets/overworld_player_side_step.png'),
+            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_step.png', flipped_horizontally=True)
+            },
+            {
+            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png'),
+            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png'),
+            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
+            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+            },
+            {
+            'DOWN': arcade.load_texture('project/assets/overworld_player_step.png', flipped_horizontally=True),
+            'UP': arcade.load_texture('project/assets/overworld_player_back_step.png', flipped_horizontally=True),
+            'LEFT': arcade.load_texture('project/assets/overworld_player_side_step_alt.png'),
+            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_step_alt.png', flipped_horizontally=True)
+            },
+            {
+            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png', flipped_horizontally=True),
+            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png', flipped_horizontally=True),
+            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
+            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+            }
+        ]
+        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png'))
+        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png'))
+        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png', flipped_horizontally=True))
+        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png', flipped_horizontally=True))
         #for i in range(8):
         #    texture = load_texture_pair(f"{main_path}_walk{i}.png")
         #    self.walk_textures.append(texture)
@@ -95,9 +128,11 @@ class OverworldPlayer(arcade.Sprite):
         #elif self.change_x > 0 and self.character_face_direction == LEFT_FACING:
         #    self.character_face_direction = RIGHT_FACING
 
+        direction = self._character_face_direction[self._dir_priority]
+
         # Idle animation
         if self.change_x == 0 and self.change_y == 0 and not self._force_walk_texture:
-            self.texture = self._idle_texture
+            self.texture = self._idle_textures[direction]
             return
 
         # Walking animation
@@ -106,7 +141,7 @@ class OverworldPlayer(arcade.Sprite):
             self._cur_texture = 0
         frame = self._cur_texture // constants.UPDATES_PER_FRAME
         #direction = self.character_face_direction
-        self.texture = self._walk_textures[frame]#[direction]
+        self.texture = self._walk_textures[frame][direction]
         if self._force_walk_texture and self._force_walk_update_counter < 1/30:
             self._force_walk_update_counter += delta_time
         else:
@@ -130,10 +165,12 @@ class OverworldPlayer(arcade.Sprite):
             if self.character_face_y == constants.FACE_UP:
                 self.change_y = constants.PLAYER_MOVEMENT_SPEED
             self.character_face_y = constants.FACE_UP
+            self._dir_priority = 1
         elif self._down_pressed and not self._up_pressed:
             if self.character_face_y == constants.FACE_DOWN:
                 self.change_y = -constants.PLAYER_MOVEMENT_SPEED
             self.character_face_y = constants.FACE_DOWN
+            self._dir_priority = 1
         else:
             self.change_y = 0
             if self.character_face_x != constants.FACE_NONE and self.change_x != 0:
@@ -143,10 +180,12 @@ class OverworldPlayer(arcade.Sprite):
             if self.character_face_x == constants.FACE_LEFT:
                 self.change_x = -constants.PLAYER_MOVEMENT_SPEED
             self.character_face_x = constants.FACE_LEFT
+            self._dir_priority = 0
         elif self._right_pressed and not self._left_pressed:
             if self.character_face_x == constants.FACE_RIGHT:
                 self.change_x = constants.PLAYER_MOVEMENT_SPEED
             self.character_face_x = constants.FACE_RIGHT
+            self._dir_priority = 0
         else:
             self.change_x = 0
             if self.character_face_y != constants.FACE_NONE and self.change_y != 0:

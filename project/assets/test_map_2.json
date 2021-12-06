@@ -115,6 +115,50 @@
                  "width":32,
                  "x":288,
                  "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":12,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"warp"
+                        }, 
+                        {
+                         "name":"warp",
+                         "type":"string",
+                         "value":"Test Map 2, 2944, 2976"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":160
+                }, 
+                {
+                 "height":32,
+                 "id":15,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"warp"
+                        }, 
+                        {
+                         "name":"warp",
+                         "type":"string",
+                         "value":"Test Map 2, 64, 160"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2944,
+                 "y":2976
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -146,7 +190,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":12,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",

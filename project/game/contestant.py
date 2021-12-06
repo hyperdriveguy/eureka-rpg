@@ -1,8 +1,10 @@
 """Contains classes for battle contestants.
 """
-from typing import Iterable
 from random import randint
+from typing import Iterable
+
 import arcade
+
 from game import constants
 
 

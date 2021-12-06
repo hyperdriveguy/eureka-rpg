@@ -1,6 +1,7 @@
 """ The Player """
-from game.overworld_player import OverworldPlayer
 from game.battle_player import BattlePlayer
+from game.overworld_player import OverworldPlayer
+
 
 class Player:
     """ Various views

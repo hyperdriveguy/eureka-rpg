@@ -1,9 +1,10 @@
 """This module contains the Battle HUD.
 """
 import arcade
-from game.battle_player import BattlePlayer
+
 from game import ui_elements
-from game.utils import px_to_pt, get_smallest
+from game.battle_player import BattlePlayer
+from game.utils import get_smallest, px_to_pt
 
 
 class BattleHud:

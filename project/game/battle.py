@@ -1,9 +1,11 @@
 """Contains the battle engine.
 """
 import sys
+
 import arcade
-from game.battle_player import BattlePlayer
+
 from game.battle_hud import BattleHud
+from game.battle_player import BattlePlayer
 from game.contestant import Contestant
 from game.utils import get_smallest
 

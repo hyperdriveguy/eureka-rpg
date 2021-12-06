@@ -22,15 +22,18 @@ FACE_UP = 'UP'
 FACE_DOWN = 'DOWN'
 
 # Map Constants
-map_path = 'project/assets/'
-maps = {
+MAP_PATH = 'project/assets/'
+MAPS = {
     'Test Map': 'test_map.json',
     'Test Map 2': 'test_map_2.json'
 }
 
 # Enemy Constants
-enemies = {
+ENEMIES = {
     'cactus': {
+        'anim': ['project/assets/angry_cactus.png',
+                 'project/assets/angry_cactus_1.png',
+                 'project/assets/angry_cactus_2.png'],
         'stats': {
             'HP': 8,
             'Attack': 7,

@@ -45,7 +45,7 @@ class OverworldMap:
         }
 
         # Read in the tiled map
-        self._tile_map = arcade.load_tilemap(constants.map_path + map_file, constants.TILE_SCALING, layer_options)
+        self._tile_map = arcade.load_tilemap(constants.MAP_PATH + map_file, constants.TILE_SCALING, layer_options)
 
         # Calculate full map width and height
         self._full_map_width = self._tile_map.width * self._tile_map.tile_width * self._tile_map.scaling
