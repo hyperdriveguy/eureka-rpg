@@ -3,10 +3,10 @@ import arcade
 from pyglet.math import Vec2
 
 from game import constants
+from game.battle import Battle
+from game.map_switcher import MapSwitcher
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
-from game.map_switcher import MapSwitcher
-from game.battle import Battle
 
 
 class Overworld(arcade.View):
@@ -44,6 +44,9 @@ class Overworld(arcade.View):
         # Keep track of the score
         self.show_debug = False
         arcade.enable_timings()
+
+        self._text_box = None
+        self._cur_battle = None
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
@@ -263,7 +266,7 @@ class Overworld(arcade.View):
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
                 if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._map_switcher.cur_map.object_properties['done']:
-                    self.window.show_view(Battle())
+                    self.window.show_view(Battle(self._cur_battle))
                     self._map_switcher.cur_map.object_properties['done'] = True
             else:
                 self._text_box.line_by_line()

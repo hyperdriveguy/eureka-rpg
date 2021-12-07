@@ -179,6 +179,43 @@
                  "width":32,
                  "x":192,
                  "y":99
+                }, 
+                {
+                 "height":32.0909,
+                 "id":14,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"afterbattle",
+                         "type":"string",
+                         "value":"The cactus seems defeated."
+                        }, 
+                        {
+                         "name":"battle",
+                         "type":"string",
+                         "value":"pickaxe"
+                        }, 
+                        {
+                         "name":"done",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"prebattle",
+                         "type":"string",
+                         "value":"Testing the interaction"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"battle"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -210,7 +247,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":14,
+ "nextobjectid":15,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
@@ -233,47 +270,69 @@
          "tiles":[
                 {
                  "id":0,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/boxCrate_double.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/boxCrate_double.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":1,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/items\/coinGold.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/items\/coinGold.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":2,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCenter.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCenter.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":3,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCorner_left.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCorner_left.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":4,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCorner_right.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCorner_right.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":5,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHill_left.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHill_left.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":6,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHill_right.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHill_right.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":7,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassLeft.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassLeft.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":8,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassMid.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassMid.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":9,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassRight.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassRight.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":10,
                  "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/stoneHalf.png",
+                 "imageheight":128,
+                 "imagewidth":128,
                  "objectgroup":
                     {
                      "draworder":"index",
@@ -332,47 +391,69 @@
                 }, 
                 {
                  "id":11,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bridgeA.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bridgeA.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":12,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bridgeB.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bridgeB.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":13,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliff_right.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliff_right.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":14,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliffAlt_left.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliffAlt_left.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":15,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliffAlt_right.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliffAlt_right.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":16,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHalf.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHalf.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":17,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHalf_left.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassHalf_left.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":18,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grass.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grass.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":19,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCenter_round.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCenter_round.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":20,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliff_left.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/grassCliff_left.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }, 
                 {
                  "id":21,
-                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bomb.png"
+                 "image":"..\/..\/..\/..\/..\/..\/..\/..\/usr\/lib\/python3.9\/site-packages\/arcade\/resources\/images\/tiles\/bomb.png",
+                 "imageheight":128,
+                 "imagewidth":128
                 }],
          "tilewidth":128
         }, 

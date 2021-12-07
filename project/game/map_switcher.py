@@ -24,7 +24,7 @@ class MapSwitcher:
         self._cur_map = None
         self.switch_map(next(iter(self._all_maps)))
 
-    def switch_map(self, map_name, spawn=None):
+    def switch_map(self, map_name):
         """ Switch to another overworld map
 
         Args:
@@ -33,7 +33,7 @@ class MapSwitcher:
         """
         self._cur_map = OverworldMap(self._all_maps[map_name], self._player)
 
-    def warp_map(self, warp_properties):
+    def warp_map(self, warp_properties: str):
         """ Warp to another map
 
         Args:
@@ -46,10 +46,6 @@ class MapSwitcher:
         warp_y = (-float(warp_y.strip()) * TILE_SCALING) + self._cur_map.map_height
         self._player.center_x = warp_x
         self._player.center_y = warp_y
-        # print(type(warp_x), type(warp_y))
-        # print((warp_x), (warp_y))
-        # print(warp_properties)
-        # print(self._cur_map.map_height)
 
     @property
     def cur_map(self):

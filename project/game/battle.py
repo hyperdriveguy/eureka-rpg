@@ -6,7 +6,7 @@ import arcade
 
 from game.battle_hud import BattleHud
 from game.battle_player import BattlePlayer
-from game.contestant import Contestant
+from game.enemy_switcher import EnemySwitcher
 from game.utils import get_smallest
 
 
@@ -33,12 +33,15 @@ class Battle(arcade.View):
         self._anim_done (bool): is animation done
         self.battle_hud (BattleHud): an instance of BattleHud
     """
-    def __init__(self):
+    def __init__(self, enemy_name):
         """Basic battle initialization.
 
         These contain classes and values that should not have to be erased on battle restart.
         """
         super().__init__()
+        # Init Enemies
+        self._enemy_switcher = EnemySwitcher()
+
         # Setup the Camera
         self._camera = arcade.Camera(self.window.width, self.window.height)
 
@@ -46,13 +49,7 @@ class Battle(arcade.View):
         self._gui_camera = arcade.Camera(self.window.width, self.window.height)
 
         self._player = BattlePlayer()
-        self._enemy = Contestant(['project/assets/angry_cactus.png',
-                                  'project/assets/angry_cactus_1.png',
-                                  'project/assets/angry_cactus_2.png'],
-                                 hp=8,
-                                 attack=7,
-                                 defense=0,
-                                 speed=1)
+        self._enemy = self._enemy_switcher.get_enemy(enemy_name)
         self._set_contestant_pos()
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)

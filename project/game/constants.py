@@ -36,10 +36,27 @@ ENEMIES = {
                  'project/assets/angry_cactus_2.png'],
         'stats': {
             'HP': 8,
-            'Attack': 7,
+            'Attack': 3,
             'Defense': 0,
             'Skill': 5,
             'Speed': 1
+            }
+    },
+    'pickaxe': {
+        'anim': ['project/assets/pickaxe.png',
+                 'project/assets/pickaxe_1.png',
+                 'project/assets/pickaxe_2.png',
+                 'project/assets/pickaxe_3.png',
+                 'project/assets/pickaxe_4.png',
+                 'project/assets/pickaxe_5.png',
+                 'project/assets/pickaxe_6.png',
+                 'project/assets/pickaxe_7.png',],
+        'stats': {
+            'HP': 4,
+            'Attack': 4,
+            'Defense': 1,
+            'Skill': 5,
+            'Speed': 8
             }
     }
 }
