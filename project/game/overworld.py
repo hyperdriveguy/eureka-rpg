@@ -287,7 +287,7 @@ class Overworld(arcade.View):
             self._map_switcher.warp_map(self._map_switcher.cur_map.object_properties['warp'])
         else:
             self._active_textbox = True
-            self._text_box = DrawTextBox(self.cur_text, self.gui_camera)
+            self._text_box = DrawTextBox(self.cur_text, self.window)
             self.player_sprite.force_movement_stop()
 
     def on_resize(self, width: int, height: int):
