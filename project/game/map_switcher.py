@@ -43,7 +43,10 @@ class MapSwitcher:
         """
         map_name, warp_x, warp_y = warp_properties.split(',')
         map_name = map_name.strip()
-        self.switch_map(map_name)
+        # Don't reload the map if the warp is on the same map
+        if map_name != self._cur_map_name:
+            print('reloading map')
+            self.switch_map(map_name)
         warp_x = float(warp_x.strip()) * TILE_SCALING
         warp_y = (-float(warp_y.strip()) * TILE_SCALING) + self._cur_map.map_height
         self._player.center_x = warp_x
