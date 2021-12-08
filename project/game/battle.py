@@ -68,7 +68,6 @@ class Battle(arcade.View):
 
         This should be called when restarting the same battle.
         """
-        pass
 
     def on_draw(self):
         """Draw elements on the screen.

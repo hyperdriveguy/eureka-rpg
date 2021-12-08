@@ -50,7 +50,7 @@ ENEMIES = {
                  'project/assets/pickaxe_4.png',
                  'project/assets/pickaxe_5.png',
                  'project/assets/pickaxe_6.png',
-                 'project/assets/pickaxe_7.png',],
+                 'project/assets/pickaxe_7.png'],
         'stats': {
             'HP': 4,
             'Attack': 4,
