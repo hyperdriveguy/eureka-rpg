@@ -84,10 +84,29 @@ class DrawTextBox:
         self._drawable_text.draw()
 
     def _calc_box_size(self, width, height):
+        """Calculate textbox size from screen size.
+
+        Args:
+            width (int): screen width
+            height (int): screen height
+        """
         self._box_width = width * 0.625
         self._box_height = height * 0.15
 
+    def _calc_font_size(self):
+        """Calculate font size from box size.
+        """
+        based_on_height = px_to_pt(self._box_height / 8)
+        based_on_width = px_to_pt(self._box_width / 33.5)
+        print('h', based_on_height, 'w', based_on_width)
+        self._font_size = get_smallest(based_on_height, based_on_width)
+
     def _wrap_text(self):
+        """Preform text wrapping based on box size.
+
+        This allows for better dynamic resizing.
+        Newline chars are detected and manually broken in to lines.
+        """
         text_bounds = self._box_width - (self._font_size * 4)
         char_width = int(text_bounds / pt_to_px(self._font_size))
         self.wrapper = textwrap.TextWrapper(width=char_width, drop_whitespace=False)
@@ -108,14 +127,13 @@ class DrawTextBox:
         """
         self.cur_line = -1
         self._calc_box_size(width, height)
-        self._font_size = px_to_pt(self._box_height / 8)
+        self._calc_font_size()
         self._wrap_text()
         self.text_box_center_x = width / 2
         self.text_box_center_y = height - self._box_height / 2 - height * 0.02
         if self.num_lines > 1:
             self._drawable_text = arcade.Text(
-                self.page_text,
-                self.text_box_center_x + pt_to_px(self._font_size) / 2,
+                self.page_text,                self.text_box_center_x + pt_to_px(self._font_size) / 2,
                 self.text_box_center_y - pt_to_px(self._font_size) / 2,
                 arcade.csscolor.WHITE,
                 self._font_size,
