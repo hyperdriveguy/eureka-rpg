@@ -82,12 +82,6 @@ class DrawTextBox:
         """
         self._window_shape.draw()
         self._drawable_text.draw()
-        arcade.draw_point(
-            self.text_box_center_x,
-            self.text_box_center_y,
-            arcade.color.BARN_RED,
-            5
-        )
 
     def _calc_box_size(self, width, height):
         self._box_width = width * 0.625
