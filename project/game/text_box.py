@@ -1,7 +1,6 @@
 """ Drawing the Text Box """
 import textwrap
 import arcade
-from game import constants
 
 class DrawTextBox:
     """ Responsible for drawing text boxes
@@ -13,7 +12,8 @@ class DrawTextBox:
         self.text_box_center_y (int): vertical position of the center point of the text box
         self.wrapper (TextWrapper): An instance of TextWrapper
         self.text_list (list): One string split into a list of strings to wrap the text
-        self.num_lines (int): The number of lines the text list has (i.e the length of the text list)
+        self.num_lines (int):
+            The number of lines the text list has (i.e the length of the text list)
         self.text (str): The text to be added to the text box
         self.cur_line (int): The last line added to the text box
         self.text_end (bool): Determine if the end of the text has been reached
@@ -41,7 +41,7 @@ class DrawTextBox:
         """ Create the text that will be seen in the text box.
 
             Args:
-                self (DrawTextBox): Aself._character_face_direction[self._dir_priority]n instance of DrawTextBox
+                self (DrawTextBox): An instance of DrawTextBox
         """
         self.page_text = ''
         if self.num_lines >= 4:
@@ -71,13 +71,19 @@ class DrawTextBox:
             Args:
                 self (DrawTextBox): An instance of DrawTextBox
         """
-        arcade.draw_rectangle_filled(self.text_box_center_x, self.text_box_center_y, self.rec_width, self.rec_length, arcade.csscolor.BLACK)
+        arcade.draw_rectangle_filled(
+            self.text_box_center_x,
+            self.text_box_center_y,
+            self.rec_width,
+            self.rec_length,
+            arcade.csscolor.BLACK
+        )
         arcade.draw_point(
             self.text_box_center_x,
             self.text_box_center_y,
             arcade.color.BARN_RED,
             5
-            )
+        )
         if self.num_lines > 1:
             arcade.draw_text(
                 self.page_text,
@@ -102,5 +108,11 @@ class DrawTextBox:
             )
 
     def resize(self, width: int, height: int):
+        """Resize and reposition the textbox.
+
+        Args:
+            width (int): new window width
+            height (int): new window height
+        """
         self.text_box_center_x = width / 2
         self.text_box_center_y = height - self.rec_length / 2 - 10
