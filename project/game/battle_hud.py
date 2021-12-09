@@ -5,6 +5,7 @@ import arcade
 from game import ui_elements
 from game.battle_player import BattlePlayer
 from game.utils import get_smallest, px_to_pt
+from platform import system
 
 
 class BattleHud:
@@ -59,6 +60,8 @@ class BattleHud:
             font_size=self._font_size,
             color=arcade.color.LIGHT_GREEN)
         base_hp_draw_y = self._cur_hp_sprite.bottom
+        if system() == 'Windows':
+            base_hp_draw_y *= 0.9
         self._full_hp_sprite = arcade.create_text_sprite(
             f'/ {self._player.max_hp}',
             hp_draw_x,
