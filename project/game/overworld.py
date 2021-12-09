@@ -213,26 +213,6 @@ class Overworld(arcade.View):
                 not self.player_sprite.allow_player_input
             )
 
-        if self.free_camera:
-            if key == arcade.key.T:
-                self.camera.shake(Vec2(10,10))
-
-            if key == arcade.key.L:
-                self.free_coords[0] += 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.K:
-                self.free_coords[1] -= 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.J:
-                self.free_coords[0] -= 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.I:
-                self.free_coords[1] += 64
-                self.camera.move_to(self.free_coords)
-
     def on_key_release(self, key, key_modifiers):
         """
         Called whenever the user lets off a previously pressed key.
@@ -243,15 +223,6 @@ class Overworld(arcade.View):
         """
         # Stop player movments
         self.player_sprite.on_key_release(key, key_modifiers)
-
-        if key == arcade.key.Y:
-            #Switch to main map
-            # Init map
-            self._map_switcher.cur_map = 'Test Map'
-
-        if key == arcade.key.T:
-            # Init map
-            self._map_switcher.cur_map = 'Test Map 2'
 
         if not self._active_textbox:
             try:
