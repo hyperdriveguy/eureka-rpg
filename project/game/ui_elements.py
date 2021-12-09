@@ -122,7 +122,12 @@ class Selector:
             self._button_list.extend(button)
             self._button_actions[button[0]] = button.name
         self._cur_selection = 0
-        self._height_mod = 1 if system() == 'Windows' else 0.8
+        if system() == 'Windows':
+            self._height_mod = 1
+            # Override y_mod for Windows only
+            self._y_mod = 1
+        else:
+            self._height_mod = 0.8
         # print('button list',len(self._button_list))
         # print('buttons', len(buttons))
 
