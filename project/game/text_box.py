@@ -7,7 +7,11 @@ class DrawTextBox:
     """ Responsible for drawing text boxes
 
     Attributes:
-        self.text (str): The text to be added to the text box
+        self._window (arcade.Window): an instance of arcade.Window
+        self.page_text (str): the text for the page
+        self.text (str): The text to be printed in the text box
+        self.text_end (bool): check if the end of the text has been reached
+        self.cur_line (int): The currrent line
         """
     def __init__(self, text: str, window: arcade.Window):
         """ Class Constructor

@@ -43,7 +43,7 @@ class Overworld(arcade.View):
 
         # Keep track of the score
         self.show_debug = False
-        arcade.enable_timings()
+        # arcade.enable_timings()
 
         self._text_box = None
         self._cur_battle = None

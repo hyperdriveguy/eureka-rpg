@@ -19,7 +19,7 @@ class MainWindow(arcade.Window):
             Args:
                 self (MainWindow): An instance of MainWindow
                 width (int): The width of the main window
-                height (int): The wight of the main window
+                height (int): The height of the main window
                 title (str): The title to show on the main window
         """
         super().__init__(width, height, title, resizable=True)
