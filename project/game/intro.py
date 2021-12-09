@@ -18,7 +18,7 @@ class IntroView(arcade.View):
         """
         super().__init__()
         
-        self._text = arcade.Text(
+        self._game_name = arcade.Text(
             GAME_NAME,
             SCREEN_WIDTH / 2,
             SCREEN_HEIGHT / 2 + 35,
@@ -27,24 +27,15 @@ class IntroView(arcade.View):
             anchor_x="center",
             anchor_y="center"
         )
-        self._make_button()
-
-    def _make_button(self):
-        """Make the UI button for selecting an action.
-        """
-        # run_draw_x = round(self._gui_camera.viewport_width * 0.95)
-        self._play_button = Button(
-            'PLAY',
+        self._start_game = arcade.Text(
+            "press SPACE to begin",
             SCREEN_WIDTH / 2,
             SCREEN_HEIGHT / 2 - 35,
-            anchor_x='center',
-            anchor_y='center',
-            font_size=30,
-            color=arcade.csscolor.WHITE
+            arcade.csscolor.WHITE,
+            24,
+            anchor_x="center",
+            anchor_y="center"
         )
-        self._main_select = Selector([self._play_button],
-                                                 y_mod=0.78, color=arcade.csscolor.WHITE)
-        self._main_select.can_select = True
 
     def on_show(self):
         """ Called when switching to this view
@@ -55,8 +46,8 @@ class IntroView(arcade.View):
         """ Draw the intro screen
         """
         arcade.start_render()
-        self._text.draw()
-        self._main_select.draw()
+        self._game_name.draw()
+        self._start_game.draw()
 
     def on_key_press(self, key, key_modfiers):
         """Called whenever a key on the keyboard is pressed.
