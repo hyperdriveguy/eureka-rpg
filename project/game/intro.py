@@ -9,8 +9,8 @@ class IntroView(arcade.View):
     Stereotype: Controller
 
     Attributes:
-        self._overworld (Overworld): an instance of Overworld
-        self._text (arcade.Text): an instnace of acrade.Text. The text to display.
+        self._game_name (arcade.Text): an instnace of arcade.Text. Displays the game name.
+        self._start_game (arcade.Text): an instnace of arcade.Text. Display how to start the game.
     """
     def __init__(self):
         """ Class Constructor
