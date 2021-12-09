@@ -1,7 +1,6 @@
 import arcade
 from game.constants import GAME_NAME, SCREEN_WIDTH, SCREEN_HEIGHT
 from game.ui_elements import Button, Selector
-from game.overworld import Overworld
 
 class IntroView(arcade.View):
     """ Splash screen for the game. Press spacebar to start game
@@ -18,7 +17,7 @@ class IntroView(arcade.View):
         """ Class Constructor
         """
         super().__init__()
-        self._overworld = Overworld()
+        
         self._text = arcade.Text(
             GAME_NAME,
             SCREEN_WIDTH / 2,
@@ -67,4 +66,4 @@ class IntroView(arcade.View):
             key_modifiers (int): key modifier that was pressed.
         """
         if key == arcade.key.SPACE:
-            self.window.show_view(self._overworld)
+            self.window.show_view(self.window.overworld)
