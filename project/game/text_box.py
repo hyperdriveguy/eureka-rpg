@@ -133,7 +133,8 @@ class DrawTextBox:
         self.text_box_center_y = height - self._box_height / 2 - height * 0.02
         if self.num_lines > 1:
             self._drawable_text = arcade.Text(
-                self.page_text,                self.text_box_center_x + pt_to_px(self._font_size) / 2,
+                self.page_text,
+                self.text_box_center_x + pt_to_px(self._font_size) / 2,
                 self.text_box_center_y - pt_to_px(self._font_size) / 2,
                 arcade.csscolor.WHITE,
                 self._font_size,
