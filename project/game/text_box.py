@@ -7,17 +7,7 @@ class DrawTextBox:
     """ Responsible for drawing text boxes
 
     Attributes:
-        self.rec_width (int): width of text box
-        self.rec_length (int): length of text box
-        self.text_box_center_x (int): horizontal position of the center point of the text box
-        self.text_box_center_y (int): vertical position of the center point of the text box
-        self.wrapper (TextWrapper): An instance of TextWrapper
-        self.text_list (list): One string split into a list of strings to wrap the text
-        self.num_lines (int):
-            The number of lines the text list has (i.e the length of the text list)
         self.text (str): The text to be added to the text box
-        self.cur_line (int): The last line added to the text box
-        self.text_end (bool): Determine if the end of the text has been reached
         """
     def __init__(self, text: str, window: arcade.Window):
         """ Class Constructor
@@ -98,7 +88,6 @@ class DrawTextBox:
         """
         based_on_height = px_to_pt(self._box_height / 8)
         based_on_width = px_to_pt(self._box_width / 33.5)
-        print('h', based_on_height, 'w', based_on_width)
         self._font_size = get_smallest(based_on_height, based_on_width)
 
     def _wrap_text(self):
