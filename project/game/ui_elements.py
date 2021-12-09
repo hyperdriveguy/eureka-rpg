@@ -1,6 +1,7 @@
 """Contains reusable UI elements.
 """
 from typing import Iterable
+from platform import system
 import arcade
 
 
@@ -121,6 +122,7 @@ class Selector:
             self._button_list.extend(button)
             self._button_actions[button[0]] = button.name
         self._cur_selection = 0
+        self._height_mod = 1 if system() == 'Windows' else 0.8
         # print('button list',len(self._button_list))
         # print('buttons', len(buttons))
 
@@ -135,7 +137,7 @@ class Selector:
             self._button_list[self._cur_selection].center_x,
             self._button_list[self._cur_selection].center_y * self._y_mod,
             self._button_list[self._cur_selection].width * 1.1,
-            self._button_list[self._cur_selection].height * 0.8,
+            self._button_list[self._cur_selection].height * self._height_mod,
             arcade.color.BLACK,
             border_width=3,
             filled=False
