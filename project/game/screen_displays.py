@@ -1,8 +1,8 @@
 import arcade
 from game.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
-class EndGameView(arcade.View):
-    """ Screen for the end of the game. 
+class ScreenDisplay(arcade.View):
+    """ Screen can be shown for the end of the game or while loading.
 
     Inherits: arcade.View
 

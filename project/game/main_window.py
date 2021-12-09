@@ -3,7 +3,7 @@ import arcade
 from game.overworld import Overworld
 from game.inventory import Inventory
 from game.intro import IntroView
-from game.end_game_view import EndGameView
+from game.screen_displays import ScreenDisplay
 
 class MainWindow(arcade.Window):
     """
@@ -25,7 +25,7 @@ class MainWindow(arcade.Window):
         """
         super().__init__(width, height, title, resizable=True)
         self._intro = IntroView()
-        self._end = EndGameView("You Win!")
+        self._end = ScreenDisplay("You Win!")
         self._overworld = Overworld()
         self._last_view = self._overworld
 
