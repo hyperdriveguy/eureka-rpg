@@ -1,6 +1,5 @@
 import arcade
 from game.constants import GAME_NAME, SCREEN_WIDTH, SCREEN_HEIGHT
-from game.ui_elements import Button, Selector
 
 class IntroView(arcade.View):
     """ Splash screen for the game. Press spacebar to start game
