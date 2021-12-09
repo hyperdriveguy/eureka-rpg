@@ -3,6 +3,7 @@ import arcade
 from game.overworld import Overworld
 from game.inventory import Inventory
 from game.intro import IntroView
+from game.end_game_view import EndGameView
 
 class MainWindow(arcade.Window):
     """
@@ -24,6 +25,7 @@ class MainWindow(arcade.Window):
         """
         super().__init__(width, height, title, resizable=True)
         self._intro = IntroView()
+        self._end = EndGameView("You Win!")
         self._overworld = Overworld()
         self._last_view = self._overworld
 
@@ -35,6 +37,7 @@ class MainWindow(arcade.Window):
         self.set_min_size(370, 260)
         test_inventory = Inventory({'Yeet': 3, 'Bruh1': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh1': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh2': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10})
         self.show_view(self._intro)
+        # self.show_view(self._end)
         # self.show_view(test_inventory)
 
     def on_key_press(self, key, key_modifiers):

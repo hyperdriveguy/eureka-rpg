@@ -1,5 +1,4 @@
 import arcade
-from pyglet import window
 from game.constants import GAME_NAME, SCREEN_WIDTH, SCREEN_HEIGHT
 from game.ui_elements import Button, Selector
 from game.overworld import Overworld
@@ -16,6 +15,8 @@ class IntroView(arcade.View):
         self._text (arcade.Text): an instnace of acrade.Text. The text to display.
     """
     def __init__(self):
+        """ Class Constructor
+        """
         super().__init__()
         self._overworld = Overworld()
         self._text = arcade.Text(
