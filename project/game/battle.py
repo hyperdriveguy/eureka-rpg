@@ -8,6 +8,7 @@ from game.battle_hud import BattleHud
 from game.battle_player import BattlePlayer
 from game.enemy_switcher import EnemySwitcher
 from game.text_box import DrawTextBox
+from game.timer import Timer
 from game.utils import get_smallest
 
 
@@ -28,7 +29,7 @@ class Battle(arcade.View):
         self._enemy = (Contestant): an instance of Contestant
         self._contestants (arcade.SpriteList): list of contestants as sprites
 
-        self._timer (int): a timer
+        self._timer (Timer): a timer
         self._player_dmg (int): player damage
         self._enemy_dmg (int): enemy damage
         self._anim_done (bool): is animation done
@@ -57,7 +58,9 @@ class Battle(arcade.View):
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)
         self._contestants.append(self._enemy)
-        self._timer = 0
+        self._timer = Timer(2)
+        self._player_turn_timer = Timer(2)
+        self._run = False
         self._player_dmg = 0
         self._enemy_dmg = 0
         self._anim_done = True
@@ -85,16 +88,17 @@ class Battle(arcade.View):
 
         self._camera.use()
         self._contestants.draw()
-        if self._timer > 0:
+        if self._timer.active:
             arcade.draw_text(f'-{self._player_dmg}',
                              self._player.center_x,
                              self._player.top,
                              color=arcade.color.RED)
+        if self._player_turn_timer.active:
             arcade.draw_text(f'-{self._enemy_dmg}',
                              self._enemy.center_x,
                              self._enemy.top,
                              color=arcade.color.RED)
-            self._anim_done = False
+            #self._anim_done = False
 
     def _set_contestant_pos(self):
         """Set the position of the player and enemy on the screen.
@@ -116,36 +120,55 @@ class Battle(arcade.View):
         """
         self.battle_hud.update(delta_time)
         if self.battle_hud.has_selected:
-            self._do_battle_turn()
-        if self._timer <= 0 and self._player.is_turn is False:
+            self._do_battle_turns()
+        if self._timer.done and self._player.is_turn is False:
             self.battle_hud.new_player_turn()
             self._player.is_turn = True
-        if self._timer > 0:
-            self._timer -= delta_time
+        self._timer.update(delta_time)
+        self._player_turn_timer.update(delta_time)
+        if self._player_turn_timer.done:
+            self._player_turn_timer.pause()
+            self._dead_enemy_check()
+
 
         self._player.update_animation(delta_time)
         self._enemy.update_animation(delta_time)
 
-    def _do_battle_turn(self):
-        """Preform a battle turn based on player selection.
+    def _turn_order(self):
+        if self._player.speed_check() > self._enemy.speed_check():
+            pass
 
-        Preforms several checks and calculates damage.
-        """
+    def _player_turn(self):
         if self.battle_hud.player_action == 'Attack':
             self._enemy_dmg = max((self._player.attack() - self._enemy.defend(), 0))
+            self._enemy.cur_hp -= self._enemy_dmg
         elif self.battle_hud.player_action == 'Run':
             # attempt to run away
             run_chance = self._player.speed_check() - self._enemy.speed_check()
             if run_chance > 1:
+                self._run = True
                 self.window.show_view(self.window.overworld)
+
+    def _enemy_turn(self):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
-        self._enemy.cur_hp -= self._enemy_dmg
+        self._player.cur_hp -= self._player_dmg
+
+    def _dead_enemy_check(self):
         if self._enemy.cur_hp <= 0:
             self.window.show_view(self.window.overworld)
-        self._player.cur_hp -= self._player_dmg
+
+    def _dead_player_check(self):
         if self._player.cur_hp <= 0:
             self.window.show_view(self.window.death_screen)
-        self._timer = 5
+
+
+
+    def _do_battle_turns(self):
+        """Preform a battle turn based on player selection.
+
+        Preforms several checks and calculates damage.
+        """
+        self._timer.restart()
         self.battle_hud.update_hp()
         self.battle_hud.has_selected = False
 

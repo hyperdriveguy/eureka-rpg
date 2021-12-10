@@ -24,6 +24,7 @@ class ScreenDisplay(arcade.View):
     def on_show(self):
         """ Called when switching to this view
         """
+        self.on_resize(self.window.width, self.window.height)
         arcade.set_background_color(arcade.color.BLACK)
 
     def on_draw(self):

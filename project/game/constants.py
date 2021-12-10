@@ -85,7 +85,7 @@ CONTESTANTS = {
                  f'{ENEMY_SPRITE_PATH}pickaxe/pickaxe_7.png'],
         'stats': {
             'HP': 4,
-            'Attack': 4,
+            'Attack': 40,
             'Defense': 1,
             'Skill': 5,
             'Speed': 8

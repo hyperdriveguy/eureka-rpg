@@ -24,6 +24,7 @@ class IntroView(arcade.View):
         """ Called when switching to this view
         """
         arcade.set_background_color(arcade.color.BLACK)
+        self.on_resize(self.window.width, self.window.height)
 
     def on_draw(self):
         """ Draw the intro screen
