@@ -1,5 +1,6 @@
 import arcade
-from game.constants import GAME_NAME, SCREEN_WIDTH, SCREEN_HEIGHT
+from game.constants import GAME_NAME
+from game.utils import px_to_pt
 
 class IntroView(arcade.View):
     """ Splash screen for the game. Press spacebar to start game
@@ -16,25 +17,8 @@ class IntroView(arcade.View):
         """ Class Constructor
         """
         super().__init__()
+        self.on_resize(self.window.width, self.window.height)
 
-        self._game_name = arcade.Text(
-            GAME_NAME,
-            SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2 + 35,
-            arcade.csscolor.WHITE,
-            48,
-            anchor_x="center",
-            anchor_y="center"
-        )
-        self._start_game = arcade.Text(
-            "press SPACE to begin",
-            SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2 - 35,
-            arcade.csscolor.WHITE,
-            24,
-            anchor_x="center",
-            anchor_y="center"
-        )
 
     def on_show(self):
         """ Called when switching to this view
@@ -58,3 +42,24 @@ class IntroView(arcade.View):
         if key == arcade.key.SPACE:
             self.window.overworld.setup()
             self.window.show_view(self.window.overworld)
+
+    def on_resize(self, width, height):
+        self._game_name = arcade.Text(
+            GAME_NAME,
+            width / 2,
+            height / 2 + width / 12.5,
+            arcade.csscolor.WHITE,
+            px_to_pt(width / 12.5),
+            anchor_x="center",
+            anchor_y="center"
+        )
+        self._start_game = arcade.Text(
+            "press SPACE to begin",
+            width / 2,
+            height / 2 - width / 25,
+            arcade.csscolor.WHITE,
+            px_to_pt(width / 25),
+            anchor_x="center",
+            anchor_y="center"
+        )
+

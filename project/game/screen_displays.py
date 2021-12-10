@@ -1,5 +1,5 @@
 import arcade
-from game.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from game.utils import px_to_pt
 
 class ScreenDisplay(arcade.View):
     """ Screen can be shown for the end of the game or while loading.
@@ -19,15 +19,7 @@ class ScreenDisplay(arcade.View):
         super().__init__()
         self._next_view = next_view
         self._text = text
-        self._text_display = arcade.Text(
-            self._text,
-            SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2,
-            arcade.csscolor.WHITE,
-            48,
-            anchor_x="center",
-            anchor_y="center"
-        )
+        self.on_resize(self.window.width, self.window.height)
 
     def on_show(self):
         """ Called when switching to this view
@@ -43,3 +35,16 @@ class ScreenDisplay(arcade.View):
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE:
             self.window.show_view(self._next_view)
+
+    def on_resize(self, width, height):
+        self._text_display = arcade.Text(
+            self._text,
+            width / 2,
+            height / 2,
+            arcade.csscolor.WHITE,
+            px_to_pt(width / 12.5),
+            anchor_x="center",
+            anchor_y="center",
+            width=width * 0.8
+        )
+
