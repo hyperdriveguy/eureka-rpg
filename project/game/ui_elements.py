@@ -1,7 +1,9 @@
 """Contains reusable UI elements.
 """
 from typing import Iterable
+from platform import system
 import arcade
+from arcade.color import BLACK
 
 
 class Button(arcade.SpriteList):
@@ -102,7 +104,7 @@ class Selector:
         self._can_select (bool): Check if element can be selected
     """
 
-    def __init__(self, buttons: Iterable, orient='main', y_mod=1):
+    def __init__(self, buttons: Iterable, orient='main', y_mod=1, color=arcade.color.BLACK):
         """Initialize the selector with the containing UI elements.
 
         Args:
@@ -121,22 +123,28 @@ class Selector:
             self._button_list.extend(button)
             self._button_actions[button[0]] = button.name
         self._cur_selection = 0
+        if system() == 'Windows':
+            self._height_mod = 1
+            # Override y_mod for Windows only
+            self._y_mod = 1
+        else:
+            self._height_mod = 0.8
         # print('button list',len(self._button_list))
         # print('buttons', len(buttons))
 
         self._selector_list = arcade.ShapeElementList()
-        self._add_selector()
+        self._add_selector(color)
         self._can_select = False
 
-    def _add_selector(self):
+    def _add_selector(self, color):
         """Create and append the selector element to the list.
         """
         self._selection_box = arcade.create_rectangle(
             self._button_list[self._cur_selection].center_x,
             self._button_list[self._cur_selection].center_y * self._y_mod,
             self._button_list[self._cur_selection].width * 1.1,
-            self._button_list[self._cur_selection].height * 0.8,
-            arcade.color.BLACK,
+            self._button_list[self._cur_selection].height * self._height_mod,
+            color,
             border_width=3,
             filled=False
         )

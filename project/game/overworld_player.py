@@ -2,6 +2,7 @@
 import arcade
 
 from game import constants
+from game.constants import PLAYER_TEXTURES
 
 
 class OverworldPlayer(arcade.Sprite):
@@ -14,20 +15,20 @@ class OverworldPlayer(arcade.Sprite):
     Stereotype: Information Holder.
 
     Attributes:
-        self._character_face_direction (list): Current direction character is facing
+        self._character_face_direction (list): Current face direction
 
         self._cur_texture (int): current index of the textures list
-        self._force_walk_texture (bool): check if walk_texture should be implemented
+        self._force_walk_texture (bool): check if walk_texture should be used
         self._force_walk_update_counter (int):
 
         self._scale (int): to scale character
 
         self._movement_lock (bool): check if player can move
 
-        self._left_pressed (bool): check if left movement key is being pressed
-        self._right_pressed (bool): check if right movement key is being pressed
-        self._up_pressed (bool): check if up movement key is being pressed
-        self._down_pressed (bool): check if down movement key is being pressed
+        self._left_pressed (bool): check for left movement key being pressed
+        self._right_pressed (bool): check for right movement key being pressed
+        self._up_pressed (bool): check for up movement key being pressed
+        self._down_pressed (bool): check for down movement key being pressed
     """
 
     def __init__(self):
@@ -36,7 +37,8 @@ class OverworldPlayer(arcade.Sprite):
         super().__init__()
 
         # Default to face-down
-        self._character_face_direction = [constants.FACE_NONE , constants.FACE_DOWN]
+        self._character_face_direction = \
+            [constants.FACE_NONE, constants.FACE_DOWN]
         # Determine which direction has texture priority
         self._dir_priority = 1
 
@@ -54,93 +56,84 @@ class OverworldPlayer(arcade.Sprite):
         self._up_pressed = False
         self._down_pressed = False
 
-        # Adjust the collision box. Default includes too much empty space
-        # side-to-side. Box is centered at sprite center, (0, 0)
-        #self.points = [[-22, -64], [22, -64], [22, 28], [-22, 28]]
-
         self._load_textures()
 
     def _load_textures(self):
-        """ Load the images/textures to be used for the sprite and sprite animation.
+        """ Load the images/textures to be used for the sprite animation.
         """
-        # Images from Kenney.nl's Asset Pack 3
-        #main_path = ":resources:images/animated_characters/female_adventurer/femaleAdventurer"
-        # main_path = ":resources:images/animated_characters/female_person/femalePerson"
-        # main_path = ":resources:images/animated_characters/male_person/malePerson"
-        # main_path = ":resources:images/animated_characters/male_adventurer/maleAdventurer"
-        # main_path = ":resources:images/animated_characters/zombie/zombie"
-        # main_path = ":resources:images/animated_characters/robot/robot"
 
         # Load textures for idle standing
-        #self.idle_texture_pair = load_texture_pair(f"{main_path}_idle.png")
         self._idle_textures = {
-            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png'),
-            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png'),
-            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
-            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+            'DOWN': arcade.load_texture(PLAYER_TEXTURES['front']['still']),
+            'UP': arcade.load_texture(PLAYER_TEXTURES['back']['still']),
+            'LEFT': arcade.load_texture(PLAYER_TEXTURES['side']['still']),
+            'RIGHT': arcade.load_texture(PLAYER_TEXTURES['side']['still'],
+                                         flipped_horizontally=True)
         }
-        self.texture = self._idle_textures[self._character_face_direction[self._dir_priority]]
+        self.texture = self._idle_textures[
+            self._character_face_direction[self._dir_priority]
+        ]
 
         # Load textures for walking
         self._walk_textures = [{
-            'DOWN': arcade.load_texture('project/assets/overworld_player_step.png'),
-            'UP': arcade.load_texture('project/assets/overworld_player_back_step.png'),
-            'LEFT': arcade.load_texture('project/assets/overworld_player_side_step.png'),
-            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_step.png', flipped_horizontally=True)
+            'DOWN': arcade.load_texture(
+                PLAYER_TEXTURES['front']['step']
+                ),
+            'UP': arcade.load_texture(
+                PLAYER_TEXTURES['back']['step']
+                ),
+            'LEFT': arcade.load_texture(PLAYER_TEXTURES['side']['step']),
+            'RIGHT': arcade.load_texture(PLAYER_TEXTURES['side']['step'],
+                                         flipped_horizontally=True)
             },
             {
-            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png'),
-            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png'),
-            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
-            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+            'DOWN': arcade.load_texture(PLAYER_TEXTURES['front']['still']),
+            'UP': arcade.load_texture(PLAYER_TEXTURES['back']['still']),
+            'LEFT': arcade.load_texture(PLAYER_TEXTURES['side']['still']),
+            'RIGHT': arcade.load_texture(PLAYER_TEXTURES['side']['still'],
+                                         flipped_horizontally=True)
             },
             {
-            'DOWN': arcade.load_texture('project/assets/overworld_player_step.png', flipped_horizontally=True),
-            'UP': arcade.load_texture('project/assets/overworld_player_back_step.png', flipped_horizontally=True),
-            'LEFT': arcade.load_texture('project/assets/overworld_player_side_step_alt.png'),
-            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_step_alt.png', flipped_horizontally=True)
+            'DOWN': arcade.load_texture(PLAYER_TEXTURES['front']['step'],
+                                        flipped_horizontally=True),
+            'UP': arcade.load_texture(PLAYER_TEXTURES['back']['step'],
+                                      flipped_horizontally=True),
+            'LEFT': arcade.load_texture(PLAYER_TEXTURES['side']['alt']),
+            'RIGHT': arcade.load_texture(PLAYER_TEXTURES['side']['alt'],
+                                         flipped_horizontally=True)
             },
             {
-            'DOWN': arcade.load_texture('project/assets/overworld_player_still.png', flipped_horizontally=True),
-            'UP': arcade.load_texture('project/assets/overworld_player_back_still.png', flipped_horizontally=True),
-            'LEFT': arcade.load_texture('project/assets/overworld_player_side_still.png'),
-            'RIGHT': arcade.load_texture('project/assets/overworld_player_side_still.png', flipped_horizontally=True)
+            'DOWN': arcade.load_texture(PLAYER_TEXTURES['front']['still'],
+                                        flipped_horizontally=True),
+            'UP': arcade.load_texture(PLAYER_TEXTURES['back']['still'],
+                                      flipped_horizontally=True),
+            'LEFT': arcade.load_texture(PLAYER_TEXTURES['side']['still']),
+            'RIGHT': arcade.load_texture(PLAYER_TEXTURES['side']['still'],
+                                         flipped_horizontally=True)
             }
         ]
-        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png'))
-        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png'))
-        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder.png', flipped_horizontally=True))
-        #self._walk_textures.append(arcade.load_texture('project/assets/placeholder_step.png', flipped_horizontally=True))
-        #for i in range(8):
-        #    texture = load_texture_pair(f"{main_path}_walk{i}.png")
-        #    self.walk_textures.append(texture)
 
     def update_animation(self, delta_time: float = 1 / 60):
         """ update the player movement animation
 
         Args:
-            delta_time (float, optional): time in seconds since method was last called. Defaults to 1/60.
+            delta_time (float, optional):
+                time in seconds since method was last called. Defaults to 1/60.
         """
-
-        # Figure out if we need to flip face left or right
-        #if self.change_x < 0 and self.character_face_direction == RIGHT_FACING:
-        #    self.character_face_direction = LEFT_FACING
-        #elif self.change_x > 0 and self.character_face_direction == LEFT_FACING:
-        #    self.character_face_direction = RIGHT_FACING
-
         direction = self._character_face_direction[self._dir_priority]
 
         # Idle animation
-        if self.change_x == 0 and self.change_y == 0 and not self._force_walk_texture:
+        if (self.change_x == 0 and self.change_y == 0 and
+                not self._force_walk_texture):
             self.texture = self._idle_textures[direction]
             return
 
         # Walking animation
         self._cur_texture += 1
-        if self._cur_texture >= len(self._walk_textures) * constants.UPDATES_PER_FRAME:
+        if (self._cur_texture >=
+                len(self._walk_textures) * constants.UPDATES_PER_FRAME):
             self._cur_texture = 0
         frame = self._cur_texture // constants.UPDATES_PER_FRAME
-        #direction = self.character_face_direction
         self.texture = self._walk_textures[frame][direction]
         if self._force_walk_texture and self._force_walk_update_counter < 1/30:
             self._force_walk_update_counter += delta_time
@@ -152,7 +145,8 @@ class OverworldPlayer(arcade.Sprite):
         """ Movement and game logic
 
         Args:
-            delta_time (float, optional): time in seconds since method was last called. Defaults to 1/60.
+            delta_time (float, optional):
+                time in seconds since method was last called. Defaults to 1/60.
         """
         if self._movement_lock:
             return
@@ -306,7 +300,7 @@ class OverworldPlayer(arcade.Sprite):
         Returns:
             bool: if color is red, the player is highlighted
         """
-        return (self.color == arcade.color.RED)
+        return self.color == arcade.color.RED
 
     @player_highlighted.setter
     def player_highlighted(self, player_highlighted):

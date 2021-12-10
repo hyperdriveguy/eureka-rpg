@@ -1,7 +1,7 @@
 """Stores enemy data
 """
 
-from game.constants import ENEMIES
+from game.constants import CONTESTANTS
 from game.contestant import Contestant
 
 
@@ -20,7 +20,7 @@ class EnemySwitcher:
         Parses constants to store contestants.
         """
         self._enemy_dict = {}
-        for enemy, attrs in ENEMIES.items():
+        for enemy, attrs in CONTESTANTS.items():
             enemy_contestant = Contestant(attrs['anim'], stat_dict=attrs['stats'])
             self._enemy_dict[enemy] = enemy_contestant
 

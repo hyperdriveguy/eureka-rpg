@@ -2,6 +2,8 @@
 import arcade
 from game.overworld import Overworld
 from game.inventory import Inventory
+from game.intro import IntroView
+from game.screen_displays import ScreenDisplay
 
 class MainWindow(arcade.Window):
     """
@@ -18,10 +20,12 @@ class MainWindow(arcade.Window):
             Args:
                 self (MainWindow): An instance of MainWindow
                 width (int): The width of the main window
-                height (int): The wight of the main window
+                height (int): The height of the main window
                 title (str): The title to show on the main window
         """
         super().__init__(width, height, title, resizable=True)
+        self._intro = IntroView()
+        self._end = ScreenDisplay("You Win!")
         self._overworld = Overworld()
         self._last_view = self._overworld
 
@@ -30,9 +34,12 @@ class MainWindow(arcade.Window):
         Set up the game variables. Call to re-start the game.
         """
         self.set_mouse_visible(False)
-        self.set_min_size(160, 144)
+        self.set_min_size(370, 260)
         test_inventory = Inventory({'Yeet': 3, 'Bruh1': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh1': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh2': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10})
-        self.show_view(self._overworld)
+        self.show_view(self._intro)
+        # self.show_view(self._overworld)
+        # self.show_view(self._end)
+        # self.show_view(test_inventory)
 
     def on_key_press(self, key, key_modifiers):
         """
