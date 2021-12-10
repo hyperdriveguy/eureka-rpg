@@ -7,6 +7,7 @@ import arcade
 from game.battle_hud import BattleHud
 from game.battle_player import BattlePlayer
 from game.enemy_switcher import EnemySwitcher
+from game.text_box import DrawTextBox
 from game.utils import get_smallest
 
 
@@ -47,6 +48,8 @@ class Battle(arcade.View):
 
         # Setup the GUI Camera
         self._gui_camera = arcade.Camera(self.window.width, self.window.height)
+
+        #self._battle_textbox = DrawTextBox(text, self.window)
 
         self._player = BattlePlayer()
         self._enemy = self._enemy_switcher.get_enemy(enemy_name)
@@ -132,7 +135,7 @@ class Battle(arcade.View):
             self._enemy_dmg = max((self._player.attack() - self._enemy.defend(), 0))
         elif self.battle_hud.player_action == 'Run':
             # attempt to run away
-            run_chance = self._player.run_check() - self._enemy.run_check()
+            run_chance = self._player.speed_check() - self._enemy.speed_check()
             if run_chance > 1:
                 self.window.show_view(self.window.overworld)
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))

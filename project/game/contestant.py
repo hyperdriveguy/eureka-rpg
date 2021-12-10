@@ -131,7 +131,7 @@ class Contestant(arcade.Sprite):
         """
         return randint(round(self._base_defense / 2), self._base_defense)
 
-    def run_check(self):
+    def speed_check(self):
         """Choose a random number weighted by speed.
 
         Returns:
