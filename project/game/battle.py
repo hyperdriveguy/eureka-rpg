@@ -128,15 +128,20 @@ class Battle(arcade.View):
 
         Preforms several checks and calculates damage.
         """
-        if self.battle_hud.player_action[0] == 'Attack':
-            self._enemy_dmg = max((self.battle_hud.player_action[1]() - self._enemy.defend(), 0))
+        if self.battle_hud.player_action == 'Attack':
+            self._enemy_dmg = max((self._player.attack() - self._enemy.defend(), 0))
+        elif self.battle_hud.player_action == 'Run':
+            # attempt to run away
+            run_chance = self._player.run_check() - self._enemy.run_check()
+            if run_chance > 1:
+                self.window.show_view(self.window.overworld)
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._enemy.cur_hp -= self._enemy_dmg
         if self._enemy.cur_hp <= 0:
             self.window.show_view(self.window.overworld)
         self._player.cur_hp -= self._player_dmg
         if self._player.cur_hp <= 0:
-            sys.exit()
+            self.window.show_view(self.window.death_screen)
         self._timer = 5
         self.battle_hud.update_hp()
         self.battle_hud.has_selected = False

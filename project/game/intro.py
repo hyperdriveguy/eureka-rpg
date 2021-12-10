@@ -16,7 +16,7 @@ class IntroView(arcade.View):
         """ Class Constructor
         """
         super().__init__()
-        
+
         self._game_name = arcade.Text(
             GAME_NAME,
             SCREEN_WIDTH / 2,
@@ -56,4 +56,5 @@ class IntroView(arcade.View):
             key_modifiers (int): key modifier that was pressed.
         """
         if key == arcade.key.SPACE:
+            self.window.overworld.setup()
             self.window.show_view(self.window.overworld)

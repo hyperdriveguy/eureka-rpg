@@ -131,6 +131,14 @@ class Contestant(arcade.Sprite):
         """
         return randint(round(self._base_defense / 2), self._base_defense)
 
+    def run_check(self):
+        """Choose a random number weighted by speed.
+
+        Returns:
+            int: escape/trap chance
+        """
+        return randint(0, self._base_speed + self._speed_mod)
+
     @property
     def is_turn(self):
         """Flag determining wether it is currently the player's turn.

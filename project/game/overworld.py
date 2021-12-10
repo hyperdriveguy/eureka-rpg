@@ -57,7 +57,7 @@ class Overworld(arcade.View):
 
         # If you have sprite lists, you should create them here,
         # and set them to None
-        self.setup()
+        # self.setup()
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """

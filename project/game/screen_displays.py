@@ -11,11 +11,13 @@ class ScreenDisplay(arcade.View):
     Attributes:
         self._text (str): the text to be written in the text display.
         self._text_display (arcade.Text): an instnace of acrade.Text. The text to display.
+        self._next_view (arcade.View): view to switch to after this one.
     """
-    def __init__(self, text):
+    def __init__(self, text, next_view):
         """ Class Constructor
         """
         super().__init__()
+        self._next_view = next_view
         self._text = text
         self._text_display = arcade.Text(
             self._text,
@@ -37,3 +39,7 @@ class ScreenDisplay(arcade.View):
         """
         arcade.start_render()
         self._text_display.draw()
+
+    def on_key_press(self, key, key_modifiers):
+        if key == arcade.key.SPACE:
+            self.window.show_view(self._next_view)

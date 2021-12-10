@@ -25,7 +25,8 @@ class MainWindow(arcade.Window):
         """
         super().__init__(width, height, title, resizable=True)
         self._intro = IntroView()
-        self._end = ScreenDisplay("You Win!")
+        self._end = ScreenDisplay("You Win!", self._intro)
+        self._you_died = ScreenDisplay("You Died", self._intro)
         self._overworld = Overworld()
         self._last_view = self._overworld
 
@@ -72,6 +73,15 @@ class MainWindow(arcade.Window):
             Overworld: An instance of Overworld
         """
         return self._overworld
+
+    @property
+    def death_screen(self):
+        """ Get overworld
+
+        Returns:
+            Overworld: An instance of Overworld
+        """
+        return self._you_died
 
     @property
     def last_view(self):
