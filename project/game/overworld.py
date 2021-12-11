@@ -78,7 +78,7 @@ class Overworld(arcade.View):
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
 
-        # Init Map
+        # Init Maps
         self._map_switcher = MapSwitcher(self.player_sprite, constants.MAPS)
 
     def on_draw(self):

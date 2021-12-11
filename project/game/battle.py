@@ -7,7 +7,7 @@ from game.battle_player import BattlePlayer
 from game.enemy_switcher import EnemySwitcher
 from game.text_box import DrawTextBox
 from game.timer import Timer
-from game.utils import get_smallest
+from game.utils import get_smallest, article_selector
 
 
 class Battle(arcade.View):
@@ -48,7 +48,7 @@ class Battle(arcade.View):
         # Setup the GUI Camera
         self._gui_camera = arcade.Camera(self.window.width, self.window.height)
 
-        self._battle_textbox = DrawTextBox(f'An {enemy_name.title()} approaches!', self.window)
+        self._battle_textbox = DrawTextBox(f'{article_selector(enemy_name).title()} {enemy_name.title()} approaches!', self.window)
         self._active_textbox = True
 
         self._player = BattlePlayer()
