@@ -50,7 +50,8 @@ class Battle(arcade.View):
         # Setup the GUI Camera
         self._gui_camera = arcade.Camera(self.window.width, self.window.height)
 
-        #self._battle_textbox = DrawTextBox(text, self.window)
+        self._battle_textbox = DrawTextBox(f'An {enemy_name.title()} approaches!', self.window)
+        self._active_textbox = True
 
         self._player = BattlePlayer()
         self._enemy = self._enemy_switcher.get_enemy(enemy_name)
@@ -58,11 +59,13 @@ class Battle(arcade.View):
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)
         self._contestants.append(self._enemy)
-        self._timer = Timer(2)
+
         self._player_turn_timer = Timer(2)
         self._enemy_turn_timer = Timer(2)
+
         self._player_first = False
-        self._turns_complete = [False, False]
+        self._turns_in_progress = False
+
         self._player_dmg = 0
         self._enemy_dmg = 0
         self._anim_done = True
@@ -100,7 +103,9 @@ class Battle(arcade.View):
                              self._enemy.center_x,
                              self._enemy.top,
                              color=arcade.color.RED)
-            #self._anim_done = False
+
+        if self._active_textbox:
+            self._battle_textbox.draw()
 
     def _set_contestant_pos(self):
         """Set the position of the player and enemy on the screen.
@@ -121,13 +126,16 @@ class Battle(arcade.View):
             delta_time (float): time in seconds since method was last called.
         """
         self.battle_hud.update(delta_time)
-        if self.battle_hud.has_selected and self._player_turn_timer.is_paused and self._enemy_turn_timer.is_paused:
+        self._player.update_animation(delta_time)
+        self._enemy.update_animation(delta_time)
+
+        if self._active_textbox:
+            return
+
+        if self.battle_hud.has_selected and not self._turns_in_progress:
+            self._player.is_turn = False
+            self._turns_in_progress = True
             self._turn_order()
-        if self._player_turn_timer.stopped and self._enemy_turn_timer.stopped and self._player.is_turn is False:
-            self.battle_hud.has_selected = False
-            self.battle_hud.new_player_turn()
-            self._player.is_turn = True
-        self._timer.update(delta_time)
         if self._player_turn_timer.done:
             self._player_turn_timer.pause()
             self._dead_enemy_check()
@@ -136,42 +144,46 @@ class Battle(arcade.View):
                 run_chance = self._player.speed_check() - self._enemy.speed_check()
                 if run_chance > 1:
                     self.window.show_view(self.window.overworld)
-                self._turns_complete[0] = True
-            if self._player_first and not self._turns_complete[1]:
+            if self._player_first:
+                self._enemy_turn()
                 self._enemy_turn_timer.restart()
+            else:
+                self._new_player_choice()
         if self._enemy_turn_timer.done:
             self._enemy_turn_timer.pause()
-            self._enemy_turn()
             self._dead_player_check()
-            self._turns_complete[1] = True
-            if not self._player_first and not self._turns_complete[0]:
+            if not self._player_first:
+                self._player_turn()
                 self._player_turn_timer.restart()
+            else:
+                self._new_player_choice()
 
 
         self._player_turn_timer.update(delta_time)
         self._enemy_turn_timer.update(delta_time)
 
-        self._player.update_animation(delta_time)
-        self._enemy.update_animation(delta_time)
+
+    def _new_player_choice(self):
+        self._turns_in_progress = False
+        self.battle_hud.has_selected = False
+        self._turns_in_progress = False
+        self.battle_hud.new_player_turn()
+        self._player.is_turn = True
 
     def _turn_order(self):
-        self._turns_complete = [False, False]
         if self._player.speed_check() > self._enemy.speed_check():
             self._player_first = True
+            self._player_turn()
             self._player_turn_timer.restart()
         else:
             self._player_first = False
+            self._enemy_turn()
             self._enemy_turn_timer.restart()
 
     def _player_turn(self):
         if self.battle_hud.player_action == 'Attack':
             self._enemy_dmg = max((self._player.attack() - self._enemy.defend(), 0))
             self._enemy.cur_hp -= self._enemy_dmg
-        elif self.battle_hud.player_action == 'Run':
-            # attempt to run away
-            run_chance = self._player.speed_check() - self._enemy.speed_check()
-            if run_chance > 1:
-                self._run = True
 
     def _enemy_turn(self):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
@@ -193,8 +205,13 @@ class Battle(arcade.View):
             key (int): key that was pressed.
             key_modifiers (int): key modifier that was pressed.
         """
-        if key == arcade.key.J:
-            self._player.is_turn = not self._player.is_turn
+        if self._active_textbox and key == arcade.key.SPACE:
+            #arcade.play_sound(self.jump_sound)
+            if self._battle_textbox.text_end:
+                self._active_textbox = False
+            else:
+                self._battle_textbox.line_by_line()
+            return
         self.battle_hud.on_key_press(key, key_modifiers)
 
     def on_show_view(self):

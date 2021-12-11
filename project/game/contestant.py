@@ -112,7 +112,7 @@ class Contestant(arcade.Sprite):
         """Set flags for preforming an attack animation.
         """
         self._anim_speed = 8
-        self._anim_timer = 3
+        self._anim_timer = 2
 
     def attack(self):
         """Preform an attack based on attack stat.
