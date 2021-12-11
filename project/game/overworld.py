@@ -206,23 +206,6 @@ class Overworld(arcade.View):
 
         if key in (arcade.key.RCTRL, arcade.key.RCOMMAND):
             self.show_debug = not self.show_debug
-        if key == arcade.key.Z:
-            self.free_camera = not self.free_camera
-        if key == arcade.key.M:
-            self.player_sprite.allow_player_input = (
-                not self.player_sprite.allow_player_input
-            )
-
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-
-        Args:
-            key (int): key that was pressed.
-            key_modifiers (int): key modifier that was pressed.
-        """
-        # Stop player movments
-        self.player_sprite.on_key_release(key, key_modifiers)
 
         if not self._active_textbox:
             try:
@@ -241,6 +224,17 @@ class Overworld(arcade.View):
                     self._map_switcher.cur_map.object_properties['done'] = True
             else:
                 self._text_box.line_by_line()
+
+    def on_key_release(self, key, key_modifiers):
+        """
+        Called whenever the user lets off a previously pressed key.
+
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
+        """
+        # Stop player movments
+        self.player_sprite.on_key_release(key, key_modifiers)
 
     def _do_interact(self):
         """ Interact with map
