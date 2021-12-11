@@ -3,6 +3,7 @@
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 GAME_NAME = "Eureka!"
+SAVE_FILE_PATH = 'project/assets/save_files/save.txt'
 
 # Constants used to scale our sprites from their original size
 CHARACTER_SCALING = 2

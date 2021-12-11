@@ -3,11 +3,12 @@
 import sys
 
 import arcade
-
+from game import constants
 from game.battle_hud import BattleHud
 from game.battle_player import BattlePlayer
 from game.enemy_switcher import EnemySwitcher
 from game.utils import get_smallest
+
 
 
 class Battle(arcade.View):
@@ -42,6 +43,8 @@ class Battle(arcade.View):
         # Init Enemies
         self._enemy_switcher = EnemySwitcher()
 
+        self._enemy_name = enemy_name
+
         # Setup the Camera
         self._camera = arcade.Camera(self.window.width, self.window.height)
 
@@ -60,6 +63,7 @@ class Battle(arcade.View):
         self._anim_done = True
 
         self.battle_hud = BattleHud(self._gui_camera, self._player)
+        
 
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -133,10 +137,12 @@ class Battle(arcade.View):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._enemy.cur_hp -= self._enemy_dmg
         if self._enemy.cur_hp <= 0:
-            self.window.show_view(self.window.overworld)
+            with open(constants.SAVE_FILE_PATH, "at") as save_file:
+                print(f'{self._enemy_name}', file=save_file)
+            self.window.show_view(self.window.battle_won)
         self._player.cur_hp -= self._player_dmg
         if self._player.cur_hp <= 0:
-            sys.exit()
+            self.window.show_view(self.window.battle_lost)
         self._timer = 5
         self.battle_hud.update_hp()
         self.battle_hud.has_selected = False

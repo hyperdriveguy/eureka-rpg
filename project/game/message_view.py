@@ -1,7 +1,7 @@
 import arcade
-from game.constants import GAME_NAME, SCREEN_WIDTH, SCREEN_HEIGHT
+from game.constants import  SCREEN_WIDTH, SCREEN_HEIGHT
 
-class IntroView(arcade.View):
+class MessageView(arcade.View):
     """ Splash screen for the game. Press spacebar to start game
 
     Inherits: arcade.View
@@ -12,13 +12,13 @@ class IntroView(arcade.View):
         self._game_name (arcade.Text): an instnace of arcade.Text. Displays the game name.
         self._start_game (arcade.Text): an instnace of arcade.Text. Display how to start the game.
     """
-    def __init__(self):
+    def __init__(self, message, cont_mess=True):
         """ Class Constructor
         """
         super().__init__()
         
         self._game_name = arcade.Text(
-            GAME_NAME,
+            message,
             SCREEN_WIDTH / 2,
             SCREEN_HEIGHT / 2 + 35,
             arcade.csscolor.WHITE,
@@ -26,15 +26,16 @@ class IntroView(arcade.View):
             anchor_x="center",
             anchor_y="center"
         )
-        self._start_game = arcade.Text(
-            "press SPACE to begin",
-            SCREEN_WIDTH / 2,
-            SCREEN_HEIGHT / 2 - 35,
-            arcade.csscolor.WHITE,
-            24,
-            anchor_x="center",
-            anchor_y="center"
-        )
+        if cont_mess:
+            self._continue_game = arcade.Text(
+                "press SPACE to continue",
+                SCREEN_WIDTH / 2,
+                SCREEN_HEIGHT / 2 - 35,
+                arcade.csscolor.WHITE,
+                24,
+                anchor_x="center",
+                anchor_y="center"
+            )
 
     def on_show(self):
         """ Called when switching to this view
@@ -46,7 +47,7 @@ class IntroView(arcade.View):
         """
         arcade.start_render()
         self._game_name.draw()
-        self._start_game.draw()
+        self._continue_game.draw()
 
     def on_key_press(self, key, key_modfiers):
         """Called whenever a key on the keyboard is pressed.

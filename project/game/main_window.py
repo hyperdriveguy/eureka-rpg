@@ -2,8 +2,9 @@
 import arcade
 from game.overworld import Overworld
 from game.inventory import Inventory
-from game.intro import IntroView
+from game.message_view import MessageView
 from game.screen_displays import ScreenDisplay
+from game.constants import GAME_NAME
 
 class MainWindow(arcade.Window):
     """
@@ -24,9 +25,11 @@ class MainWindow(arcade.Window):
                 title (str): The title to show on the main window
         """
         super().__init__(width, height, title, resizable=True)
-        self._intro = IntroView()
+        self._intro = MessageView(GAME_NAME)
         self._end = ScreenDisplay("You Win!")
         self._overworld = Overworld()
+        self.battle_won = MessageView('The enemy seems defeated')
+        self.battle_lost = MessageView("You lost the battle")
         self._last_view = self._overworld
 
     def setup(self):

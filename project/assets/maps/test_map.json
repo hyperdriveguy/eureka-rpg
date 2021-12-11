@@ -188,7 +188,7 @@
                         {
                          "name":"afterbattle",
                          "type":"string",
-                         "value":"The cactus seems defeated."
+                         "value":"The pickaxe seems defeated."
                         }, 
                         {
                          "name":"battle",
