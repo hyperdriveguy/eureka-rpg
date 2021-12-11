@@ -1,7 +1,5 @@
 """Contains the battle engine.
 """
-import sys
-
 import arcade
 
 from game.battle_hud import BattleHud
@@ -192,7 +190,7 @@ class Battle(arcade.View):
 
     def _dead_enemy_check(self):
         if self._enemy.cur_hp <= 0:
-            self.window.show_view(self.window.overworld)
+            self.window.show_view(self.window._win_battle)
 
     def _dead_player_check(self):
         if self._player.cur_hp <= 0:
