@@ -1,8 +1,7 @@
 """Contains the battle engine.
 """
-import sys
-
 import arcade
+import csv
 from game import constants
 from game.battle_hud import BattleHud
 from game.battle_player import BattlePlayer
@@ -137,6 +136,8 @@ class Battle(arcade.View):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._enemy.cur_hp -= self._enemy_dmg
         if self._enemy.cur_hp <= 0:
+            with open(constants.SAVE_FILE_PATH, "a", newline="") as save_file:
+                save_file.write(f'{self._enemy_name}')
             self.window.show_view(self.window._win_battle)
         self._player.cur_hp -= self._player_dmg
         if self._player.cur_hp <= 0:

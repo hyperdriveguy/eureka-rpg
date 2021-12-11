@@ -38,8 +38,8 @@ class MainWindow(arcade.Window):
         self.set_mouse_visible(False)
         self.set_min_size(370, 260)
         test_inventory = Inventory({'Yeet': 3, 'Bruh1': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh1': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh2': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10})
-        self.show_view(self._intro)
-        # self.show_view(self._overworld)
+        # self.show_view(self._intro)
+        self.show_view(self._overworld)
         # self.show_view(self._end)
         # self.show_view(test_inventory)
 

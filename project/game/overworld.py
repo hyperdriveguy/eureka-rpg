@@ -2,6 +2,7 @@
 import arcade
 from pyglet.math import Vec2
 
+import csv
 from game import constants
 from game.battle import Battle
 from game.map_switcher import MapSwitcher
@@ -242,9 +243,14 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._map_switcher.cur_map.object_properties["done"]:
+                with open(constants.SAVE_FILE_PATH, "rt") as save_file:
+                    for line in save_file:
+                        self.complete_battles.append(line)
+                print(self.complete_battles)
+                # print(f"{self._map_switcher.cur_map.object_properties['battle']}")
+                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and f"{self._map_switcher.cur_map.object_properties['battle']}" not in self.complete_battles:
                     self.window.show_view(Battle(self._cur_battle))
-                    self._map_switcher.cur_map.object_properties['done'] = True
+                    # self._map_switcher.cur_map.object_properties['done'] = True
                     
             else:
                 self._text_box.line_by_line()
@@ -256,7 +262,7 @@ class Overworld(arcade.View):
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
         elif self._map_switcher.cur_map.object_properties['type'].lower() == 'battle':
-            if self._map_switcher.cur_map.object_properties['done']:
+            if f"{self._map_switcher.cur_map.object_properties['battle']}" in self.complete_battles:
                 self.cur_text = self._map_switcher.cur_map.object_properties['afterbattle']                
             else:
                 self.cur_text = self._map_switcher.cur_map.object_properties['prebattle']
