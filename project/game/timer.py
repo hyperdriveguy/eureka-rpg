@@ -57,5 +57,13 @@ class Timer:
         return self._countdown <= 0 and not self._paused
 
     @property
+    def stopped(self):
+        return self._countdown <= 0 and self._paused
+
+    @property
     def active(self):
         return self._countdown > 0 and not self._paused
+
+    @property
+    def is_paused(self):
+        return self._paused

@@ -60,7 +60,9 @@ class Battle(arcade.View):
         self._contestants.append(self._enemy)
         self._timer = Timer(2)
         self._player_turn_timer = Timer(2)
-        self._run = False
+        self._enemy_turn_timer = Timer(2)
+        self._player_first = False
+        self._turns_complete = [False, False]
         self._player_dmg = 0
         self._enemy_dmg = 0
         self._anim_done = True
@@ -88,7 +90,7 @@ class Battle(arcade.View):
 
         self._camera.use()
         self._contestants.draw()
-        if self._timer.active:
+        if self._enemy_turn_timer.active:
             arcade.draw_text(f'-{self._player_dmg}',
                              self._player.center_x,
                              self._player.top,
@@ -119,24 +121,47 @@ class Battle(arcade.View):
             delta_time (float): time in seconds since method was last called.
         """
         self.battle_hud.update(delta_time)
-        if self.battle_hud.has_selected:
-            self._do_battle_turns()
-        if self._timer.done and self._player.is_turn is False:
+        if self.battle_hud.has_selected and self._player_turn_timer.is_paused and self._enemy_turn_timer.is_paused:
+            self._turn_order()
+        if self._player_turn_timer.stopped and self._enemy_turn_timer.stopped and self._player.is_turn is False:
+            self.battle_hud.has_selected = False
             self.battle_hud.new_player_turn()
             self._player.is_turn = True
         self._timer.update(delta_time)
-        self._player_turn_timer.update(delta_time)
         if self._player_turn_timer.done:
             self._player_turn_timer.pause()
             self._dead_enemy_check()
+            if self.battle_hud.player_action == 'Run':
+                # attempt to run away
+                run_chance = self._player.speed_check() - self._enemy.speed_check()
+                if run_chance > 1:
+                    self.window.show_view(self.window.overworld)
+                self._turns_complete[0] = True
+            if self._player_first and not self._turns_complete[1]:
+                self._enemy_turn_timer.restart()
+        if self._enemy_turn_timer.done:
+            self._enemy_turn_timer.pause()
+            self._enemy_turn()
+            self._dead_player_check()
+            self._turns_complete[1] = True
+            if not self._player_first and not self._turns_complete[0]:
+                self._player_turn_timer.restart()
 
+
+        self._player_turn_timer.update(delta_time)
+        self._enemy_turn_timer.update(delta_time)
 
         self._player.update_animation(delta_time)
         self._enemy.update_animation(delta_time)
 
     def _turn_order(self):
+        self._turns_complete = [False, False]
         if self._player.speed_check() > self._enemy.speed_check():
-            pass
+            self._player_first = True
+            self._player_turn_timer.restart()
+        else:
+            self._player_first = False
+            self._enemy_turn_timer.restart()
 
     def _player_turn(self):
         if self.battle_hud.player_action == 'Attack':
@@ -147,11 +172,11 @@ class Battle(arcade.View):
             run_chance = self._player.speed_check() - self._enemy.speed_check()
             if run_chance > 1:
                 self._run = True
-                self.window.show_view(self.window.overworld)
 
     def _enemy_turn(self):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._player.cur_hp -= self._player_dmg
+        self.battle_hud.update_hp()
 
     def _dead_enemy_check(self):
         if self._enemy.cur_hp <= 0:
@@ -160,17 +185,6 @@ class Battle(arcade.View):
     def _dead_player_check(self):
         if self._player.cur_hp <= 0:
             self.window.show_view(self.window.death_screen)
-
-
-
-    def _do_battle_turns(self):
-        """Preform a battle turn based on player selection.
-
-        Preforms several checks and calculates damage.
-        """
-        self._timer.restart()
-        self.battle_hud.update_hp()
-        self.battle_hud.has_selected = False
 
     def on_key_press(self, key, key_modifiers):
         """Get player keypresses.
