@@ -137,12 +137,10 @@ class Battle(arcade.View):
         self._player_dmg = max((self._enemy.attack() - self._player.defend(), 0))
         self._enemy.cur_hp -= self._enemy_dmg
         if self._enemy.cur_hp <= 0:
-            with open(constants.SAVE_FILE_PATH, "at") as save_file:
-                print(f'{self._enemy_name}', file=save_file)
-            self.window.show_view(self.window.battle_won)
+            self.window.show_view(self.window._win_battle)
         self._player.cur_hp -= self._player_dmg
         if self._player.cur_hp <= 0:
-            self.window.show_view(self.window.battle_lost)
+            self.window.show_view(self.window._lose_battle)
         self._timer = 5
         self.battle_hud.update_hp()
         self.battle_hud.has_selected = False
