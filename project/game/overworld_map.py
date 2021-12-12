@@ -44,6 +44,9 @@ class OverworldMap:
             },
         }
 
+        self._background_music = arcade.load_sound(":resources:sounds/jump1.wav") #Change this
+        self._play_background_music = arcade.play_sound(self._background_music, looping=True)
+
         # Read in the tiled map
         self._tile_map = arcade.load_tilemap(constants.MAP_PATH + map_file, constants.TILE_SCALING, layer_options)
 
@@ -57,6 +60,9 @@ class OverworldMap:
         else:
             self._player.center_x, self._player.center_y = spawn
 
+        def play_sound_on_loop(self, sound):
+            arcade.play_sound(sound, looping=True)
+        
         def build_map_objects():
             """ Build the interactable map objects"""
             self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
