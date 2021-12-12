@@ -50,6 +50,7 @@ class Overworld(arcade.View):
         self._cur_battle = None
 
         self._save_battle = Save(constants.SAVE_BATTLE_PATH)
+        self._save_battle.clear_file()
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
@@ -224,7 +225,7 @@ class Overworld(arcade.View):
                 self.player_sprite.allow_player_input = True
                 if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
                     self.window.show_view(Battle(self._cur_battle))
-                    
+
             else:
                 self._text_box.line_by_line()
 

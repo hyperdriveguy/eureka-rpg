@@ -199,7 +199,7 @@ class Battle(arcade.View):
         if self._enemy.cur_hp <= 0:
             self._save_battle.write_to_file(self._enemy_name)
             if self._enemy_name == 'pickaxe':
-                self.window.show_view(_win_game)
+                self.window.show_view(self.window._win_game)
             else:
                 self.window.show_view(self.window._win_battle)
 

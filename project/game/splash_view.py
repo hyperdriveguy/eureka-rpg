@@ -63,7 +63,8 @@ class SplashView(arcade.View):
         """
         arcade.start_render()
         self._screen_msg.draw()
-        self._continue_msg.draw()
+        if self._cont_msg:
+            self._continue_msg.draw()
 
     def on_key_press(self, key, key_modfiers):
         """Called whenever a key on the keyboard is pressed.
@@ -72,7 +73,7 @@ class SplashView(arcade.View):
             key (int): key that was pressed.
             key_modifiers (int): key modifier that was pressed.
         """
-        if key == arcade.key.SPACE:            
+        if key == arcade.key.SPACE:
             self.window.show_view(self.window.overworld)
 
 # def resize(self, width, height):
