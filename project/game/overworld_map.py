@@ -59,9 +59,6 @@ class OverworldMap:
             self._player.center_x, self._player.center_y = self._spawn.shape
         else:
             self._player.center_x, self._player.center_y = spawn
-
-        def play_sound_on_loop(self, sound):
-            arcade.play_sound(sound, looping=True)
         
         def build_map_objects():
             """ Build the interactable map objects"""
