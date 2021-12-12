@@ -76,6 +76,9 @@ class Battle(arcade.View):
 
         arcade.set_background_color(arcade.color.WHITE)
 
+        self._background_music = arcade.load_sound("project/assets/sounds/weeping_cowboy.wav")
+        arcade.play_sound(self._background_music, looping=True)
+
     def setup(self):
         """Battle setup.
 
@@ -195,7 +198,10 @@ class Battle(arcade.View):
     def _dead_enemy_check(self):
         if self._enemy.cur_hp <= 0:
             self._save_battle.write_to_file(self._enemy_name)
-            self.window.show_view(self.window._win_battle)
+            if self._enemy_name == 'pickaxe':
+                self.window.show_view(_win_game)
+            else:
+                self.window.show_view(self.window._win_battle)
 
     def _dead_player_check(self):
         if self._player.cur_hp <= 0:

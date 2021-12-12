@@ -27,6 +27,8 @@ FACE_DOWN = 'DOWN'
 # Map Constants
 MAP_PATH = 'project/assets/maps/'
 MAPS = {
+    #'Main Map': 'main_map.json',
+    #'Cave': 'cave.json',
     'Test Map': 'test_map.json',
     'Test Map 2': 'test_map_2.json'
 }
@@ -70,7 +72,18 @@ CONTESTANTS = {
                  f'{ENEMY_SPRITE_PATH}cactus/angry_cactus_1.png',
                  f'{ENEMY_SPRITE_PATH}cactus/angry_cactus_2.png'],
         'stats': {
-            'HP': 8,
+            'HP': 2,
+            'Attack': 3,
+            'Defense': 0,
+            'Skill': 5,
+            'Speed': 1
+            }
+    },
+    'zombie': {
+        'anim': [f'{ENEMY_SPRITE_PATH}zombie/Zambii_1.png',
+                 f'{ENEMY_SPRITE_PATH}zombie/Zambii_2.png'],
+        'stats': {
+            'HP': 4,
             'Attack': 3,
             'Defense': 0,
             'Skill': 5,
@@ -87,11 +100,11 @@ CONTESTANTS = {
                  f'{ENEMY_SPRITE_PATH}pickaxe/pickaxe_6.png',
                  f'{ENEMY_SPRITE_PATH}pickaxe/pickaxe_7.png'],
         'stats': {
-            'HP': 4,
-            'Attack': 40,
+            'HP': 6,
+            'Attack': 4,
             'Defense': 1,
             'Skill': 5,
-            'Speed': 8
+            'Speed': 15
             }
     }
 }
