@@ -7,6 +7,7 @@ from game.battle import Battle
 from game.map_switcher import MapSwitcher
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
+from game.save import Save
 
 
 class Overworld(arcade.View):
@@ -47,6 +48,8 @@ class Overworld(arcade.View):
 
         self._text_box = None
         self._cur_battle = None
+
+        self._save_battle = Save(constants.SAVE_BATTLE_PATH)
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
@@ -219,9 +222,9 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._map_switcher.cur_map.object_properties['done']:
+                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
                     self.window.show_view(Battle(self._cur_battle))
-                    self._map_switcher.cur_map.object_properties['done'] = True
+                    
             else:
                 self._text_box.line_by_line()
 
@@ -243,7 +246,8 @@ class Overworld(arcade.View):
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
         elif self._map_switcher.cur_map.object_properties['type'].lower() == 'battle':
-            if self._map_switcher.cur_map.object_properties['done']:
+            if self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
+            # if self._map_switcher.cur_map.object_properties['battle'] in self.battles_won:
                 self.cur_text = self._map_switcher.cur_map.object_properties['afterbattle']
             else:
                 self.cur_text = self._map_switcher.cur_map.object_properties['prebattle']

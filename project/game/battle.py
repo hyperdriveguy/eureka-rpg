@@ -8,6 +8,8 @@ from game.enemy_switcher import EnemySwitcher
 from game.text_box import DrawTextBox
 from game.timer import Timer
 from game.utils import get_smallest, article_selector
+from game.save import Save
+from game.constants import SAVE_BATTLE_PATH
 
 
 class Battle(arcade.View):
@@ -39,6 +41,7 @@ class Battle(arcade.View):
         These contain classes and values that should not have to be erased on battle restart.
         """
         super().__init__()
+        self._enemy_name = enemy_name
         # Init Enemies
         self._enemy_switcher = EnemySwitcher()
 
@@ -69,6 +72,7 @@ class Battle(arcade.View):
         self._anim_done = True
 
         self.battle_hud = BattleHud(self._gui_camera, self._player)
+        self._save_battle = Save(SAVE_BATTLE_PATH)
 
         arcade.set_background_color(arcade.color.WHITE)
 
@@ -190,10 +194,12 @@ class Battle(arcade.View):
 
     def _dead_enemy_check(self):
         if self._enemy.cur_hp <= 0:
+            self._save_battle.write_to_file(self._enemy_name)
             self.window.show_view(self.window._win_battle)
 
     def _dead_player_check(self):
         if self._player.cur_hp <= 0:
+            self._save_battle.clear_file()
             self.window.show_view(self.window.death_screen)
 
     def on_key_press(self, key, key_modifiers):
