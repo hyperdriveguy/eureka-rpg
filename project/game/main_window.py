@@ -29,7 +29,7 @@ class MainWindow(arcade.Window):
         self._end = ScreenDisplay("You Win!", self._intro)
         self._you_died = ScreenDisplay("You Died", self._intro)
         self._intro_unused = SplashView(GAME_NAME)
-        self._win_game = SplashView("You Win!", cont_msg=False)
+        self._win_game = SplashView("You Won the Game!", cont_msg=False, long_msg=True)
         self._game_over = SplashView("Game Over", cont_msg=False)
         self._win_battle = SplashView("The enemy has been defeated", long_msg=True)
         self._lose_battle = SplashView("You lost the battle")
