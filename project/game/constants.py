@@ -4,6 +4,9 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 GAME_NAME = "Eureka!"
 
+SAVE_BATTLE_PATH = 'project/assets/save_files/save_battle.txt'
+SAVE_GAME_PATH = 'project/assets/save_files/save_game.txt'
+
 # Constants used to scale our sprites from their original size
 CHARACTER_SCALING = 2
 TILE_SCALING = 2
@@ -24,6 +27,8 @@ FACE_DOWN = 'DOWN'
 # Map Constants
 MAP_PATH = 'project/assets/maps/'
 MAPS = {
+    'Main Map': 'main_map.json',
+    'Cave': 'cave.json',
     'Test Map': 'test_map.json',
     'Test Map 2': 'test_map_2.json'
 }
@@ -67,11 +72,22 @@ CONTESTANTS = {
                  f'{ENEMY_SPRITE_PATH}cactus/angry_cactus_1.png',
                  f'{ENEMY_SPRITE_PATH}cactus/angry_cactus_2.png'],
         'stats': {
-            'HP': 8,
+            'HP': 5,
             'Attack': 3,
-            'Defense': 0,
+            'Defense': 2,
             'Skill': 5,
             'Speed': 1
+            }
+    },
+    'zombie': {
+        'anim': [f'{ENEMY_SPRITE_PATH}zombie/Zambii_1.png',
+                 f'{ENEMY_SPRITE_PATH}zombie/Zambii_2.png'],
+        'stats': {
+            'HP': 6,
+            'Attack': 3,
+            'Defense': 1,
+            'Skill': 5,
+            'Speed': 2
             }
     },
     'pickaxe': {
@@ -84,11 +100,11 @@ CONTESTANTS = {
                  f'{ENEMY_SPRITE_PATH}pickaxe/pickaxe_6.png',
                  f'{ENEMY_SPRITE_PATH}pickaxe/pickaxe_7.png'],
         'stats': {
-            'HP': 4,
+            'HP': 8,
             'Attack': 4,
-            'Defense': 1,
+            'Defense': 2,
             'Skill': 5,
-            'Speed': 8
+            'Speed': 15
             }
     }
 }

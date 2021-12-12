@@ -24,7 +24,7 @@ class EnemySwitcher:
             enemy_contestant = Contestant(attrs['anim'], stat_dict=attrs['stats'])
             self._enemy_dict[enemy] = enemy_contestant
 
-    def get_enemy(self, enemy_name):
+    def get_enemy(self, enemy_name) -> Contestant:
         """Fetch an enemy from the dictionary.
 
         Args:

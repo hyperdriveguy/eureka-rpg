@@ -58,3 +58,10 @@ def get_smallest(*values):
         any: smallest value determined by sorted.
     """
     return sorted(values)[0]
+
+def article_selector(noun):
+    noun = noun.lower()
+    vowels = ('a', 'e', 'i', 'o', 'u')
+    if noun[0] in vowels:
+        return 'an'
+    return 'a'

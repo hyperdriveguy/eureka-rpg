@@ -114,6 +114,7 @@ class Selector:
         Raises:
             IndexError: an empty sprite list was provided.
         """
+        self._selector_color = color
         self._y_mod = y_mod
         self._button_actions = {}
         self._button_list = arcade.SpriteList()
@@ -133,10 +134,10 @@ class Selector:
         # print('buttons', len(buttons))
 
         self._selector_list = arcade.ShapeElementList()
-        self._add_selector(color)
+        self._add_selector()
         self._can_select = False
 
-    def _add_selector(self, color):
+    def _add_selector(self):
         """Create and append the selector element to the list.
         """
         self._selection_box = arcade.create_rectangle(
@@ -144,7 +145,7 @@ class Selector:
             self._button_list[self._cur_selection].center_y * self._y_mod,
             self._button_list[self._cur_selection].width * 1.1,
             self._button_list[self._cur_selection].height * self._height_mod,
-            color,
+            self._selector_color,
             border_width=3,
             filled=False
         )

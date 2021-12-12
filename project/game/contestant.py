@@ -112,7 +112,7 @@ class Contestant(arcade.Sprite):
         """Set flags for preforming an attack animation.
         """
         self._anim_speed = 8
-        self._anim_timer = 3
+        self._anim_timer = 2
 
     def attack(self):
         """Preform an attack based on attack stat.
@@ -130,6 +130,14 @@ class Contestant(arcade.Sprite):
             int: damage negated
         """
         return randint(round(self._base_defense / 2), self._base_defense)
+
+    def speed_check(self):
+        """Choose a random number weighted by speed.
+
+        Returns:
+            int: escape/trap chance
+        """
+        return randint(0, self._base_speed + self._speed_mod)
 
     @property
     def is_turn(self):
