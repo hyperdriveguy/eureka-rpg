@@ -76,9 +76,6 @@ class Battle(arcade.View):
 
         arcade.set_background_color(arcade.color.WHITE)
 
-        self._background_music = arcade.load_sound("project/assets/sounds/weeping_cowboy.wav")
-        arcade.play_sound(self._background_music, looping=True)
-
     def setup(self):
         """Battle setup.
 
@@ -228,6 +225,11 @@ class Battle(arcade.View):
         """Called when the window shows the view.
         """
         self._player.is_turn = True
+        approaching = arcade.load_sound("project/assets/sounds/approaching.wav")
+        self._background_music = arcade.play_sound(approaching, looping=True)
+
+    def on_hide_view(self):
+        arcade.stop_sound(self._background_music)
 
     def on_resize(self, width: int, height: int):
         """Called whenever the user resizes the window.

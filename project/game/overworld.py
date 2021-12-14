@@ -85,6 +85,13 @@ class Overworld(arcade.View):
         # Init Maps
         self._map_switcher = MapSwitcher(self.player_sprite, constants.MAPS)
 
+    def on_show_view(self):
+        weeping_cowboy = arcade.load_sound("project/assets/sounds/weeping_cowboy.wav")
+        self._background_music = arcade.play_sound(weeping_cowboy, looping=True)
+
+    def on_hide_view(self):
+        arcade.stop_sound(self._background_music)
+
     def on_draw(self):
         """
         Render the screen.
