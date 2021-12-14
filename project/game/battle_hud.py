@@ -5,6 +5,7 @@ import arcade
 from game import ui_elements
 from game.battle_player import BattlePlayer
 from game.utils import get_smallest, px_to_pt
+from platform import system
 
 
 class BattleHud:
@@ -58,7 +59,7 @@ class BattleHud:
             anchor_y='center',
             font_size=self._font_size,
             color=arcade.color.LIGHT_GREEN)
-        base_hp_draw_y = self._cur_hp_sprite.bottom
+        base_hp_draw_y = round(self._gui_camera.viewport_height * 0.1)
         self._full_hp_sprite = arcade.create_text_sprite(
             f'/ {self._player.max_hp}',
             hp_draw_x,
@@ -154,22 +155,6 @@ class BattleHud:
         self.update_hp()
         self._build_main_bar()
 
-    def _get_action(self, action):
-        """Get the action selected by the player
-
-        Args:
-            action (str): label text of the action selected.
-
-        Raises:
-            ValueError: occurs when an action is passed that isn't recognized.
-        """
-        if action == 'Attack':
-            self._selected_action = (action, self._player.attack)
-        elif action == 'Run':
-            self._selected_action = (action, None)
-        else:
-            raise ValueError(f'Unhandled action "{action}"')
-
     def update_hp(self):
         """Update the HP displayed on the HUD.
 
@@ -215,14 +200,14 @@ class BattleHud:
             if key == arcade.key.D:
                 self._main_select.next_button()
             if key == arcade.key.SPACE:
-                self._get_action(self._main_select.select())
+                self._selected_action = self._main_select.select()
                 self._player.is_turn = False
                 self._has_selected = True
 
     def new_player_turn(self):
         """Reset the selected action to queue a new turn.
         """
-        self._selected_action = ('', None)
+        self._selected_action = ''
 
     @property
     def player_action(self):

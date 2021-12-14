@@ -7,6 +7,7 @@ from game.battle import Battle
 from game.map_switcher import MapSwitcher
 from game.overworld_player import OverworldPlayer
 from game.text_box import DrawTextBox
+from game.save import Save
 
 
 class Overworld(arcade.View):
@@ -43,10 +44,13 @@ class Overworld(arcade.View):
 
         # Keep track of the score
         self.show_debug = False
-        arcade.enable_timings()
+        # arcade.enable_timings()
 
         self._text_box = None
         self._cur_battle = None
+
+        self._save_battle = Save(constants.SAVE_BATTLE_PATH)
+        self._save_battle.clear_file()
 
         # Load sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
@@ -57,7 +61,7 @@ class Overworld(arcade.View):
 
         # If you have sprite lists, you should create them here,
         # and set them to None
-        self.setup()
+        # self.setup()
 
     def setup(self):
         """ Set up the game variables. Call to re-start the game. """
@@ -78,7 +82,7 @@ class Overworld(arcade.View):
         self.player_sprite.center_x = constants.PLAYER_START_X
         self.player_sprite.center_y = constants.PLAYER_START_Y
 
-        # Init Map
+        # Init Maps
         self._map_switcher = MapSwitcher(self.player_sprite, constants.MAPS)
 
     def on_draw(self):
@@ -98,7 +102,7 @@ class Overworld(arcade.View):
 
         if self._active_textbox:
             self.gui_camera.use()
-            self._text_box.draw_text_box()
+            self._text_box.draw()
 
 
         if self.show_debug:
@@ -206,52 +210,6 @@ class Overworld(arcade.View):
 
         if key in (arcade.key.RCTRL, arcade.key.RCOMMAND):
             self.show_debug = not self.show_debug
-        if key == arcade.key.Z:
-            self.free_camera = not self.free_camera
-        if key == arcade.key.M:
-            self.player_sprite.allow_player_input = (
-                not self.player_sprite.allow_player_input
-            )
-
-        if self.free_camera:
-            if key == arcade.key.T:
-                self.camera.shake(Vec2(10,10))
-
-            if key == arcade.key.L:
-                self.free_coords[0] += 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.K:
-                self.free_coords[1] -= 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.J:
-                self.free_coords[0] -= 64
-                self.camera.move_to(self.free_coords)
-
-            if key == arcade.key.I:
-                self.free_coords[1] += 64
-                self.camera.move_to(self.free_coords)
-
-    def on_key_release(self, key, key_modifiers):
-        """
-        Called whenever the user lets off a previously pressed key.
-
-        Args:
-            key (int): key that was pressed.
-            key_modifiers (int): key modifier that was pressed.
-        """
-        # Stop player movments
-        self.player_sprite.on_key_release(key, key_modifiers)
-
-        if key == arcade.key.Y:
-            #Switch to main map
-            # Init map
-            self._map_switcher.cur_map = 'Test Map'
-
-        if key == arcade.key.T:
-            # Init map
-            self._map_switcher.cur_map = 'Test Map 2'
 
         if not self._active_textbox:
             try:
@@ -265,11 +223,22 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._map_switcher.cur_map.object_properties['done']:
+                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
                     self.window.show_view(Battle(self._cur_battle))
-                    self._map_switcher.cur_map.object_properties['done'] = True
+
             else:
                 self._text_box.line_by_line()
+
+    def on_key_release(self, key, key_modifiers):
+        """
+        Called whenever the user lets off a previously pressed key.
+
+        Args:
+            key (int): key that was pressed.
+            key_modifiers (int): key modifier that was pressed.
+        """
+        # Stop player movments
+        self.player_sprite.on_key_release(key, key_modifiers)
 
     def _do_interact(self):
         """ Interact with map
@@ -278,7 +247,8 @@ class Overworld(arcade.View):
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
         elif self._map_switcher.cur_map.object_properties['type'].lower() == 'battle':
-            if self._map_switcher.cur_map.object_properties['done']:
+            if self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
+            # if self._map_switcher.cur_map.object_properties['battle'] in self.battles_won:
                 self.cur_text = self._map_switcher.cur_map.object_properties['afterbattle']
             else:
                 self.cur_text = self._map_switcher.cur_map.object_properties['prebattle']
@@ -287,7 +257,7 @@ class Overworld(arcade.View):
             self._map_switcher.warp_map(self._map_switcher.cur_map.object_properties['warp'])
         else:
             self._active_textbox = True
-            self._text_box = DrawTextBox(self.cur_text)
+            self._text_box = DrawTextBox(self.cur_text, self.window)
             self.player_sprite.force_movement_stop()
 
     def on_resize(self, width: int, height: int):
@@ -300,3 +270,8 @@ class Overworld(arcade.View):
         """
         self.camera.resize(width, height)
         self.gui_camera.resize(width, height)
+
+        try:
+            self._text_box.resize(width, height)
+        except AttributeError:
+            pass

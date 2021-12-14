@@ -11,7 +11,7 @@ class SplashView(arcade.View):
         self._game_name (arcade.Text): an instnace of arcade.Text. Displays the game name.
         self._start_game (arcade.Text): an instnace of arcade.Text. Display how to start the game.
     """
-    def __init__(self, screen_msg, next_view, cont_msg=True, long_msg=False):
+    def __init__(self, screen_msg, cont_msg=True, long_msg=False):
         """ Class Constructor
         """
         super().__init__()
@@ -63,7 +63,8 @@ class SplashView(arcade.View):
         """
         arcade.start_render()
         self._screen_msg.draw()
-        self._continue_msg.draw()
+        if self._cont_msg:
+            self._continue_msg.draw()
 
     def on_key_press(self, key, key_modfiers):
         """Called whenever a key on the keyboard is pressed.

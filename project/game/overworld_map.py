@@ -44,6 +44,9 @@ class OverworldMap:
             },
         }
 
+        self._background_music = arcade.load_sound("project/assets/sounds/weeping_cowboy.wav")
+        arcade.play_sound(self._background_music, looping=True)
+
         # Read in the tiled map
         self._tile_map = arcade.load_tilemap(constants.MAP_PATH + map_file, constants.TILE_SCALING, layer_options)
 
