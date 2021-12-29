@@ -3,7 +3,6 @@
 from typing import Iterable
 from platform import system
 import arcade
-from arcade.color import BLACK
 
 
 class Button(arcade.SpriteList):

@@ -5,7 +5,6 @@ import arcade
 from game import ui_elements
 from game.battle_player import BattlePlayer
 from game.utils import get_smallest, px_to_pt
-from platform import system
 
 
 class BattleHud:

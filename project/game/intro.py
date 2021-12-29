@@ -1,3 +1,5 @@
+"""This module contains code for the introduction splash.
+"""
 import arcade
 from game.constants import GAME_NAME
 from game.utils import px_to_pt
@@ -63,4 +65,3 @@ class IntroView(arcade.View):
             anchor_x="center",
             anchor_y="center"
         )
-
