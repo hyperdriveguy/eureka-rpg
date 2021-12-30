@@ -72,4 +72,9 @@ class MapSwitcher:
 
     @property
     def first_map(self):
+        """Get the first map.
+
+        Returns:
+            OverworldMap: the first map in the switcher.
+        """
         return next(iter(self._all_maps))

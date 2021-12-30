@@ -46,7 +46,6 @@ class Inventory(arcade.View):
 
     def setup(self):
         """TODO"""
-        pass
 
     def on_draw(self):
         """
@@ -59,10 +58,10 @@ class Inventory(arcade.View):
     def _scroll_camera(self):
         """ move scroll camera. This selects different buttons
         """
-        x, y = self._selector.selector_pos
-        x -= self._scrolling_camera.viewport_width / 2
-        y -= self._scrolling_camera.viewport_height / 2
-        self._scrolling_camera.move_to((x, y))
+        view_x, view_y = self._selector.selector_pos
+        view_x -= self._scrolling_camera.viewport_width / 2
+        view_y -= self._scrolling_camera.viewport_height / 2
+        self._scrolling_camera.move_to((view_x, view_y))
 
     def on_update(self, delta_time):
         """ Scroll camera movement
@@ -93,7 +92,6 @@ class Inventory(arcade.View):
             key (int): key that was pressed.
             key_modifiers (int): key modifier that was pressed.
         """
-        pass
 
     def on_show_view(self):
         pass

@@ -1,7 +1,7 @@
 import arcade
 from game.utils import px_to_pt
 
-class ScreenDisplay(arcade.View):
+class SplashView(arcade.View):
     """Screen can be shown for the end of the game or while loading.
 
     Inherits: arcade.View
@@ -13,14 +13,14 @@ class ScreenDisplay(arcade.View):
         self._text_display (arcade.Text): an instnace of acrade.Text. The text to display.
         self._next_view (arcade.View): view to switch to after this one.
     """
-    def __init__(self, text, next_view, cont_msg=True, long_msg=False):
+    def __init__(self, text, next_view, cont_msg=True):
         """Class Constructor
         """
         super().__init__()
         self._next_view = next_view
         self._text = text
         self._cont_msg = cont_msg
-        self._long_msg = long_msg
+        self._long_msg = len(text) > 20
         self.on_resize(self.window.width, self.window.height)
 
     def on_show(self):
@@ -46,9 +46,9 @@ class ScreenDisplay(arcade.View):
             self._screen_msg = arcade.Text(
                 self._text,
                 width / 2,
-                height / 2 + width / 15,
+                height / 2 + width / 30,
                 arcade.csscolor.WHITE,
-                px_to_pt(width / 15),
+                px_to_pt(width / 30),
                 anchor_x="center",
                 anchor_y="center",
                 width=width * 0.8
@@ -57,9 +57,9 @@ class ScreenDisplay(arcade.View):
             self._screen_msg = arcade.Text(
                 self._text,
                 width / 2,
-                height / 2 + width / 12.5,
+                height / 2 + width / 20,
                 arcade.csscolor.WHITE,
-                px_to_pt(width / 12.5),
+                px_to_pt(width / 20),
                 anchor_x="center",
                 anchor_y="center",
                 width=width * 0.8
@@ -68,9 +68,9 @@ class ScreenDisplay(arcade.View):
             self._continue_msg = arcade.Text(
                 "press SPACE to continue",
                 width / 2,
-                height / 2 - width / 25,
+                height / 2 - width / 35,
                 arcade.csscolor.WHITE,
-                24,
+                px_to_pt(width / 35),
                 anchor_x="center",
                 anchor_y="center",
                 width=width * 0.8
