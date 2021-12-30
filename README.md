@@ -17,6 +17,5 @@
 * Arcade
 
 ## Authors
-* Hyperdriveguy - hyperdriveguy@gmail.com
-
+* Carson Bush - hyperdriveguy@gmail.com
 * Bryndi Hellewell - brynlol12@gmail.com
