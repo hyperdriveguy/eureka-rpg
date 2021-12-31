@@ -58,12 +58,27 @@ class Timer:
 
     @property
     def stopped(self):
+        """Whether the timer has fully stopped (completed and paused).
+
+        Returns:
+            bool: timer stopped
+        """
         return self._countdown <= 0 and self._paused
 
     @property
     def active(self):
+        """Whether timer is active (incomplete and not paused).
+
+        Returns:
+            bool: timer active
+        """
         return self._countdown > 0 and not self._paused
 
     @property
     def is_paused(self):
+        """Whether timer has paused the countdown.
+
+        Returns:
+            bool: paused
+        """
         return self._paused

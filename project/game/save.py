@@ -9,7 +9,6 @@ class Save():
         """Class Constructor
 
         Args:
-            
         """
         self._path = path
 

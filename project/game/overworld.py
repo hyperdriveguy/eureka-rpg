@@ -1,6 +1,5 @@
 """ The Overworld """
 import arcade
-from pyglet.math import Vec2
 
 from game import constants
 from game.battle import Battle
@@ -117,7 +116,9 @@ class Overworld(arcade.View):
             self.gui_camera.use()
 
             # Draw player coordinates screen, scrolling it with the viewport
-            coords = f"{self.player_sprite.center_x:.0f}, {self.player_sprite.center_y:.0f}, {self.player_sprite.character_face_direction}"
+            coords = (f'{self.player_sprite.center_x:.0f}, '
+                      f'{self.player_sprite.center_y:.0f}, '
+                      f'{self.player_sprite.character_face_direction}')
             arcade.draw_text(
                 coords,
                 10,
@@ -126,8 +127,10 @@ class Overworld(arcade.View):
                 18,
             )
             if self._active_textbox:
+                textbox_debug_info = (f'cur_text length: {len(self.cur_text)}, '
+                                      f'number of lines: {self._text_box.num_lines}')
                 arcade.draw_text(
-                    f'cur_text length: {len(self.cur_text)}, number of lines: {self._text_box.num_lines}',
+                    textbox_debug_info,
                     10,
                     50,
                     arcade.csscolor.WHITE,
@@ -230,7 +233,9 @@ class Overworld(arcade.View):
             if self._text_box.text_end:
                 self._active_textbox = False
                 self.player_sprite.allow_player_input = True
-                if self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and not self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
+                if (self._map_switcher.cur_map.object_properties['type'].lower() == 'battle' and
+                        not self._save_battle.battle_complete(
+                            self._map_switcher.cur_map.object_properties['battle'])):
                     self.window.show_view(Battle(self._cur_battle))
 
             else:
@@ -254,7 +259,8 @@ class Overworld(arcade.View):
         if self._map_switcher.cur_map.object_properties['type'].lower() == 'text':
             self.cur_text = self._map_switcher.cur_map.object_text
         elif self._map_switcher.cur_map.object_properties['type'].lower() == 'battle':
-            if self._save_battle.battle_complete(self._map_switcher.cur_map.object_properties['battle']):
+            if self._save_battle.battle_complete(
+                    self._map_switcher.cur_map.object_properties['battle']):
             # if self._map_switcher.cur_map.object_properties['battle'] in self.battles_won:
                 self.cur_text = self._map_switcher.cur_map.object_properties['afterbattle']
             else:

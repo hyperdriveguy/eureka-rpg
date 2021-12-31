@@ -1,3 +1,5 @@
+"""This module includes transition splash that are configurable.
+"""
 import arcade
 from game.utils import px_to_pt
 
@@ -75,4 +77,3 @@ class SplashView(arcade.View):
                 anchor_y="center",
                 width=width * 0.8
             )
-
