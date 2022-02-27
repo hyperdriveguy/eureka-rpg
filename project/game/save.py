@@ -21,6 +21,7 @@ class Save():
             for line in file:
                 if cur_battle == line.strip("\n"):
                     return True
+        return False
 
 
 

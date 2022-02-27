@@ -46,7 +46,7 @@ class DrawTextBox:
                 self.text_end = True
         else:
             for line in self.text_list:
-                self.page_text += line.strip(' ')
+                self.page_text += line
             self.text_end = True
         self._drawable_text.value = self.page_text
 
