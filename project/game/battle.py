@@ -58,7 +58,7 @@ class Battle(arcade.View):
         self._active_textbox = True
 
         self._player = BattlePlayer()
-        self._enemy = self._enemy_switcher.get_enemy(enemy_name)
+        self._enemy = self._enemy_switcher.get(enemy_name)
         self._set_contestant_pos()
         self._contestants = arcade.SpriteList()
         self._contestants.append(self._player)

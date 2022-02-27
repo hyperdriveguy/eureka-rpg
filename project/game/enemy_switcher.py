@@ -24,7 +24,16 @@ class EnemySwitcher:
             enemy_contestant = Contestant(attrs['anim'], stat_dict=attrs['stats'])
             self._enemy_dict[enemy] = enemy_contestant
 
-    def get_enemy(self, enemy_name) -> Contestant:
+    def add(self, enemy_name: str, enemy: Contestant):
+        """Add an enemy to be fetched later not in constants.
+
+        Args:
+            enemy_name (str): key for fetching the enemy later
+            enemy (Contestant): contestant to battle
+        """
+        self._enemy_dict[enemy_name] = enemy
+
+    def get(self, enemy_name) -> Contestant:
         """Fetch an enemy from the dictionary.
 
         Args:
@@ -34,12 +43,3 @@ class EnemySwitcher:
             Contestant: the contestant to fetch for battle.
         """
         return self._enemy_dict[enemy_name]
-
-    def add_enemy(self, enemy_name: str, enemy: Contestant):
-        """Add an enemy to be fetched later not in constants.
-
-        Args:
-            enemy_name (str): key for fetching the enemy later
-            enemy (Contestant): contestant to battle
-        """
-        self._enemy_dict[enemy_name] = enemy
