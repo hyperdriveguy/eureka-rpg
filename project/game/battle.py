@@ -51,7 +51,10 @@ class Battle(arcade.View):
         # Setup the GUI Camera
         self._gui_camera = arcade.Camera(self.window.width, self.window.height)
 
-        self._battle_textbox = DrawTextBox(f'{article_selector(enemy_name).title()} {enemy_name.title()} approaches!', self.window)
+        self._battle_textbox = DrawTextBox(
+            f'{article_selector(enemy_name).title()} {enemy_name.title()} approaches!',
+            self.window
+        )
         self._active_textbox = True
 
         self._player = BattlePlayer()

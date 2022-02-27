@@ -60,6 +60,14 @@ def get_smallest(*values):
     return sorted(values)[0]
 
 def article_selector(noun):
+    """Select an article to use based on a given noun.
+
+    Args:
+        noun (str): noun in a sentence
+
+    Returns:
+        str: article
+    """
     noun = noun.lower()
     vowels = ('a', 'e', 'i', 'o', 'u')
     if noun[0] in vowels:

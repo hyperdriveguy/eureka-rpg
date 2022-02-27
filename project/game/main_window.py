@@ -1,11 +1,8 @@
 """ The Main Window """
 import arcade
 from game.overworld import Overworld
-from game.inventory import Inventory
-from game.splash_view import SplashView
+from game.screen_displays import SplashView
 from game.intro import IntroView
-from game.screen_displays import ScreenDisplay
-from game.constants import GAME_NAME
 class MainWindow(arcade.Window):
     """
     Main application class.
@@ -26,14 +23,13 @@ class MainWindow(arcade.Window):
         """
         super().__init__(width, height, title, resizable=True)
         self._intro = IntroView()
-        self._end = ScreenDisplay("You Win!", self._intro)
-        self._you_died = ScreenDisplay("You Died", self._intro)
-        self._intro_unused = SplashView(GAME_NAME)
-        self._win_game = SplashView("You Won the Game!", cont_msg=False, long_msg=True)
-        self._game_over = SplashView("Game Over", cont_msg=False)
-        self._win_battle = SplashView("The enemy has been defeated", long_msg=True)
-        self._lose_battle = SplashView("You lost the battle")
+        self._end = SplashView("You Win!", self._intro)
+        self._you_died = SplashView("You Died", self._intro)
+        self._win_game = SplashView("You Won the Game!", self._intro)
+        self._game_over = SplashView("Game Over", self._intro)
         self._overworld = Overworld()
+        self._win_battle = SplashView("The enemy has been defeated", self._overworld)
+        self._lose_battle = SplashView("You lost the battle", self._overworld)
         self._last_view = self._overworld
 
     def setup(self):
@@ -42,11 +38,9 @@ class MainWindow(arcade.Window):
         """
         self.set_mouse_visible(False)
         self.set_min_size(370, 260)
-        test_inventory = Inventory({'Yeet': 3, 'Bruh1': 10, 'Brufh': 10, 'Bruhh': 10, 'Brduh': 10, 'BEruh': 10, 'Bruasdh': 10, 'Brdsuh1': 10, 'Brfsuh': 10, 'Brufasdh': 10, 'Brfsuh2': 10, 'Bafsrafsddsaasddfasdfsdfasasdfadsfdfsasdfasdfasdfdsfasdfadfsafdsdfasadfsadfsdasfadsfadfsasdfadsfadfsadsfasdfadsfssssssssssssssssssssssssssssssffffffffffffffffffffffffffffffffffffffffffffffffffuh': 10, 'Bruh': 10})
         self.show_view(self._intro)
         # self.show_view(self._overworld)
         # self.show_view(self._end)
-        # self.show_view(test_inventory)
 
     def on_key_press(self, key, key_modifiers):
         """

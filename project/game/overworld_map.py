@@ -45,11 +45,17 @@ class OverworldMap:
         }
 
         # Read in the tiled map
-        self._tile_map = arcade.load_tilemap(constants.MAP_PATH + map_file, constants.TILE_SCALING, layer_options)
+        self._tile_map = arcade.load_tilemap(
+            constants.MAP_PATH + map_file,
+            constants.TILE_SCALING,
+            layer_options
+        )
 
         # Calculate full map width and height
-        self._full_map_width = self._tile_map.width * self._tile_map.tile_width * self._tile_map.scaling
-        self._full_map_height = self._tile_map.height * self._tile_map.tile_height * self._tile_map.scaling
+        self._full_map_width = \
+            self._tile_map.width * self._tile_map.tile_width * self._tile_map.scaling
+        self._full_map_height = \
+            self._tile_map.height * self._tile_map.tile_height * self._tile_map.scaling
 
         if spawn is None:
             self._spawn = self._tile_map.object_lists['Spawn'][0]
@@ -59,7 +65,10 @@ class OverworldMap:
 
         def build_map_objects():
             """ Build the interactable map objects"""
-            self._text_objects = Interactable(self._tile_map.object_lists['Text'], self._player, self._full_map_height)
+            self._text_objects = Interactable(self._tile_map.object_lists['Text'],
+                                              self._player,
+                                              self._full_map_height
+            )
 
         def build_map_scene():
             """ Initialize Scene with our TileMap, this will automatically add all layers
