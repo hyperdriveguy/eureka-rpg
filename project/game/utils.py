@@ -14,13 +14,10 @@ def is_between(target, begin, end):
         target (int, float): target value
         begin (int, float): beginning value
         end (int, float): ending value
-
-    Returns:
-        [type]: [description]
     """
     raise DeprecationWarning('Use a chain comparison instead.\n'
                              f'Example: begin ({begin}) <= target '
-                             '({target}) <= end ({end')
+                             f'({target}) <= end ({end})')
 
 
 def px_to_pt(pixels):
