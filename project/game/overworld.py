@@ -24,8 +24,6 @@ class Overworld(arcade.View):
         self.free_camera (bool): Check if camera should be changed to free mode
         self.free_coords (): coordinates of the free camera
 
-        self.show_debug (bool): Check if debugging info should be shown
-
         self.collect_coin_sound (): sound of collecting coins
         self.jump_sound (): sound of jump
         self.game_over (): sound of gameover
@@ -40,10 +38,6 @@ class Overworld(arcade.View):
 
         self.free_camera = False
         self.free_coords = 0, 0
-
-        # Keep track of the score
-        self.show_debug = False
-        # arcade.enable_timings()
 
         self._text_box = None
         self._cur_battle = None
@@ -110,54 +104,6 @@ class Overworld(arcade.View):
             self.gui_camera.use()
             self._text_box.draw()
 
-
-        if self.show_debug:
-            # Activate the GUI camera before drawing GUI elements
-            self.gui_camera.use()
-
-            # Draw player coordinates screen, scrolling it with the viewport
-            coords = (f'{self.player_sprite.center_x:.0f}, '
-                      f'{self.player_sprite.center_y:.0f}, '
-                      f'{self.player_sprite.character_face_direction}')
-            arcade.draw_text(
-                coords,
-                10,
-                10,
-                arcade.csscolor.WHITE,
-                18,
-            )
-            if self._active_textbox:
-                textbox_debug_info = (f'cur_text length: {len(self.cur_text)}, '
-                                      f'number of lines: {self._text_box.num_lines}')
-                arcade.draw_text(
-                    textbox_debug_info,
-                    10,
-                    50,
-                    arcade.csscolor.WHITE,
-                    18
-                )
-            try:
-                cur_fps = arcade.get_fps()
-                if cur_fps >= 60:
-                    fps_color = arcade.color.GREEN
-                elif cur_fps >= 45:
-                    fps_color = arcade.color.YELLOW
-                elif cur_fps >= 30:
-                    fps_color = arcade.color.ORANGE
-                else:
-                    fps_color = arcade.color.RED
-                arcade.draw_text(
-                    f'{cur_fps:.2f} FPS',
-                    10,
-                    10,
-                    fps_color,
-                    12,
-                    self.gui_camera.viewport_width - 20,
-                    'right'
-                )
-            except ValueError:
-                print('Warning: Timings are not enabled.')
-
     def center_camera(self, sprite: arcade.Sprite):
         """ Center the camera on the player
 
@@ -217,9 +163,6 @@ class Overworld(arcade.View):
         self.player_sprite.on_key_press(key, key_modifiers)
 
         self._map_switcher.cur_map.on_keypress(key, key_modifiers)
-
-        if key in (arcade.key.RCTRL, arcade.key.RCOMMAND):
-            self.show_debug = not self.show_debug
 
         if not self._active_textbox:
             try:
