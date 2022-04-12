@@ -13,6 +13,7 @@ def main():
     """
     game = MainWindow(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_NAME)
     game.setup()
+    game.set_vsync(True)
     run()
 
 if __name__ == "__main__":
