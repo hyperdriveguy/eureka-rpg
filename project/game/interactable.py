@@ -1,4 +1,5 @@
 """ Map Interactions """
+# TODO remove Threading because it won't do what is intended as this is a CPU bound problem
 from concurrent.futures import ThreadPoolExecutor
 from game import constants
 

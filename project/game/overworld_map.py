@@ -143,6 +143,7 @@ class OverworldMap:
         """
         return self._scene
 
+    # TODO put this somewhere else, not hidden under several classes
     @property
     def player_can_interact(self):
         """ Get player_can_interact
